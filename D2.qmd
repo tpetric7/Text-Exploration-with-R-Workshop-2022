@@ -1,4 +1,4 @@
-# Quanteda korpus {#sec-delavnica2}
+# Quanteda korpusne funkcije {#sec-delavnica2}
 
 ```{r}
 #| warning: false

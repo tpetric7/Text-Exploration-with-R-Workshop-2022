@@ -1,4 +1,4 @@
-# Delavnica 1: Beremo, štejemo, tabeliramo in rišemo {#sec-delavnica1}
+# Na začetku je bil tidyverse {#sec-delavnica1}
 
 ```{r}
 #| echo: false

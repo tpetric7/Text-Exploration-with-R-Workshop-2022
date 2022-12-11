@@ -1,4 +1,4 @@
-# Delavnica 4 {#sec-delavnica4}
+# Kolokacije in sentiment {#sec-delavnica4}
 
 ## Paketki
 
