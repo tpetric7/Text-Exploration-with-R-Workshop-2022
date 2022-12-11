@@ -1,0 +1,1 @@
+Če je 2x2 enako 4, potem je Ivam Cankar napisal dramo Lepa Vida. Če je 2x2 enako 5, potem je Ivan Cankar napisal dramo Lepa Vida. Če je 2x2 enako 5, potem ni Ivan Cankar napisal dramo Lepa Vida.

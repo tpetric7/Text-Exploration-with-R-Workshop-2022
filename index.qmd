@@ -1,0 +1,5 @@
+# . {.unnumbered}
+
+```{r out.width="100%"}
+knitr::include_graphics("pictures/R_delavnica_naslovna_slika.png")
+```

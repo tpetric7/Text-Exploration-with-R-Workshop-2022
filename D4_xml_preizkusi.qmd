@@ -1,0 +1,305 @@
+# Delavnica 4 {#sec-delavnica4}
+
+## Paketki
+
+```{r}
+#| warning: false
+#| message: false
+
+packages = c("tidyverse", "tidytext", "janitor", "scales", "widyr", 
+             "quanteda", "quanteda.textplots", "quanteda.textstats",
+             "wordcloud2", "ggwordcloud", "udpipe", "syuzhet",
+             "ggtext", "corpustools", "xml2", "XML", "rvest", 
+             "readtext", "readxl", "writexl", "xlsx", "stopwords", 
+             "xmlconvert")
+
+# Install packages not yet installed
+installed_packages <- packages %in% rownames(installed.packages())
+if (any(installed_packages == FALSE)) {
+  install.packages(packages[!installed_packages])
+}
+
+# Packages loading
+invisible(lapply(packages, library, character.only = TRUE))
+```
+
+
+## Pretvorba XML datotek
+
+Datoteke v obliki xml lahko pretvorimo v podatkovni niz. 
+
+S spletnega portala [clarin](https://www.clarin.si/repository/xmlui/handle/11356/1491) smo naložili v shranili literarni korpus v obliki xml, ki poleg besedil vsebuje tudi različne metapodatke.  
+
+Najprej ustvarimo seznam relevantnih xml datotek. Datoteke imajo pripono *vert*.
+
+```{r warning=FALSE, message=FALSE}
+seznam <- list.files("slovenski_korpusi/maj68.vert/",
+                     pattern = "*.vert",
+                     full.names = TRUE)
+wd <- getwd()
+pot <- paste0(wd, "/", seznam)
+
+head(pot, 3)
+```
+
+
+### Pretvorba z xmlconvert
+
+Vsaka xml datoteka v tej zbirki vsebuje nekaj *metapodatkov*. Potem ko pretovrimo eno izmed datotek, zasledimo 17 stolpcev:    
+
+```{r}
+library(xmlconvert)
+xdf <- xml_to_df(pot[1], records.tag = "text", 
+                 fields = "attributes") %>% 
+  mutate(pages = as.character(pages)) %>% 
+  rename(text_id = id)
+
+head(xdf)
+```
+
+Zagotoviti želimo enotno formatiranje stolpcev.  
+
+```{r}
+xdf <- xdf %>% 
+  mutate(across(c(text_id:author, gender, 
+                monograph:facs), as.character)) %>% 
+  mutate(across(c(birth, year), as.numeric))
+
+xdf
+```
+
+
+Besedilo v xml datoteki je razdeljeno na 70 povedi (sentence, s). Toliko je stolpcev v tabeli. 
+
+```{r}
+library(xmlconvert)
+ydf <- xml_to_df(pot[1], records.tag = "text", fields = "tags",
+                 field.names = "id")
+head(ydf)
+```
+
+Povedi sestojijo iz 277 stavkov. Toliko je stolpcev v tabeli. 
+
+```{r}
+library(xmlconvert)
+sdf <- xml_to_df(pot[1], records.tag = "p", fields = "tags",
+                 field.names = "id", 
+                 hierarchy.field.delim = c("<s","<g"), 
+                 stringsAsFactors = F)
+sdf <- sdf[1,]
+head(sdf)
+```
+
+```{r}
+###Positional attributes
+columns <- c("word", "lemma", "tag_en", "upos", "feats", "token_id", "dep", "dep_head_lemma", "dep_head_tag_en", "dep_head_upos", "dep_head_feats", "dep_head_id")
+```
+
+
+```{r}
+zdf <- xml_to_df(pot[1], records.tag = "text", fields = "tags",
+                 field.names = "id") %>% 
+  pivot_longer(cols = starts_with("maj68"), 
+               names_to = "sentence_id", values_to = "value") %>% 
+  separate(value, into = c("delimiter", "value"), 
+           sep = "\n", extra = "merge", fill = "right") %>% 
+  separate_rows(value, sep = "\n") %>% 
+  separate(value, into = columns, 
+           sep = "\t", extra = "merge", fill = "right") %>% 
+  # positive lookahead: match q followed by u
+  mutate(text_id = str_extract(sentence_id, ".+(?=\\.)"),
+         text_id = str_remove(text_id, "\\.$"),
+         text_id = str_replace(text_id, "\\.", "-")) %>% 
+  select(text_id, sentence_id:dep_head_id)
+
+```
+
+
+```{r}
+literatura68 <- xdf %>% 
+  left_join(zdf, by = "text_id")
+head(literatura68)
+dim(literatura68)
+```
+
+Preden zaženemo zanko za pretvorbo xml datotek, je dobro preveriti, ali so vse xml datoteke brez napake. Da bi preprečili *error “xmlParseEntityRef: noname”*, preverjamo, ali je v gradivu izgubljen znak & (ampersand) in ga zamenjamo z &amp; - s pravilnim kodiranjem. 
+
+https://stackoverflow.com/questions/29831427/convert-to-amp-while-preserving-existing-entity-references
+
+Naslednja programska zanka zamenja osamele znake \\& (ampersand) in jih zamenja z ustreznim \\&amp;
+
+```{r}
+tictoc::tic()
+for(i in 1:length(pot)){
+  read_lines(pot[i]) %>% 
+  # negative lookahead to locate single & and replace them
+  str_replace_all(pattern = '&(?![_a-zA-Z]\\w*;)(?!#\\d+;)', 
+       replacement = '&amp;') %>% 
+    write_lines(pot[i])
+}
+tictoc::toc()
+```
+
+Pretvoriti želimo vse xml dokumente (delitev na povedi) in zato bomo sestavili programsko zanko -- *for-loop*. 
+
+```{r}
+library(xmlconvert)
+
+tictoc::tic()
+
+litxml <- NULL
+
+for(i in 1:length(pot[100:110])){
+  xdf <- xml_to_df(pot[i], records.tag = "text", 
+                   fields = "attributes") %>% 
+    rename(text_id = id) %>% 
+    mutate(across(c(text_id:author, gender, 
+                    monograph:facs), as.character)) %>% 
+    mutate(across(c(birth, year), as.numeric))
+  
+  zdf <- xml_to_df(pot[i], records.tag = "text", fields = "tags",
+                   field.names = "id") %>% 
+    pivot_longer(cols = starts_with("maj68"), 
+                 names_to = "sentence_id", values_to = "value") %>% 
+    separate(value, into = c("delimiter", "value"), 
+             sep = "\n", extra = "merge", fill = "right") %>% 
+    separate_rows(value, sep = "\n") %>% 
+    separate(value, into = columns, 
+             sep = "\t", extra = "merge", fill = "right") %>% 
+    # positive lookahead: match q followed by u
+    mutate(text_id = str_extract(sentence_id, ".+(?=\\.)"),
+           text_id = str_remove(text_id, "\\.$"),
+           text_id = str_replace(text_id, "\\.", "-")) %>% 
+    select(text_id, sentence_id:dep_head_id)
+  
+  slovnica = xdf %>% 
+    left_join(zdf, by = "text_id")
+  litxml = bind_rows(litxml, slovnica)
+}
+
+tictoc::toc()
+
+dim(litxml)
+```
+
+```{r}
+tail(litxml)
+```
+
+
+
+### Pretvorba z XML in xml2
+
+Z drugimi knjižnicami je postopek zahtevnejši -- vsaj v tem primeru je tako. 
+
+https://megapteraphile.wordpress.com/2020/03/29/converting-xml-to-tibble-in-r/
+
+```{r}
+library(XML)
+library(xml2)
+
+xmldf <- NULL
+
+for(i in 1:length(pot[1])){
+  xml_document <- read_xml(pot[i])
+  xml_list <- as_list(xml_document)
+  xml_tbl <- as_tibble(xml_list)
+  xml_df = xml_tbl %>% 
+    unnest_longer(text)
+  litxml = bind_rows(xmldf, xml_df)
+}
+
+litxml %>% head()
+# str(litxml$text, 1)
+```
+
+
+```{r warning=FALSE, message=FALSE}
+lp_wider = litxml %>%
+  filter(text_id == "s") %>%
+  unnest_wider(text) 
+```
+
+```{r}
+lp_df = lp_wider %>%
+  # 1st time unnest to release the 2-dimension list?
+  unnest(cols = names(.)) %>%
+  # 2nd time to nest the single list in each cell?
+  unnest(cols = names(.)) %>%
+  # convert data type
+  readr::type_convert()
+```
+
+
+### Rvest
+
+```{r}
+library(rvest)
+level1 <- html_element(xml_document, xpath = "//text[@id]")
+level2 <- html_element(xml_document, xpath = "//p[@id]")
+level3 <- html_element(xml_document, xpath = "//s[@id]")
+  
+```
+
+```{r}
+top <- as.character(level1) %>% str_extract("\\<text .+\\>")
+
+header <- top %>% 
+  as_tibble() %>% 
+  separate_rows(value, sep = '" ') %>% 
+  separate(value, into = c("name", "value"), sep = "=") %>% 
+  mutate(name = str_remove(name, "[<]"),
+         value = str_remove_all(value, '"')) %>% 
+  pivot_wider(names_from = name, values_from = value) %>% 
+  janitor::clean_names()
+
+length(header)
+```
+
+```{r}
+line_id <- as.character(level2) %>% str_extract_all("\\<s.*\\>") %>% unlist()
+```
+
+regex: https://www.regular-expressions.info/lookaround.html
+
+```{r}
+cols <- NULL
+for(i in 1:17){
+  col <- paste("col", i)
+  cols <- rbind(cols, col)
+}
+
+data <- as.character(level2) %>% 
+  str_extract_all("\\<s.+\n.+") %>% 
+  unlist() %>% 
+  as_tibble() %>% 
+  separate(value, into = c("name", "value"), 
+           sep = "\\>\n", extra = "merge", fill = "right") %>% 
+  mutate(name = str_remove(name, "\\<s ")) %>% 
+  separate(value, into = cols, 
+           sep = "\t", extra = "merge", fill = "right") %>% 
+  rename(sentence_id = name) %>% 
+  mutate(sentence_id = str_remove(sentence_id, 'id="'),
+         sentence_id = str_remove(sentence_id, '"')) %>% 
+  # positive lookahead: match q followed by u
+  mutate(text_id = str_extract(sentence_id, ".+(?=1\\.)"),
+         text_id = str_remove(text_id, "\\.$")) %>% 
+  janitor::clean_names()
+  # separate(value, into = c(names(header[1:17])), sep = "\t", 
+  #          extra = "merge", fill = "right")
+
+head(data)
+```
+
+```{r}
+literatura68 <- header %>% 
+  left_join(data, by = "text_id")
+head(literatura68)
+```
+
+https://wiki.facepunch.com/gmod/Lua_Error_Explanation
+
+
+### Try Python Pandas?
+
+https://stackoverflow.com/questions/28259301/how-to-convert-an-xml-file-to-nice-pandas-dataframe

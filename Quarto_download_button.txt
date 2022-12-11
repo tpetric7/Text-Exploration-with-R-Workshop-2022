@@ -1,0 +1,330 @@
+https://stackoverflow.com/questions/73868585/quarto-book-download-button
+
+Using bookdown we are able to download different file formats from a download button, e.g.
+
+---
+bookdown::gitbook:
+   download:
+      - ["test.pdf", "PDF File"]
+      - ["test.html", "HTML File"]
+      - ["test.csv", "Data test.csv"]
+---
+
+In quarto, we only have the options for downloads: (one or more of pdf, epub, and docx). Has somebody an idea how to include data (e.g. .csv or .qs) via a download button to include on navbar or preferably sidebar?
+
+Edit 1: After the great answer of @shafee, here is how my book at the moment looks like and where I would like to add the option to download the data.
+
+example_sidebar
+
+By clicking on the downarrow, a dropdown menu opens and there I would like to add the option (optimal would be more than one, i.e. many datasets) "Download Data". Here is an example .yml:
+
+---
+project:
+  type: book
+  
+book:
+  title: "Quarto Book"
+  chapters:
+    - index.qmd
+    - intro.qmd
+       
+  sidebar:
+    pinned: true
+    
+  repo-url: https://www.rstudio.com/   
+  search: 
+    location: sidebar
+    type: textbox
+  downloads: [pdf, epub]
+    
+format:
+  html:
+   # include-after-body: custom.html
+    theme: cosmo
+---
+
+Edit 2: There could be a way using the tools option in the sidebar. Maybe someone has an idea how to correctly generate an URL for the data such that it will be downloaded directly.
+
+  sidebar:
+    pinned: true
+    tools:
+      - icon: save
+        menu:
+          - text: Data XLSX
+            url:  ymlthis::yml_params_code(browseURL('data/mtcars.xlsx'))
+          - text: Data CSV
+            url:  ymlthis::yml_params_code(browseURL('data/mtcars.csv'))
+
+ex_2
+
+    rquarto
+
+Share
+Follow
+edited 3 hours ago
+asked 2 days ago
+Julian's user avatar
+Julian
+2,44211 gold badge55 silver badges2323 bronze badges
+Add a comment
+1 Answer
+Sorted by:
+1
+Updated Answer (Corresponding to OP's 2nd edit)
+
+The concept remains the same. Here we are just replacing those menu items under the tools with the button created from index.qmd file using javascript.
+
+If you need to add more csv or xlsx data, just add the corresponding code for creating button inside the .download_btn pandoc divs and add more - text: "" and url: "#" in the _quarto.yml file.
+
+_quarto.yml
+
+project:
+  type: book
+
+book:
+  title: "Quarto Book"
+  author: "Jane Doe"
+  date: "9/29/2022"
+  chapters:
+    - index.qmd
+    - intro.qmd
+
+  downloads: [pdf, epub]
+  sidebar:
+    pinned: true
+    tools:
+      - icon: save
+        menu:
+          - text: ""
+            url:  "#"
+          - text: ""
+            url:  "#"
+          - text: ""
+            url:  "#"
+            
+  repo-url: https://www.rstudio.com/   
+  search: 
+    location: sidebar
+    type: textbox
+
+format:
+  html:
+    include-after-body: custom.html
+    theme: cosmo
+
+index.qmd
+
+# Preface {.unnumbered}
+
+This is a Quarto book.
+
+
+::: {.download_btn}
+
+```{css}
+#| echo: false
+
+.btn-default,
+.btn-default:hover,
+.btn-default:active {
+  font-size: 20px;
+  color: black;
+  background-color: transparent;
+  border-color: transparent;
+}
+
+.btn-default:hover {
+  color: grey;
+  transition: 0.2s;
+}
+
+```
+
+
+```{r}
+#| echo: false
+
+library(downloadthis)
+
+mtcars %>%
+  download_this(
+    output_name = "mtcars data set",
+    output_extension = ".csv",
+    button_label = "mtcars.csv",
+    button_type = "default",
+    has_icon = TRUE,
+    icon = "fa fa-file-csv"
+  )
+```
+
+
+```{r}
+#| echo: false
+
+iris %>%
+  download_this(
+    output_name = "Iris data set",
+    output_extension = ".csv",
+    button_label = "iris.csv",
+    button_type = "default",
+    has_icon = TRUE,
+    icon = "fa fa-file-csv"
+  )
+```
+
+```{r}
+#| echo: false
+
+palmerpenguins::penguins %>%
+  download_this(
+    output_name = "penguins data set",
+    output_extension = ".csv",
+    button_label = "penguins.csv",
+    button_type = "default",
+    has_icon = TRUE,
+    icon = "fa fa-file-csv"
+  )
+```
+
+:::
+
+custom.html
+
+
+<script>
+var all_btns = document.querySelectorAll(".download_btn a");
+var data_nav = document.querySelectorAll('[aria-labelledby="sidebar-tool-dropdown-0"] li')
+
+for (let i = 0; i < data_nav.length; i++) {
+  let li = document.createElement("li");
+  li.appendChild(all_btns[i]);
+  data_nav[i].parentElement.replaceChild(li, data_nav[i])
+}
+
+</script>
+
+csv download option when the save button is click
+Old Answer
+
+Since so far there's no default option from Quarto to add buttons for downloading csv data, as a workaround we can add a download button in the Book navbar with the help of {downloadthis} R-package and using a few line of javascript code.
+
+So at first, add the code for creating button and a bit css to style the button's appearance in the index.qmd file with echo: false.
+
+index.qmd
+
+# Preface {.unnumbered}
+
+This is a Quarto book.
+
+::: {.download_btn}
+
+```{css}
+#| echo: false
+
+.btn-default,
+.btn-default:hover,
+.btn-default:active {
+  font-size: 24px;
+  padding: 0px;
+  margin-top: -5px;
+  color: white;
+  background-color: transparent;
+  border-color: transparent;
+}
+
+.btn-default:hover {
+  color: whitesmoke;
+  transition: 0.2s;
+}
+
+```
+
+
+```{r}
+#| echo: false
+
+library(downloadthis)
+
+mtcars %>%
+  download_this(
+    output_name = "mtcars data set",
+    output_extension = ".csv",
+    button_label = "",
+    button_type = "default",
+    has_icon = TRUE,
+    icon = "fa fa-file-csv"
+  )
+```
+
+:::
+
+Now by default, the button will be created in the book body of the index page. But we want this in the book navbar. To do that, we can add a save icon with href: "#" as a placeholder in the right side of the navbar, and then using javascript we can replace this save icon with our created download button.
+
+Now to add js code, create an html file custom.html and put these lines of codes in that file and then add this custom.html file with include-after-body: custom.html in _quarto.yml.
+
+custom.html
+
+<script>
+
+var btn = document.querySelector(".download_btn");
+var nav = document.querySelector(".navbar-nav .bi-save");
+nav.parentElement.replaceChild(btn, nav);
+
+</script>
+
+_quarto.yml
+
+project:
+  type: book
+  
+book:
+  title: "Quarto Book"
+  chapters:
+    - index.qmd
+    - intro.qmd
+  navbar:
+   right: 
+     - icon: save
+       href: "#"
+    
+format:
+  html:
+    include-after-body: custom.html
+    theme: cosmo
+
+Now the rendered book navbar looks like,
+
+csv file download button in navbar
+
+Refer to the downloadthis package documentation to know about various options for adding buttons to download csv or xlsx files or any R-object as rds file and to know about how to style the buttons.
+
+Disclaimer: I am just an R-user and know just a little bit javascript. So anyone, please feel free to edit this answer with more efficient js code. :-)
+Share
+Follow
+edited 12 mins ago
+answered 6 hours ago
+shafee's user avatar
+shafee
+5,13366 silver badges2828 bronze badges
+
+    Thank you for taking the time, your answer works, but I was wondering if we can control the download placement such that it also works with the dropdown menu - see my edit. – 
+    Julian
+    5 hours ago
+    1
+    That would be more complicated to do I think. And Its already enough complicated : ). – 
+    shafee
+    5 hours ago
+    1
+    Maybe your solution is a starting point for others who may have an idea how that could be possible. My issue in the end is that I have several datasets that I would like to be downloadable for the user. Great answer nevertheless and thank you for answering so many Quarto and RMarkdown questions:) – 
+    Julian
+    5 hours ago 
+
+    Well, for you case, one possible solution could be, you can host multiple dataset as zipped file in your github repo and then use the download_link button. Would that work for you? – 
+    shafee
+    4 hours ago
+    2
+    Yes and no :D I would rather prefer a dropdown such that the user can decide on the specific file one wants to download and not all of them. But it could be a compromise, thanks for the suggestion! – 
+    Julian
+    3 hours ago
+
+Show 1 more comment 

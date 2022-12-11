@@ -1,0 +1,11 @@
+štirje udeleženci, A in C na levem in B in D na desnem bregu reke
+AC reka BD
+legenda:
+odgovor sporočilo
+I. reda II. reda III. reda IV. reda
+lahko
+mora
+izbrano
+vertikalno
+horizontalno
+SISTEM KOMUNIKACIJE

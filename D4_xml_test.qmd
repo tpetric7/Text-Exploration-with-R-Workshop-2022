@@ -1,0 +1,151 @@
+# Delavnica {#sec-delavnica4}
+
+## XML
+
+Datoteke v obliki xml lahko spremenimo v podatkovni niz. 
+
+S spletnega portala [clarin](https://www.clarin.si/repository/xmlui/handle/11356/1491) smo naložili v shranili literarni korpus v obliki xml, ki poleg besedil vsebuje tudi različne metapodatke.  
+
+Najprej ustvarimo seznam relevantnih xml datotek. Datoteke imajo pripono *vert*.
+
+```{r warning=FALSE, message=FALSE}
+seznam <- list.files("slovenski_korpusi/maj68.vert/",
+                     pattern = "*.vert",
+                     full.names = TRUE)
+wd <- getwd()
+pot <- paste0(wd, "/", seznam)
+
+head(pot, 3)
+```
+
+Ena xml datoteka. 
+
+https://megapteraphile.wordpress.com/2020/03/29/converting-xml-to-tibble-in-r/
+
+```{r}
+library(XML)
+# en zapis
+xml_doc = pot[1]
+# pridobi podatke iz zapisa (text + labels)
+data <- read_xml(xml_doc)
+# prepoznaj xml strukturo in ekstrahiraj
+myXML = xmlParse(data)
+# imamo xml format z drevesno strukturo
+
+# pretvori v podatkovni niz
+myData = xmlToDataFrame(nodes=getNodeSet(myXML, "//text[@id]"))
+
+
+tb <- as_tibble(myData, .name_repair = "universal")
+
+# tb <- as_tibble(myData) %>%
+# transmute(
+# name = name,
+# price_dollars = parse_number(price),
+# description = description,
+# calories = as.numeric(calories)
+# )
+
+# myData = xmlToDataFrame(myXML, stringsAsFactors = FALSE) %>% 
+#                         mutate_all(~type.convert(., as.is = T))
+```
+
+```{r}
+library(XML)
+# en zapis
+xml_doc = pot[1]
+# prepoznaj xml strukturo in ekstrahiraj
+myXML = xmlParse(xml_doc)
+# pretvori v podatkovni niz
+myData = xmlToDataFrame(myXML,stringsAsFactors = F) %>% 
+  mutate_all(~type.convert(., as.is = T))
+```
+
+https://blog.gtwang.org/r/r-xml-package-parsing-and-generating-xml-tutorial/
+
+
+```{r}
+library(XML)
+# en zapis
+xml_doc = pot[1]
+# prepoznaj xml strukturo in ekstrahiraj
+myXML = xmlParse(xml_doc)
+
+xml_top <- xmlRoot(myXML)
+xml_name <- xmlName(xml_top)
+sml_size <- xmlSize(xml_top)
+names(xml_top[[1]])
+xml_leaf <- xml_top[[1]][["s"]]
+xml_leaf_value <- xmlValue(xml_leaf)
+xml_df <- xmlToDataFrame(xml_top)
+head(xml_df)
+str(xml_df$text)
+# xml_df$text <- as.numeric(levels(xml_df$text))[as.integer(xml_df$text)]
+
+node_list <- xmlToList(xml_top[[1]])
+str(node_list)
+
+
+# pretvori v podatkovni niz
+myData = xmlToDataFrame(nodes=getNodeSet(xml_top, "//text[@id]"))
+
+
+
+
+tb <- as_tibble(myData, .name_repair = "universal")
+
+```
+
+
+
+
+
+```{r}
+library(xml2)
+xml_document <- read_xml(pot[1])
+
+```
+
+
+```{r}
+xmldf <- NULL
+
+for(i in 1:length(pot)){
+  xml_document <- read_xml(pot[i])
+  xml_doc <- as_list(xml_document)
+  xml_df = as_tibble(xml_doc) %>% 
+    unnest_longer(text)
+  litxml = bind_rows(xmldf, xml_df)
+}
+
+litxml %>% head()
+```
+
+```{r}
+str(litxml$text, 1)
+```
+
+
+```{r warning=FALSE, message=FALSE}
+lp_wider = litxml %>%
+  filter(text_id == "s") %>%
+  unnest_wider(text) 
+```
+
+```{r}
+lp_df = lp_wider %>%
+  # 1st time unnest to release the 2-dimension list?
+  unnest(cols = names(.)) %>%
+  # 2nd time to nest the single list in each cell?
+  unnest(cols = names(.)) %>%
+  # convert data type
+  readr::type_convert()
+```
+
+
+
+```{r}
+litxml <- map_dfr(pot, read_xml) %>% as_list()
+
+```
+

@@ -1,0 +1,10 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+# exclude everything
+data/*
+# exception to the rule
+!data/.gitkeep 
+
+/.quarto/

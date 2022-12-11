@@ -1,0 +1,143 @@
+MAINTAINER "CLARIN.SI <info@clarin.si>"		#manatee@clarin
+NAME "Maj68 (Maj 1968 v literaturi)"
+INFO "Korpus literature 1969 Maj68 v2.0 // May68 Corpus of Slovenian 1968 literature v2.0"
+ENCODING "UTF-8"
+LOCALE "sl_SI.UTF-8"
+DEFAULTLOCALE "sl_SI.UTF-8"
+LANGUAGE "Slovenian"
+INFOHREF "http://hdl.handle.net/11356/1491"
+TAGSETDOC "http://nl.ijs.si/ME/V6/msd/html/msd-sl.html#msd.msds-sl"
+
+PATH "/data/manatee-data/maj68/"			#manatee@clarin
+VERTICAL "| zcat /data/vert/maj68.vert.gz"		#manatee@clarin
+
+DOCSTRUCTURE text
+MAXDETAIL 10000
+
+#SIMPLEQUERY '[lc="%s" | lemma_lc="%s"]'
+
+SUBCORPATTRS "text.text_type|text.lang_type,text.modernism|text.visual|text.nstd_level,text.foreign_level|text.foreign_lang,text.monograph|text.year,text.gender|text.birth|text.author,text.title|text.id"
+SHORTREF "=text.title"
+FULLREF "text.id,text.title,text.author,text.facs,text.birth,text.gender,text.text_type,text.lang_type,text.modernism,text.visual,text.nstd_level,text.foreign_lang,text.foreign_level,text.year,text.monograph,text.volnum,text.pages,p.id,s.id"
+
+STRUCTURE text {
+    ATTRIBUTE id {
+      TYPE "UNIQUE"
+    }    
+    ATTRIBUTE title
+    ATTRIBUTE author {
+        MULTIVALUE yes
+        MULTISEP ";"
+    }
+    ATTRIBUTE facs
+    ATTRIBUTE birth {
+        MULTIVALUE yes
+        MULTISEP ";"
+    }
+    ATTRIBUTE gender {
+        MULTIVALUE yes
+        MULTISEP ";"
+    }
+    ATTRIBUTE text_type
+    ATTRIBUTE lang_type
+    ATTRIBUTE modernism
+    ATTRIBUTE visual
+    ATTRIBUTE nstd_level
+    ATTRIBUTE foreign_lang {
+        MULTIVALUE yes
+        MULTISEP ";"
+    }
+    ATTRIBUTE foreign_level
+    ATTRIBUTE year
+    ATTRIBUTE monograph
+    ATTRIBUTE volnum
+    ATTRIBUTE pages
+    ATTRIBUTE wordcount
+}
+STRUCTURE p {
+    ATTRIBUTE id {
+      TYPE "UNIQUE"
+    }    
+    DISPLAYTAG 0
+    DISPLAYBEGIN ""
+    DISPLAYEND " ¶ "
+}
+STRUCTURE gap {
+    ATTRIBUTE reason
+    DISPLAYTAG 0
+    DISPLAYBEGIN ""
+    DISPLAYEND " [...] "
+}
+STRUCTURE lb {
+    DISPLAYTAG 0
+    DISPLAYBEGIN ""
+    DISPLAYEND " // "
+}
+STRUCTURE s {
+    ATTRIBUTE id {
+      TYPE "UNIQUE"
+    }    
+    DISPLAYTAG 0
+}
+STRUCTURE g {
+    DISPLAYTAG 0
+    DISPLAYBEGIN "_EMPTY_"
+}
+
+###Positional attributes
+ATTRIBUTE word
+ATTRIBUTE lc {
+	LABEL	"word (lowercase)"
+	DYNAMIC  "utf8lowercase"
+	DYNLIB   "internal"
+	ARG1     "C"
+	FUNTYPE  "s"
+	FROMATTR "word"
+	DYNTYPE  "index"
+	TRANSQUERY "yes"
+}
+ATTRIBUTE lemma
+ATTRIBUTE lemma_lc {
+	LABEL	"lemma (lowercase)"
+	DYNAMIC  "utf8lowercase"
+	DYNLIB   "internal"
+	ARG1     "C"
+	FUNTYPE  "s"
+	FROMATTR "lemma"
+	TYPE     "index"
+	TRANSQUERY  "yes"
+}
+ATTRIBUTE tag_en {
+	LABEL	"MSD (English)"
+}
+ATTRIBUTE pos {
+	LABEL	"UD PoS tag"
+}
+ATTRIBUTE feats {
+	LABEL	"UD features"
+        MULTIVALUE yes
+        MULTISEP " "
+}
+ATTRIBUTE id {
+	LABEL	"ID of token"
+}
+ATTRIBUTE dep {
+	LABEL	"UD dependency label"
+}
+ATTRIBUTE dep_head_lemma {
+	LABEL	"Lemma of the dependency head"
+}
+ATTRIBUTE dep_head_tag_en {
+	LABEL	"MSD (English) of the dependency head"
+}
+ATTRIBUTE dep_head_pos {
+	LABEL	"UD PoS tag of the dependency head"
+}
+ATTRIBUTE dep_head_feats {
+	LABEL	"UD features of the dependency head"
+        MULTIVALUE yes
+        MULTISEP " "
+}
+ATTRIBUTE dep_head_id {
+	LABEL	"ID of the dependency head"
+}

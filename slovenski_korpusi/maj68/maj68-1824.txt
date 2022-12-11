@@ -1,0 +1,5 @@
+1000 m v zraku
+60 m² oblaka GEFF izbor globina
+3000 cm² na 100 m² padavine GEFF izbor površina
+1000 m, 875 m, 125 m nadmorske višine
+Zagreb GEFF izbor temperature

@@ -1,0 +1,76 @@
+# Uvod {#sec-uvod}
+
+```{r echo=FALSE, fig.keep='all', out.width="100%"}
+knitr::include_graphics("pictures/R_delavnica_shema.png")
+```
+
+`R` je odprtokoden računalniški jezik, znan po številnih statističnih funkcijah in grafičnih zmožnostih, omogoča avtomatizirano obdelavo raznovstnih podatkov (npr. besedil in njihovih sestavnih delov), uporabljamo pa ga lahko tudi za sestavljanje in objavljanje člankov, blogov, spletnih strani in knjig .[^intro-1]
+
+`RStudio` je brezplačen grafični vmesnik za programiranje v računalniškem jeziku `R`. 
+
+
+```{r echo=FALSE, fig.keep='all', out.width="100%", fig.height=8, fig.width=10}
+knitr::include_graphics("pictures/R_delavnica_oris_vsebin.png")
+```
+
+[^intro-1]: Knjiga je bila sestavljeno z orodjem `Quarto` <https://quarto.org/docs/books/>.
+
+-----
+
+Spletni naslov za namestitev programa R:   
+
+https://cloud.r-project.org/bin/windows/base/R-4.2.2-win.exe (Windows)   
+https://cloud.r-project.org/bin/macosx/big-sur-arm64/base/R-4.2.2-arm64.pkg (MacOS)   
+https://cloud.r-project.org/bin/linux/ (Linux)   
+
+Po namestitvi programa R sledi namestitev urejevalnika RStudio:   
+
+https://posit.co/download/rstudio-desktop/ (Windows ali MacOS ali Linux).   
+
+V fonolaboratoriju sta R in RStudio že nameščena. Kdor želi, lahko seveda dela s svojim prenosnikom. Prosim, prej namestite R in RStudio.
+
+Za delo je potreben dostop do medmrežja.   
+
+-----
+
+Uporabljeni piktogrami[^intro-2]:
+
+[^intro-2]: Clipart <https://www.clipartmax.com/>
+
+::: rmdnote
+To je simbol za opredelitev (rmdnote).
+:::
+
+::: rmdtip
+To je simbol za namig ali doatno pojasnilo (rmdtip).
+:::
+
+::: rmdrobot
+To je navodilo za samostojno nalogo (rmdrobot).
+:::
+
+::: rmdrstudio
+To je logotip grafičnega vmesnika `RStudio` (rmdrstudio).
+:::
+
+::: rmdwarning
+To je simbol za svarilo (rmdwarning).
+:::
+
+::: rmderror
+To je logotip za napako pri sestavljanju skripta (rmderror).
+:::
+
+```{r include=FALSE}
+# automatically create a bib database for R packages
+knitr::write_bib(c(
+  .packages(), "tidyverse", "tidytext", "janitor", "scales", "widyr", 
+             "quanteda", "quanteda.textplots", "quanteda.textstats",
+             "wordcloud2", "ggwordcloud", "udpipe", "syuzhet",
+             "ggtext", "corpustools", "xml2", "XML", "rvest", 
+             "readtext", "readxl", "writexl", "xlsx", "stopwords", 
+             "xmlconvert", "lubridate"), 
+  'packages.bib')
+```
+
+packages = c()

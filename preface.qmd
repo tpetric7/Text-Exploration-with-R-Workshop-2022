@@ -1,0 +1,5 @@
+# Predgovor {#sec-predgovor .unnumbered}
+
+Pred vami je vzorec knjige, ki uvaja v delo z računalniškim jezikom *R*. 
+
+`Quarto Book` <https://quarto.org/>

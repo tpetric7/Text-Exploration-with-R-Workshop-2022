@@ -1,0 +1,21 @@
+                     Corpus of 1968 Slovenian literature
+                                 Maj68 2.0
+
+       Citation, documentation, download, and licence available from
+                      http://hdl.handle.net/11356/1491
+
+ @misc{11356/1491,
+ title = {Corpus of 1968 Slovenian literature Maj68 2.0},
+ author = {Juvan, Marko and {\v Z}ejn, Andrejka and {\v S}orli, Mojca and Mandi{\'c}, Lucija and Toma{\v z}in, Andrej and Je{\v z}, Andra{\v z} and Bal{\v z}alorsky Anti{\'c}, Varja and Erjavec, Toma{\v z}},
+ url = {http://hdl.handle.net/11356/1491},
+ note = {Slovenian language resource repository {CLARIN}.{SI}},
+ copyright = {Creative Commons - Attribution-{NonCommercial}-{ShareAlike} 4.0 International ({CC} {BY}-{NC}-{SA} 4.0)},
+ issn = {2820-4042},
+ year = {2022} }
+
+
+This directory contains the plain-text version of the corpus (derived
+from the source TEI). The text files contain one paragraph per line.
+Also included is maj68 meta-data TSV files.
+
+

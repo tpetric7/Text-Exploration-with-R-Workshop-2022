@@ -1,0 +1,112 @@
+project:
+  type: book
+  output-dir: docs
+
+book:
+  # cover-image: "pictures/Diapozitiv1.PNG"
+  # cover-image-alt: |
+    # Textlinguistik - Einführung in Textmuster und Textsorten
+  title: "Delavnica<br>za delo z lastnimi besedilnimi zbirkami<br>v računalniškem jeziku R"
+  # title-block-banner: true
+  # title-block-banner-color: "darkgreen"
+  subtitle: "Center za jezikoslovne raziskave<br>Filozofske fakultete<br>Univerze v Mariboru"
+  author: "Teodor Petrič"
+  #affiliation-title: "Univerza v Mariboru<br>Universität Maribor"
+  date: "2022-12-12"
+  chapters:
+    - index.qmd
+    - preface.qmd
+    - intro.qmd
+    - part: "Prvi koraki"
+      chapters: 
+        - D1.qmd
+        - D2.qmd
+    - part: "Že tečemo"
+      chapters: 
+        - D3.qmd
+        - D4.qmd
+    - summary.qmd
+    - references.qmd
+  page-navigation: true
+  sidebar: 
+    collapse-level: 5
+    pinned: true
+  search: true
+  reader-mode: true
+  repo-url: https://tpetric7.github.io/phonology-german-2022/
+  repo-actions: [edit, issue]
+  downloads: [pdf, epub, docx]
+  sharing: [twitter, facebook]
+  page-footer: 
+    border: true
+    background: light
+    left: "Delavnica Centra za jezikoslovne raziskave, Filozofska fakulteta, Univerza v Mariboru 2022, Teodor Petrič" 
+    right: 
+      - icon: github
+        href: https://github.com/tpetric7/
+      - icon: twitter 
+        href: https://twitter.com/TPetric 
+
+bibliography: references.bib
+
+comments: 
+  hypothesis: true
+
+execute: 
+  warning: false
+  message: false
+  echo: true
+  error: true
+
+highlight-style: arrow
+
+format:
+  html:
+    theme:
+      light: flatly
+      dark: darkly
+    css: [style.css, TMwR.css]
+    scss: [colors.scss]
+    # scss: [r4ds.scss]
+    # page-layout: full
+    toc: true
+    toc-depth: 5
+    toc-location: right
+    code-fold: true
+    code-summary: "Show the code"
+    code-tools: true
+    code-copy: hover
+    code-overflow: wrap
+    number-sections: true
+    number-depth: 5
+    callout-appearance: default
+    callout-icon: true
+    citations-hover: true
+    footnotes-hover: true
+    fig-width: 8
+    fig-height: 6
+    fig-align: left
+    fig-responsive: true
+    fig-cap-location: bottom
+    tbl-cap-location: top
+    lang: en
+    self-contained: false
+    anchor-sections: true
+    smooth-scroll: true
+    hypothesis: true
+  pdf:
+    documentclass: scrbook # scrreprt
+    keep-tex: true
+    include-in-header: 
+      text: |
+        \usepackage{makeidx}
+        \makeindex
+    include-after-body: 
+      text: |
+        \printindex
+  epub:
+    cover-image: "pictures/R_delavnica_naslovna_slika.png"
+  docx:
+    reference-doc: custom-reference.docx
+
+editor: source

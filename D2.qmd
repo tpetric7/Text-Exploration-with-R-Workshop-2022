@@ -1,0 +1,39 @@
+# Quanteda korpus {#sec-delavnica2}
+
+```{r}
+#| warning: false
+#| message: false
+
+packages = c("tidyverse", "tidytext", "janitor", "scales", "widyr", 
+             "quanteda", "quanteda.textplots", "quanteda.textstats",
+             "wordcloud2", "ggwordcloud", "udpipe", "syuzhet",
+             "ggtext", "corpustools", "xml2", "XML", "rvest", 
+             "readtext", "readxl", "writexl", "xlsx", "stopwords", 
+             "xmlconvert", "lubridate")
+
+# Install packages not yet installed
+installed_packages <- packages %in% rownames(installed.packages())
+if (any(installed_packages == FALSE)) {
+  install.packages(packages[!installed_packages])
+}
+
+# Packages loading
+invisible(lapply(packages, library, character.only = TRUE))
+```
+
+Knjižnica `quanteda` ima nekaj zelo priročnih funkcij za prikaz konkordance in različne grafike. 
+
+S knjižnico `quanteda` bomo ustvarili korpus (`corpus`), ga razdrobili na manjše jezikovne enote (`tokens`) in pripravili matriko (`dfm`), ki vključuje besedila v vrsticah in besede (oz. tokens) v stolpcih.  
+
+To so gradniki, ki jih potrebujemo za statistične in grafične funkcije v knjižnici `quanteda`.
+
+```{r}
+df <- read_csv2("data/slovenska_literatura_1968.csv")
+corp <- corpus(df, text_field = "text", docid_field = "doc_id")
+toks <- tokens(corp, remove_numbers = TRUE, remove_punct = T,
+               remove_symbols = T, remove_url = T, 
+               remove_separators = FALSE)
+mat <- dfm(toks, padding = TRUE)
+
+```
+

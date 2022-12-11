@@ -1,0 +1,4 @@
+Šrot je dolžan Hočevarju dva jurja, Hočevar je dolžan dva jurja Deklevi, Dekleva pa je spet Šrotu dolžan dva jurja. 1. runda: Šrot dá jurja Hočevarju, tako da mu je dolžan le še tisoč dinarjev. Isti denar Hočevar dá Deklevi in zniža svoj dolg pri njem prav tako na tisoč dinarjev. Dobljeni denar Dekleva daje Šrotu in tako likvidira polovico svojega dolga. Na koncu je vsak dolžan le še tisoč dinarjev, in Šrot ima v rokah še en tisočak.
+2. runda. Šrot dá jurja Hočevarju, Hočevar Deklevi, Dekleva pa Šrotu. Tako da noben več ni dolžan nobenemu.
+Pogoj za uspešnost formule je fizična prisotnost vseh upnikov in dolžnikov (po možnosti v uredništvu Tribune), da ne bi likvidnosti prej odklenkalo v Šumiju.
+Aktualni list Tribuna gotovo berejo v ZIS, RIS, Gospodarski zbornici, bankah. Za pomoč pri izdelavi elaborata pa se zahvaljujemo: profesorjem: Nešiću, Dintinjani, Merharju in Černetu.
