@@ -375,4 +375,5 @@ Priljubljen in preprost način upodobitve pogostosti besed je besedni oblak. Lep
 wordcloud2(b_stetje)
 ```
 
+
 Gornji besedni oblak vsebuje besedne oblike (types). Informativnejši bi bil, če bi besedne oblike lematizirali in prikazovali slovarske enote.

@@ -33,7 +33,7 @@ book:
     pinned: true
   search: true
   reader-mode: true
-  repo-url: https://tpetric7.github.io/phonology-german-2022/
+  repo-url: https://github.com/tpetric7/Text-Exploration-with-R-Workshop-2022/
   repo-actions: [edit, issue]
   downloads: [pdf, epub, docx]
   sharing: [twitter, facebook]
