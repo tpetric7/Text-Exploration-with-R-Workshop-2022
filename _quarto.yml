@@ -60,6 +60,7 @@ execute:
 
 highlight-style: arrow
 
+prefer-html: true
 format:
   html:
     theme:

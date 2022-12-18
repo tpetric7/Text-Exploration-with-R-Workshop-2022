@@ -1,6 +1,12 @@
 # Na začetku je bil tidyverse {#sec-delavnica1}
 
 ```{r}
+#| include: false
+# install.packages("knitr")
+```
+
+
+```{r}
 #| echo: false
 #| fig-keep: 'all'
 #| out-width: "100%"
@@ -12,32 +18,35 @@ knitr::include_graphics("pictures/2020_27_Xmen_annotated.png")
 Med prvim srečanjem uporabljamo tole jezikovno gradivo s spletnega portala [clarin](www.clarin.si), @11356/1491 :\
 Juvan, Marko; et al., 2022, Corpus of 1968 Slovenian literature Maj68 2.0, Slovenian language resource repository CLARIN.SI, ISSN 2820-4042, http://hdl.handle.net/11356/1491.
 
+Tale korpus je tudi integriran v [NoSketchEngine](http://www.clarin.si/noske/). Nekaj osnovnih informacij o gradivu najdemo na povezavi:  
+<https://www.clarin.si/noske/run.cgi/corp_info?corpname=maj68&struct_attr_stats=1>
+
+
 ## Paketki
 
-V sledečem programskem odstavku (program chunk) preverjamo, ali so navedene programske knjižnice (library) že nameščene. Če niso, jih program namesti in naloži v računalniški spomin (RAM).
+Programski zapis (skript) vsebuje *navadno besedilo* in *programske odstavke* (program chunk), v katere vpisujemo ali prilepimo programske korake. Pri orientaciji v našem programskem zapisu nam pomaga razčlemba (*Outline*). 
+
+*Programski odstavek* sprožimo s pritiskom na *zeleni trikotnik* na vrhu programskega odstavka ali z bližnjico `Ctrl + Shift + Enter`. *Posamezne programske korake* znotraj odstavka lahko označimo z miško ali tipkovnico in jih izvedemo z bližnjico `Ctrl + Enter`. 
+
+*Bližnjice* so navedene v menuju *Code*. Tudi od tam so dosegljivi osnovni programski ukazi.   
+
+V sledečem programskem odstavku (program chunk) nalagamo neprivzete knjižnice (`library`) v računalniški spomin (RAM). Če jih pozabimo naložiti v pomnilnik, zaželene dodatne programske funkcije ne bodo na razpolago.  
 
 ```{r}
 #| warning: false
 #| message: false
 
-packages = c("tidyverse", "tidytext", "janitor", "scales", "widyr", 
-             "quanteda", "quanteda.textplots", "quanteda.textstats",
-             "wordcloud2", "ggwordcloud", "udpipe", "syuzhet",
-             "ggtext", "corpustools", "xml2", "XML", "rvest", 
-             "readtext", "readxl", "writexl", "xlsx", "stopwords", 
-             "xmlconvert", "lubridate")
-
-# Install packages not yet installed
-installed_packages <- packages %in% rownames(installed.packages())
-if (any(installed_packages == FALSE)) {
-  install.packages(packages[!installed_packages])
-}
-
-# Packages loading
-invisible(lapply(packages, library, character.only = TRUE))
+library(tidyverse)
+library(tidytext)
+library(lubridate)
+library(readtext)
+library(quanteda)
+library(readxl)
+library(writexl)
+library(wordcloud2)
 ```
 
-Posamezno knjižnico namestimo takole:
+Če potrebujemo še kakšno dodatno knjižnico, jo namestimo tako kot v naslednjem programskem odstavku s funkcijo `install.packages()` ali v menuju v desnem panelu (Files, Packages, Help, ...):
 
 ```{r}
 #| eval: false
@@ -45,7 +54,7 @@ Posamezno knjižnico namestimo takole:
 install.packages("ggtext")
 ```
 
-Knjižnico naložimo v pomnilnik takole:
+Vsako dodatno knjižnico naložimo v pomnilnik z ukazom `library()`:
 
 ```{r}
 #| include: true
@@ -55,14 +64,26 @@ library(ggtext)
 
 ## Odpiranje besedilnih datotek
 
-Optimalno je, če so vse besedilne datoteke v isti mapi. Potem lahko naložimo vsa besedila z enim ukazom, tj. `readtext()`, v pomnilnik.
+Optimalno je, če so vse besedilne datoteke v isti mapi. Potem lahko naložimo vsa besedila z enim ukazom, tj. `readtext()`, v pomnilnik. 
+
+Funkcija `readtext()` podpira tudi nekatere druge datotečne oblike (npr. *csv*, *pdf* in Wordove datoteke). 
 
 ```{r}
-txt <- readtext("slovenski_korpusi/maj68/*.txt")
+txt <- readtext("slovenski_korpusi/maj68/*.txt", 
+                encoding = "UTF-8")
 txt
+
 ```
 
 Vsako besedilo ima svoj *doc_id* in je zajeto v podatkovnem nizu (tabeli), ki smo ga poimenovali *txt*.
+
+Ogled tabele v vgrajenem brskalniku: 
+
+```{r}
+#| eval: false
+view(txt)
+```
+
 
 Kdo je napisal ta besedila? Odgovor se skriva podatkovnem nizu, ki ga imamo v isti mapi in ga odpremo s funkcijo `read_tsv()`, saj so stolpci medsebojno ločeni s tabulatorjem (`\t`):
 
@@ -71,7 +92,49 @@ public <- read_tsv("slovenski_korpusi/maj68/maj68-publics.tsv")
 head(public) %>% rmarkdown::paged_table()
 ```
 
-Stolpec z imenom *...27* je prazen, zato ga bomo odstranili.
+Za *odpiranje podatkovnih nizov ali tabel* imamo še celo kopico drugih ukazov ali možnost izbiranja prek menuja, ki omogoča tudi kopiranje programske funkcije:   
+
+<https://cran.r-project.org/doc/manuals/R-data.html>
+
+```{r}
+#| eval: false
+#| include: true
+sami_izberemo_datoteko <- read.table(file.choose(), 
+                                     sep = "\t", dec = ",",
+                                     fileEncoding = "UTF-8")
+```
+
+
+Ukazi programske zbirke `tidyverse` imajo poenoteno *sintakso*: 
+prvi argument je ime podatkovnega niza ali tabele (*data*), potem sledijo morebitni drugi argumenti (odvisno od posamezne funkcije): 
+npr. `read_csv`("ime_datoteke_na_disku_ali_spletu.csv")  
+`write_csv`(tabela_v_pomnilniku, "ime_datotke.csv")  
+`select`(tabela_v_pomnilniku, ime_spremenljivke)
+`filter`(tabela_v_pomnilniku, ime_spremenljivke == "Prešeren")  
+`ggplot`(tabela_v_pomnilniku, aes(x, y))  ...
+
+```{r}
+#| eval: false
+select(public, author_disp)
+```
+
+
+Simbol `%>%` (na slovenski tipkovnici bližnjica `ctrl + shift + M`) pomeni *nadaljuj z naslednjim ukazom in prevzemi vse količine iz prejšnjega koraka*. 
+
+```{r}
+#| eval: false
+public %>% select(author_disp)
+```
+
+Simbol za dolar `$` se tudi uporablja za izbiranje spremenljivke: 
+
+```{r}
+#| eval: false
+public$author_disp
+```
+
+
+V naši tabeli s slovenskimi leposlovnimi deli iz 1960ih let je stolpec z imenom *...27*. Stolpec je prazen, zato ga bomo odstranili.
 
 ```{r}
 public <- public %>% 
@@ -79,9 +142,10 @@ public <- public %>%
   select(-27)
 ```
 
+
 ## Združitev tabel
 
-Obe tabeli lahko združimo, saj imamo *doc_id* v tabeli *txt* (z besedili) in *id* v tabeli *public*. Za združevanje morata imeti oba stolpca isto ime. Zato ga bomo v tabeli *public* ustrezno prilagodili in v vrsticah tabele *txt*odstranili pripono *txt* v imenih posameznih besedil.
+Obe tabeli lahko združimo, saj imamo *doc_id* v tabeli *txt* (z besedili) in *id* v tabeli *public*. Za združevanje morata imeti oba stolpca isto ime. Zato ga bomo v tabeli *public* ustrezno prilagodili in v vrsticah tabele *txt*odstranili pripono *.txt* v imenih posameznih besedil.
 
 ```{r}
 public <- public %>% 
@@ -106,10 +170,11 @@ Podatkovni niz lahko shranimo na disku. Možni so različne oblike. Najustreznej
 
 ```{r}
 # golo besedilo, stolpci ločeni s podpičji
-write_csv2(df, "data/slovenska_literatura_1968.csv")
+write.csv2(df, "data/slovenska_literatura_1968.csv")
+# write_csv2() je alternativna funkcija iz zbirke tidyverse 
 ```
 
-Mnogi redno uporabljajo `Excel`, ki zahteva licenco. Potencialna slabost je, da `Excel` čez 10 let ne bo več podpiral starega datotečnega formata. Druga slabost je, da `Excel` podpira le 32767 znakov v celici.
+Mnogi redno uporabljajo `Excel`, ki zahteva licenco. Potencialna slabost je, da `Excel` čez nekaj let mogoče ne bo več podpiral starega datotečnega formata. Druga morebitna slabost je, da `Excel` podpira le 32767 znakov v celici. Najbolj varno je trajno shranjevanje v obliki golega besedila, saj tako datoteko lahko odpremo z vsakim programom. 
 
 ```{r}
 #| eval: false
@@ -124,7 +189,7 @@ write.xlsx2(df, "data/slovenska_literatura_1968.xlsx")
 
 ## Izbor literarnih del
 
-Izbrati želimo le prozna dela. Katere besedilne zvrsti najdemo v stolpcu *text_type*?
+Katere besedilne zvrsti najdemo v stolpcu *text_type*?
 
 ```{r}
 df %>% 
@@ -133,6 +198,8 @@ df %>%
   pull()
 ```
 
+Izbrati želimo le prozna dela. 
+
 ```{r}
 proza <- df %>% 
   filter(text_type == "proza")
@@ -140,30 +207,35 @@ proza <- df %>%
 dim(proza)
 ```
 
-V tabeli z imenom *proza* je 342 vrstic (tj. proznih del) in 27 stolpcev.
+V tabeli z imenom *proza* je 342 vrstic (tj. proznih del) in po združitvi tabel 27 stolpcev.
 
 ## Dodajanje stolpcev
 
-S funkcijo `mutate()` dodajamo nove stolpce ali spremenimo vsebino stolpcev.
+S funkcijo `mutate()` dodajamo nove stolpce ali spreminjamo vsebino stolpcev.
 
-Kako dolga so besedila? Koliko znakov, pojavnic (tokens) in različnic (types) imajo besedila?
+Kako dolga so besedila? Koliko znakov, pojavnic (tokens) in različnic (types) imajo besedila? Za prvo oceno uporabljajo funkcije knjižnice `quanteda`. 
 
 ```{r}
 proza <- proza %>% 
+  # dodajamo tri stolpce
   mutate(st_znakov = nchar(text),
          tokens = ntoken(text),
          types = ntype(text))
 
 proza %>% 
+  # izbor stolpcev za prikaz
   select(doc_id, title, st_znakov, tokens, types, author_disp) %>% 
+  # razvrščanje dokumentov od najdaljšega do najkrajšega
   arrange(-st_znakov) %>% 
+  # prikaži samo 10 prvih dokumentov
   head(10) %>% 
+  # za preglednejši izpis tabele
   rmarkdown::paged_table()
 ```
 
 Štetje znakov, pojavnic in različnic vključuje tudi ločila in drugo nebesedno gradivo. Tega večinoma ne želimo.
 
-Poenotimo in dodajmo še stolpec z datumi.
+Poenotimo in dodajmo še stolpec z datumi za prikaz na časovnici.
 
 ```{r}
 proza <- proza %>% 
@@ -188,24 +260,30 @@ proza %>%
 library(lubridate)
 
 proza %>% 
+  # preštej koliko naslovov glede na datum
   count(date, name = "titles") %>% 
+  # nariši diagram
   ggplot(aes(date, titles)) +
+  # črtni diagram
   geom_segment(aes(x = date, xend = date, 
                    y = 0, yend = titles), 
                alpha = 0.5, color = "darkgreen") +
+  # imena osi
   labs(x = "", y = "")
 
 ```
 
 ## Iskanje besednih oblik
 
-Funkcija `str_detect()` nam poišče znake ali besede v jezikovnem gradivu, funkicja `filter()` pa izloči nerelevantne vrstice v tabeli. *Regularni izrazi* (*regex*) nam pomagajo pri oženju poizvedbenih meril. V naslednjem programskem odstavku je prikazana uporaba regex. Število zadetkov se nanaša na število najdenih dokumentov.
+Funkcija `str_detect()` nam poišče znake ali besede v jezikovnem gradivu, funkicja `filter()` pa omejuje število vrstic v tabeli. *Regularni izrazi* (*regex*) nam pomagajo pri oženju poizvedbenih meril. V naslednjem programskem odstavku je prikazana uporaba regex. Število zadetkov se nanaša na število najdenih dokumentov.
 
 ```{r}
 proza %>% 
+  # poišči vzorec in omejuj izbor vrstic
   filter(str_detect(text, "dober.+dan")) %>% 
+  # izberi stolpce za prikaz
   select(doc_id, author_disp, text) %>% 
-  # 16 zadetkov
+  # preštej: 16 zadetkov
   count()
 
 # samo besedi dober in dan, vmes pa je lahko en ali več znakov
@@ -218,7 +296,12 @@ proza %>%
 
 ## Besede
 
-Seznam besed (ali drugih manjših besedilnih enot) lahko ustvarimo na več načinov. V sledečem programskem odstavku uporabljamo funkcijo `unnest_tokens()`.
+Seznam besed (ali drugih manjših besedilnih enot) lahko ustvarimo na več načinov. V sledečem programskem odstavku uporabljamo funkcijo `unnest_tokens()` iz knjižnice `tidytext`.  
+
+V funkciji `unnest_tokens()` najprej navedemo izhodno obliko (npr. besedo), vhodno gradivo (npr. besedilo) na tretjem mestu vrsto besedilne enote (npr. "words"). 
+
+Besedilo lahko razdelimo na naslednje manjše enote:   
+"words" (default), "characters", "character_shingles", "ngrams", "skip_ngrams", "sentences", "lines", "paragraphs", "regex", "tweets" (tokenization by word that preserves usernames, hashtags, and URLS ).  
 
 ```{r}
 besede <- proza %>% 
@@ -227,7 +310,7 @@ besede <- proza %>%
 dim(besede)
 ```
 
-Podatkovni niz z imenom *besede* je dolg 704956 vrstic (tj. število pojavnic) in 30 stolpcev.
+Podatkovni niz z imenom *besede* je dolg 704956 vrstic (tj. število pojavnic) in 30 stolpcev. V vsaki vrstici je ena besedna oblika. 
 
 ### Štetje besed
 
@@ -243,6 +326,17 @@ V tabeli *besede* je skoraj 705000 pojavnic. Toliko je tudi vrstic v tabeli, kar
 ```{r}
 nrow(besede)
 ```
+
+Koliko je povedi?
+
+```{r}
+stavki <- proza %>% 
+  unnest_tokens(poved, text, "sentences")
+
+dim(stavki)
+```
+
+V proznih delih je 51613 povedi.  
 
 Katere besedne oblike (*types*) se v proznih delih najpogosteje pojavljajo? Za šteje uporabljamo funkcijo `count()`.
 
@@ -261,7 +355,9 @@ V vsebinskih analizah želimo na vrhu besednega seznama videti predvsem besede, 
 
 ```{r}
 stop_tidy <- stopwords(language = "sl", source = "stopwords-iso") %>% 
+  # iz seznama naredi tabelo
   as_tibble() %>% 
+  # preimenuj stolpec "value"
   rename(word = value)
 
 dim(stop_tidy)
@@ -338,14 +434,14 @@ avtorji_select <- b_avtorji %>%
   filter(author_disp != "[Neznani avtor]") %>% 
   # imena ne smejo biti podvojena
   distinct(author_disp) %>% 
-  # omejuj število avtorjev
+  # omejuj število avtorjev za prikaz
   head(9) %>% 
-  # potegni imenski niz iz tabelarnega stolpca
+  # potegni seznam imen iz stolpca
   pull(author_disp)
 
 ```
 
-Upodobitev: 
+*Stolpčni diagram* najpogostejših besednih oblik pri devetih avtorjih (po odstranitvi najkrajših besed): 
 
 ```{r}
 b_avtorji %>% 
@@ -365,11 +461,11 @@ b_avtorji %>%
   theme(legend.position = "none")
 ```
 
-Če gornji ukrepi niso dovolj učinkoviti, so možni bolj prefinjeni postopki. Med priljubljenimi so *lematizacija*, označevanje besednih oblik (*POS tagging*), term frequency inverse document frequency (*tf_idf*), določevanje ključnih besed (*keywords*) ali drugi postopki.
+Če gornji ukrepi za omejevanje besednega gradiva niso bili dovolj učinkoviti, so možni bolj prefinjeni postopki. Med priljubljenimi so *lematizacija*, označevanje besednih oblik (*POS tagging*), term frequency inverse document frequency (*tf_idf*), določevanje ključnih besed (*keywords*) ali drugi postopki.
 
 ### Besedni oblak
 
-Priljubljen in preprost način upodobitve pogostosti besed je besedni oblak. Lepe oblake riše funkcija `wordcloud2()`, ki privzeto pričakuje dva stolpca: besedo in pogostnost za vsako besedo.
+Priljubljen in preprost način upodobitve pogostosti besed je besedni oblak. Lepe barvite oblake riše funkcija `wordcloud2()`, ki privzeto pričakuje tabelo z dvema stolpcema: besedo in pogostnost besede.
 
 ```{r}
 wordcloud2(b_stetje)

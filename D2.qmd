@@ -1,39 +1,328 @@
 # Quanteda korpusne funkcije {#sec-delavnica2}
 
+## Nalaganje knjižnic
+
 ```{r}
 #| warning: false
 #| message: false
 
-packages = c("tidyverse", "tidytext", "janitor", "scales", "widyr", 
-             "quanteda", "quanteda.textplots", "quanteda.textstats",
-             "wordcloud2", "ggwordcloud", "udpipe", "syuzhet",
-             "ggtext", "corpustools", "xml2", "XML", "rvest", 
-             "readtext", "readxl", "writexl", "xlsx", "stopwords", 
-             "xmlconvert", "lubridate")
+library(readtext)
+library(quanteda)
+library(quanteda.textstats)
+library(quanteda.textplots)
+library(tidyverse)
+library(tidytext)
+library(wordcloud2)
+library(udpipe)
+library(janitor)
+library(scales)
+library(widyr)
+library(syuzhet)
+library(corpustools)
+library(lubridate)
+library(readxl)
+library(writexl)
 
-# Install packages not yet installed
-installed_packages <- packages %in% rownames(installed.packages())
-if (any(installed_packages == FALSE)) {
-  install.packages(packages[!installed_packages])
-}
-
-# Packages loading
-invisible(lapply(packages, library, character.only = TRUE))
 ```
 
-Knjižnica `quanteda` ima nekaj zelo priročnih funkcij za prikaz konkordance in različne grafike. 
+## Odpiranje tabele
+
+```{r}
+# iz prejšnje seje: csv datoteka z besedili in metapodatki
+df <- read_csv2("data/slovenska_literatura_1968.csv") %>% 
+  select(-`...1`, -n)
+```
+
+## Izbor proznih del
+
+```{r}
+names(df)
+```
+
+```{r}
+df_dolzina <- df %>% 
+  filter(author_disp != "[Neznani avtor]") %>% 
+  filter(text_type == "proza") %>% 
+  group_by(title_disp, author_disp) %>% 
+  summarise(dolzina = ntoken(text)) %>% 
+  arrange(-dolzina)
+```
+```{r}
+df_dolzina %>% 
+  head(10) %>% 
+  rmarkdown::paged_table()
+```
+
+```{r}
+df_naslova <- df_dolzina[c(8, 9), ] %>% 
+  pull(title_disp)
+df_naslova
+```
+
+```{r}
+df_izbor <- df %>% 
+  filter(title_disp %in% df_naslova)
+
+df_izbor %>% rmarkdown::paged_table()
+```
+
+
+
+## Quanteda korpus
+
+Knjižnica `quanteda` ima nekaj zelo priročnih in hitrih funkcij za prikaz konkordanc in diagramov. 
 
 S knjižnico `quanteda` bomo ustvarili korpus (`corpus`), ga razdrobili na manjše jezikovne enote (`tokens`) in pripravili matriko (`dfm`), ki vključuje besedila v vrsticah in besede (oz. tokens) v stolpcih.  
 
-To so gradniki, ki jih potrebujemo za statistične in grafične funkcije v knjižnici `quanteda`.
+V sledečem programskem odstavku so gradniki, ki jih potrebujemo za statistične in grafične funkcije knjižnice `quanteda`.
 
 ```{r}
-df <- read_csv2("data/slovenska_literatura_1968.csv")
-corp <- corpus(df, text_field = "text", docid_field = "doc_id")
+corp <- corpus(df_izbor, 
+               text_field = "text", docid_field = "doc_id")
 toks <- tokens(corp, remove_numbers = TRUE, remove_punct = T,
                remove_symbols = T, remove_url = T, 
                remove_separators = FALSE)
 mat <- dfm(toks, padding = TRUE)
+
+```
+## Besedilna evidenca
+
+```{r message=FALSE, warning=FALSE}
+evidenca <- textstat_summary(corp)
+evidenca %>% rmarkdown::paged_table()
+```
+
+```{r message=FALSE, warning=FALSE}
+povzetek <- summary(corp)
+povzetek
+```
+
+## Seznam nezaželenih besed
+
+```{r}
+stop_sl <- stopwords(language = "sl", source = "stopwords-iso")
+
+stop_sl <- c(stopwords(language = "sl", 
+                       source = "stopwords-iso"), "\n", " ")
+
+```
+
+Odstranjujemo. 
+
+```{r}
+besede <- tokens_select(toks, pattern = stop_sl, 
+                       selection = "remove", padding = FALSE)
+```
+
+
+## Kwic konkordance
+
+```{r}
+kwic(toks, pattern = c("ura", "tišina"))
+
+kwic(toks, pattern = c("ur*", "tišin*"), 
+     case_insensitive = TRUE) %>% 
+  as_tibble() %>% 
+  rmarkdown::paged_table()
+
+```
+
+```{r}
+kwic(toks, "*ica", valuetype = "glob", 
+     case_insensitive = FALSE) %>% 
+  as_tibble() %>% 
+  group_by(docname) %>% 
+  count(keyword, sort = TRUE)
+```
+
+```{r}
+kwic(toks, pattern = c("\\b.*[nl]ica\\b"),
+     valuetype = "regex", 
+     case_insensitive = FALSE) %>% 
+  as_tibble() %>% 
+  rmarkdown::paged_table()
+```
+
+## Pogostnost
+
+```{r}
+matrika = dfm_select(mat, selection = "remove", 
+                     pattern = stop_sl, padding = FALSE)
+matrika
+```
+
+maj68-0073	Vladimir Kavčič (1932)	
+maj68-0147	Tone Partljič (1940)
+
+```{r}
+pogostnost <- textstat_frequency(matrika, groups = c("maj68-0073", "maj68-0147"))
+
+pogostnost <- textstat_frequency(matrika, groups = c("Kavčič", "Partljič"))
+
+pogostnost %>% 
+  group_by(group) %>% 
+  filter(str_detect(feature, "^[:alpha:]")) %>% 
+  slice_head(n = 5) %>% 
+  rmarkdown::paged_table()
+
+```
+
+```{r}
+pogostnost %>% 
+  group_by(group) %>% 
+  filter(str_detect(feature, "^[:alpha:]")) %>% 
+  slice_head(n = 5) %>%
+  pivot_wider(names_from = feature, values_from = frequency,
+              values_fill = 0) %>% 
+  rmarkdown::paged_table()
+
+```
+
+```{r}
+pogostnost %>% 
+  filter(str_detect(feature, "^[:alpha:]")) %>% 
+  slice_max(order_by = frequency, n = 20) %>% 
+  mutate(feature = reorder_within(feature, frequency, frequency, sep = ": ")) %>%
+  # ggplot(aes(frequency, reorder(feature, frequency))) +
+  ggplot(aes(frequency, feature)) +
+  geom_col(fill="steelblue") +
+  labs(x = "Frequency", y = "") +
+  facet_wrap(~ group, scales = "free")
+
+```
+
+
+## Kolokacije
+
+```{r}
+coll_2 = textstat_collocations(besede, size = 2:5, tolower = TRUE) # naredi male črke !
+
+coll_2 %>% 
+  rmarkdown::paged_table()
+
+```
+
+
+```{r}
+rad <- coll_2 %>% 
+  filter(str_detect(collocation, "rad$"))
+rad %>% rmarkdown::paged_table()
+
+```
+
+```{r}
+besede_caps = tokens_select(besede, pattern = "^[A-Z]", 
+                                valuetype = "regex", 
+                                case_insensitive = FALSE, 
+                                padding = TRUE)
+
+coll_caps2 = textstat_collocations(besede_caps, size = 2, 
+                                   tolower = FALSE, 
+                                   min_count = 2)
+
+coll_caps2 %>% rmarkdown::paged_table()
+
+```
+
+
+## Položaj v besedilu
+
+```{r}
+kwic_majda = kwic(besede, pattern = "Majda")
+textplot_xray(kwic_majda)
+
+```
+
+## Slovarska raznolikost besedil
+
+```{r}
+textstat_lexdiv(matrika, measure = "all") %>% 
+  rmarkdown::paged_table()
+```
+
+## Podobnost besedil
+
+```{r}
+df_naslovi <- df_dolzina[c(2, 8, 9), ] %>% 
+  pull(title_disp)
+df_naslovi
+```
+
+```{r}
+df_izbor3 <- df %>% 
+  filter(title_disp %in% df_naslovi)
+
+df_izbor3 %>% rmarkdown::paged_table()
+```
+
+```{r}
+corp3 <- corpus(df_izbor3, 
+               text_field = "text", docid_field = "doc_id")
+toks3 <- tokens(corp3, remove_numbers = TRUE, remove_punct = T,
+               remove_symbols = T, remove_url = T, 
+               remove_separators = FALSE)
+mat3 <- dfm(toks3, padding = TRUE)
+
+```
+
+```{r}
+textstat_simil(mat3, method = "cosine", margin = "documents")
+```
+
+```{r}
+# plot a dendrogram after converting the object into distances
+dist1 = textstat_dist(mat3, method = "euclidean", 
+                      margin = "documents")
+plot(hclust(as.dist(dist1)))
+```
+
+
+## Ključne besede
+
+```{r message=FALSE, warning=FALSE}
+df_izbor
+
+key_kavcic <- textstat_keyness(matrika, target = "maj68-0073")
+key_kavcic %>% rmarkdown::paged_table()
+
+key_partljic <- textstat_keyness(matrika, target = "maj68-0147")
+key_partljic %>% rmarkdown::paged_table()
+
+```
+
+```{r message=FALSE, warning=FALSE}
+textplot_keyness(key_kavcic)
+textplot_keyness(key_partljic)
+
+```
+
+
+## Razumljivost besedila
+
+```{r}
+textstat_readability(corp, measure = c("Flesch", "Flesch.Kincaid", "FOG", "FOG.PSK", "FOG.NRI")) %>% 
+  rmarkdown::paged_table()
+```
+
+## Kookurenčna mreža (FCM)
+
+```{r}
+dfm_tags <- dfm_select(
+  matrika[2,], 
+  pattern = (c("jože", "tomaž", "beti", "veronika", 
+               "majda", "miro", "danica", "rekel", 
+               "železnik", "vino")))
+toptag <- names(topfeatures(dfm_tags, 50))
+head(toptag)
+```
+
+
+```{r}
+# Construct feature-cooccurrence matrix (fcm) of tags
+fcm_tom <- fcm(matrika[2,]) # besedilo 2 je tom.txt
+head(fcm_tom)
+top_fcm <- fcm_select(fcm_tom, pattern = toptag)
+textplot_network(top_fcm, min_freq = 0.6, edge_alpha = 0.8, edge_size = 5)
 
 ```
 

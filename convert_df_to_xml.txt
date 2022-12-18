@@ -1,0 +1,142 @@
+https://cran.r-project.org/web/packages/xmlconvert/xmlconvert.pdf
+
+convertxml::df_to_xml(
+df,
+fields = "tags",
+record.tag = "record",
+field.names = NULL,
+only.fields = NULL,
+exclude.fields = NULL,
+root.node = "root",
+xml.file = NULL,
+non.exist = NULL,
+encoding = "UTF-8",
+no.return = FALSE
+)
+
+# Create a dataframe
+soccer.worldcups <- data.frame(list(year=c(2014, 2010, 2006),
+location=c("Brazil", "South Africa", "Germany"),
+goals_scored=c(171, 145, 147),
+average_goals=c(2.7, 2.3, 2.4),
+average_attendance=c(57918, 49669,52491)),
+stringsAsFactors = FALSE)
+# Convert to XML with the fields (i.e. dataframe variables/columns) stored in XML tags
+xml <- df_to_xml(soccer.worldcups, fields="tags", record.tag = "worldcup")
+# Convert to XML with the fields (i.e. dataframe variables/columns) stored in attributes
+xml <- df_to_xml(soccer.worldcups, fields="tags", record.tag = "worldcup")
+
+
+
+https://stackoverflow.com/questions/59310948/convert-dataframe-to-xml
+
+I'm trying to convert a dataframe to xml. It is about 600K records. I'm using the XML package:
+
+library(XML)
+
+con <- xmlOutputDOM("mydata")
+for(i in seq(nrow(mydata))){
+  con$addTag("person", attrs = mydata[i,])
+}
+
+The code above is taking too long to run, Is there a way for my to rewrite this code or use a different package to improve the performance?
+
+
+Answer:
+
+library('XML')
+
+data
+
+df1 <- data.frame(a = 1:7, b = letters[1:7], stringsAsFactors = FALSE)
+
+code
+
+# create a new xml doc
+doc_xml <- newXMLDoc(isHTML = FALSE)
+
+# create a table node
+table_node <- newXMLNode("table", doc = doc_xml)
+
+# row data
+row_data <- apply(df1, 1, function(x) {
+  z1 <- newXMLNode('row') # create a new node for each row
+  addChildren(z1, lapply(names(x), function(y) newXMLNode(y, x[y])))
+})
+
+# add row data to table node
+xmlParent(row_data) <- table_node
+
+# save as xml file
+saveXML(doc_xml, file = "df1.xml")
+
+Output
+
+doc_xml
+# <?xml version="1.0"?>
+# <table>
+#   <row>
+#     <a>1</a>
+#     <b>a</b>
+#   </row>
+#   <row>
+#     <a>2</a>
+#     <b>b</b>
+#   </row>
+#   <row>
+#     <a>3</a>
+#     <b>c</b>
+#   </row>
+#   <row>
+#     <a>4</a>
+#     <b>d</b>
+#   </row>
+#   <row>
+#     <a>5</a>
+#     <b>e</b>
+#   </row>
+#   <row>
+#     <a>6</a>
+#     <b>f</b>
+#   </row>
+#   <row>
+#     <a>7</a>
+#     <b>g</b>
+#   </row>
+# </table>
+
+verify nodes
+
+getNodeSet(doc_xml, "//a")
+getNodeSet(doc_xml, "//b")
+
+Convert xml to dataframe
+
+# using xpath expression of xml data inside R
+xmlToDataFrame(nodes = getNodeSet(doc_xml, "//table/*"),
+               stringsAsFactors = FALSE,
+               colClasses = c('integer', 'character'))
+# using name of xml data inside R
+xmlToDataFrame(doc = doc_xml, 
+               stringsAsFactors = FALSE, 
+               colClasses = c('integer', 'character'))
+# from xml file
+xmlToDataFrame(doc = "df1.xml", 
+               stringsAsFactors = FALSE, 
+               colClasses = c('integer', 'character'))
+#   a b
+# 1 1 a
+# 2 2 b
+# 3 3 c
+# 4 4 d
+# 5 5 e
+# 6 6 f
+# 7 7 g
+
+Share
+Improve this answer
+Follow
+edited Dec 12, 2019 at 22:39
+answered Dec 12, 2019 at 20:52
+Sathish's user avatar
+Sathish

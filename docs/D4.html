@@ -300,6 +300,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <li><a href="#shrani" id="toc-shrani" class="nav-link" data-scroll-target="#shrani"><span class="toc-section-number">5.3</span>  Shrani</a></li>
   <li><a href="#druge-knjižnice" id="toc-druge-knjižnice" class="nav-link" data-scroll-target="#druge-knjižnice"><span class="toc-section-number">5.4</span>  Druge knjižnice</a></li>
   <li><a href="#nekaj-preprostih-poizvedb" id="toc-nekaj-preprostih-poizvedb" class="nav-link" data-scroll-target="#nekaj-preprostih-poizvedb"><span class="toc-section-number">5.5</span>  Nekaj preprostih poizvedb</a></li>
+  <li><a href="#pretvorba-podatkovnega-niza-v-xml" id="toc-pretvorba-podatkovnega-niza-v-xml" class="nav-link" data-scroll-target="#pretvorba-podatkovnega-niza-v-xml"><span class="toc-section-number">5.6</span>  Pretvorba podatkovnega niza v xml</a></li>
   </ul>
 <div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/tpetric7/Text-Exploration-with-R-Workshop-2022/edit/main/D4.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/tpetric7/Text-Exploration-with-R-Workshop-2022/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
     </div>
@@ -328,21 +329,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="cell">
 <details>
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>packages <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"tidyverse"</span>, <span class="st">"tidytext"</span>, <span class="st">"janitor"</span>, <span class="st">"scales"</span>, <span class="st">"widyr"</span>, </span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>             <span class="st">"quanteda"</span>, <span class="st">"quanteda.textplots"</span>, <span class="st">"quanteda.textstats"</span>,</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>             <span class="st">"wordcloud2"</span>, <span class="st">"ggwordcloud"</span>, <span class="st">"udpipe"</span>, <span class="st">"syuzhet"</span>,</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>             <span class="st">"ggtext"</span>, <span class="st">"corpustools"</span>, <span class="st">"xml2"</span>, <span class="st">"XML"</span>, <span class="st">"rvest"</span>, </span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>             <span class="st">"readtext"</span>, <span class="st">"readxl"</span>, <span class="st">"writexl"</span>, <span class="st">"xlsx"</span>, <span class="st">"stopwords"</span>, </span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>             <span class="st">"xmlconvert"</span>, <span class="st">"lubridate"</span>)</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Install packages not yet installed</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>installed_packages <span class="ot">&lt;-</span> packages <span class="sc">%in%</span> <span class="fu">rownames</span>(<span class="fu">installed.packages</span>())</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">any</span>(installed_packages <span class="sc">==</span> <span class="cn">FALSE</span>)) {</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">install.packages</span>(packages[<span class="sc">!</span>installed_packages])</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Packages loading</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="fu">invisible</span>(<span class="fu">lapply</span>(packages, library, <span class="at">character.only =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(xml2)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(XML)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(xmlconvert)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rvest)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section>
@@ -1013,6 +1004,43 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 </div>
+</section>
+<section id="pretvorba-podatkovnega-niza-v-xml" class="level2" data-number="5.6">
+<h2 data-number="5.6" class="anchored" data-anchor-id="pretvorba-podatkovnega-niza-v-xml"><span class="header-section-number">5.6</span> Pretvorba podatkovnega niza v xml</h2>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># odstrani številke vrstic</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>litxml <span class="ot">&lt;-</span> litxml[<span class="sc">-</span><span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(xmlconvert)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert to XML with the fields (i.e. dataframe variables/columns) stored in XML tags</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>xmls <span class="ot">&lt;-</span> <span class="fu">df_to_xml</span>(litxml[litxml<span class="sc">$</span>text_id <span class="sc">==</span> <span class="st">"maj68-0001"</span>,], <span class="at">fields =</span> <span class="st">"tags"</span>, <span class="at">record.tag =</span> <span class="st">"text_id"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_lines</span>(xmls, <span class="st">"data/xmls.xml"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert to XML with the fields (i.e. dataframe variables/columns) stored in attributes</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>xmls2 <span class="ot">&lt;-</span> <span class="fu">df_to_xml</span>(litxml[litxml<span class="sc">$</span>text_id <span class="sc">==</span> <span class="st">"maj68-0001"</span>,], <span class="at">fields=</span><span class="st">"attributes"</span>, <span class="at">record.tag =</span> <span class="st">"text_id"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_lines</span>(xmls2, <span class="st">"data/xmls2.xml"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
 
 
 <!-- -->
@@ -1331,290 +1359,309 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       </a>
   </div>
 </nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="sourceCode" id="cb24" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># Kolokacije in sentiment {#sec-delavnica4}</span></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="fu">## Paketki</span></span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
-<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: false</span></span>
-<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>packages <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"tidyverse"</span>, <span class="st">"tidytext"</span>, <span class="st">"janitor"</span>, <span class="st">"scales"</span>, <span class="st">"widyr"</span>, </span>
-<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>             <span class="st">"quanteda"</span>, <span class="st">"quanteda.textplots"</span>, <span class="st">"quanteda.textstats"</span>,</span>
-<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>             <span class="st">"wordcloud2"</span>, <span class="st">"ggwordcloud"</span>, <span class="st">"udpipe"</span>, <span class="st">"syuzhet"</span>,</span>
-<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>             <span class="st">"ggtext"</span>, <span class="st">"corpustools"</span>, <span class="st">"xml2"</span>, <span class="st">"XML"</span>, <span class="st">"rvest"</span>, </span>
-<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>             <span class="st">"readtext"</span>, <span class="st">"readxl"</span>, <span class="st">"writexl"</span>, <span class="st">"xlsx"</span>, <span class="st">"stopwords"</span>, </span>
-<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a>             <span class="st">"xmlconvert"</span>, <span class="st">"lubridate"</span>)</span>
-<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Install packages not yet installed</span></span>
-<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a>installed_packages <span class="ot">&lt;-</span> packages <span class="sc">%in%</span> <span class="fu">rownames</span>(<span class="fu">installed.packages</span>())</span>
-<span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">any</span>(installed_packages <span class="sc">==</span> <span class="cn">FALSE</span>)) {</span>
-<span id="cb24-21"><a href="#cb24-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">install.packages</span>(packages[<span class="sc">!</span>installed_packages])</span>
-<span id="cb24-22"><a href="#cb24-22" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb24-23"><a href="#cb24-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-24"><a href="#cb24-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Packages loading</span></span>
-<span id="cb24-25"><a href="#cb24-25" aria-hidden="true" tabindex="-1"></a><span class="fu">invisible</span>(<span class="fu">lapply</span>(packages, library, <span class="at">character.only =</span> <span class="cn">TRUE</span>))</span>
-<span id="cb24-26"><a href="#cb24-26" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb24-27"><a href="#cb24-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-28"><a href="#cb24-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-29"><a href="#cb24-29" aria-hidden="true" tabindex="-1"></a><span class="fu">## Pretvorba XML datotek</span></span>
-<span id="cb24-30"><a href="#cb24-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-31"><a href="#cb24-31" aria-hidden="true" tabindex="-1"></a>Datoteke v obliki xml lahko pretvorimo v podatkovni niz. </span>
-<span id="cb24-32"><a href="#cb24-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-33"><a href="#cb24-33" aria-hidden="true" tabindex="-1"></a>S spletnega portala <span class="co">[</span><span class="ot">clarin.si</span><span class="co">](https://www.clarin.si/repository/xmlui/handle/11356/1491)</span> smo naložili v shranili literarni korpus v obliki xml, ki poleg besedil vsebuje tudi različne metapodatke.  </span>
-<span id="cb24-34"><a href="#cb24-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-35"><a href="#cb24-35" aria-hidden="true" tabindex="-1"></a><span class="fu">### Seznam xml datotek</span></span>
-<span id="cb24-36"><a href="#cb24-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-37"><a href="#cb24-37" aria-hidden="true" tabindex="-1"></a>Najprej ustvarimo seznam relevantnih xml datotek. Datoteke imajo pripono *vert*.</span>
-<span id="cb24-38"><a href="#cb24-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-39"><a href="#cb24-39" aria-hidden="true" tabindex="-1"></a><span class="in">```{r warning=FALSE, message=FALSE}</span></span>
-<span id="cb24-40"><a href="#cb24-40" aria-hidden="true" tabindex="-1"></a>seznam <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="st">"slovenski_korpusi/maj68.vert/"</span>,</span>
-<span id="cb24-41"><a href="#cb24-41" aria-hidden="true" tabindex="-1"></a>                     <span class="at">pattern =</span> <span class="st">"*.vert"</span>,</span>
-<span id="cb24-42"><a href="#cb24-42" aria-hidden="true" tabindex="-1"></a>                     <span class="at">full.names =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb24-43"><a href="#cb24-43" aria-hidden="true" tabindex="-1"></a>wd <span class="ot">&lt;-</span> <span class="fu">getwd</span>()</span>
-<span id="cb24-44"><a href="#cb24-44" aria-hidden="true" tabindex="-1"></a>pot <span class="ot">&lt;-</span> <span class="fu">paste0</span>(wd, <span class="st">"/"</span>, seznam)</span>
-<span id="cb24-45"><a href="#cb24-45" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-46"><a href="#cb24-46" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(pot, <span class="dv">3</span>)</span>
-<span id="cb24-47"><a href="#cb24-47" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb24-48"><a href="#cb24-48" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-49"><a href="#cb24-49" aria-hidden="true" tabindex="-1"></a><span class="fu">### Pretvorba z xmlconvert</span></span>
-<span id="cb24-50"><a href="#cb24-50" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-51"><a href="#cb24-51" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Metapodatki</span></span>
-<span id="cb24-52"><a href="#cb24-52" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-53"><a href="#cb24-53" aria-hidden="true" tabindex="-1"></a>Vsaka xml datoteka v tej zbirki vsebuje nekaj *metapodatkov*. Najprej vse potrebne postopke preizkusimo na primeru ene izmed razpoložljivih xml datotek z zgoraj ustvarjenega seznama, ki smo mu dodelili ime *pot*.  </span>
-<span id="cb24-54"><a href="#cb24-54" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-57"><a href="#cb24-57" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb24-58"><a href="#cb24-58" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(xmlconvert)</span>
-<span id="cb24-59"><a href="#cb24-59" aria-hidden="true" tabindex="-1"></a>xdf <span class="ot">&lt;-</span> <span class="fu">xml_to_df</span>(pot[<span class="dv">1</span>], <span class="at">records.tag =</span> <span class="st">"text"</span>, </span>
-<span id="cb24-60"><a href="#cb24-60" aria-hidden="true" tabindex="-1"></a>                 <span class="at">fields =</span> <span class="st">"attributes"</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb24-61"><a href="#cb24-61" aria-hidden="true" tabindex="-1"></a>  <span class="co"># preimenovanje stolpca</span></span>
-<span id="cb24-62"><a href="#cb24-62" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">text_id =</span> id) <span class="sc">%&gt;%</span> </span>
-<span id="cb24-63"><a href="#cb24-63" aria-hidden="true" tabindex="-1"></a>  <span class="co"># oblikovanje izbranih stolpcev</span></span>
-<span id="cb24-64"><a href="#cb24-64" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">c</span>(text_id<span class="sc">:</span>author, gender, </span>
-<span id="cb24-65"><a href="#cb24-65" aria-hidden="true" tabindex="-1"></a>                  monograph<span class="sc">:</span>facs), as.character)) <span class="sc">%&gt;%</span> </span>
-<span id="cb24-66"><a href="#cb24-66" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">c</span>(birth, year), as.numeric))</span>
-<span id="cb24-67"><a href="#cb24-67" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-68"><a href="#cb24-68" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(xdf)</span>
-<span id="cb24-69"><a href="#cb24-69" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb24-70"><a href="#cb24-70" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-71"><a href="#cb24-71" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Slovnična analiza</span></span>
-<span id="cb24-72"><a href="#cb24-72" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-73"><a href="#cb24-73" aria-hidden="true" tabindex="-1"></a>Besedilo v vzorčni xml datoteki je razdeljeno na 70 povedi (sentence, s). Toliko je stolpcev v tabeli. </span>
-<span id="cb24-74"><a href="#cb24-74" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-77"><a href="#cb24-77" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb24-78"><a href="#cb24-78" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(xmlconvert)</span>
-<span id="cb24-79"><a href="#cb24-79" aria-hidden="true" tabindex="-1"></a>ydf <span class="ot">&lt;-</span> <span class="fu">xml_to_df</span>(pot[<span class="dv">1</span>], <span class="at">records.tag =</span> <span class="st">"text"</span>, <span class="at">fields =</span> <span class="st">"tags"</span>,</span>
-<span id="cb24-80"><a href="#cb24-80" aria-hidden="true" tabindex="-1"></a>                 <span class="at">field.names =</span> <span class="st">"id"</span>)</span>
-<span id="cb24-81"><a href="#cb24-81" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(ydf)</span>
-<span id="cb24-82"><a href="#cb24-82" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb24-83"><a href="#cb24-83" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-84"><a href="#cb24-84" aria-hidden="true" tabindex="-1"></a>Povedi sestojijo iz 277 stavkov. Toliko je stolpcev v tabeli. </span>
-<span id="cb24-85"><a href="#cb24-85" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-88"><a href="#cb24-88" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb24-89"><a href="#cb24-89" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(xmlconvert)</span>
-<span id="cb24-90"><a href="#cb24-90" aria-hidden="true" tabindex="-1"></a>sdf <span class="ot">&lt;-</span> <span class="fu">xml_to_df</span>(pot[<span class="dv">1</span>], <span class="at">records.tag =</span> <span class="st">"p"</span>, <span class="at">fields =</span> <span class="st">"tags"</span>,</span>
-<span id="cb24-91"><a href="#cb24-91" aria-hidden="true" tabindex="-1"></a>                 <span class="at">field.names =</span> <span class="st">"id"</span>, </span>
-<span id="cb24-92"><a href="#cb24-92" aria-hidden="true" tabindex="-1"></a>                 <span class="at">hierarchy.field.delim =</span> <span class="fu">c</span>(<span class="st">"&lt;s"</span>,<span class="st">"&lt;g"</span>), </span>
-<span id="cb24-93"><a href="#cb24-93" aria-hidden="true" tabindex="-1"></a>                 <span class="at">stringsAsFactors =</span> F)</span>
-<span id="cb24-94"><a href="#cb24-94" aria-hidden="true" tabindex="-1"></a>sdf <span class="ot">&lt;-</span> sdf[<span class="dv">1</span>,]</span>
-<span id="cb24-95"><a href="#cb24-95" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(sdf)</span>
-<span id="cb24-96"><a href="#cb24-96" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb24-97"><a href="#cb24-97" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-98"><a href="#cb24-98" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Pretvorba slovnične analize</span></span>
-<span id="cb24-99"><a href="#cb24-99" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-100"><a href="#cb24-100" aria-hidden="true" tabindex="-1"></a>Imena stolpcev, ki vsebuje slovnično analizo besednih oblik. </span>
-<span id="cb24-101"><a href="#cb24-101" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-104"><a href="#cb24-104" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb24-105"><a href="#cb24-105" aria-hidden="true" tabindex="-1"></a><span class="do">###Positional attributes</span></span>
-<span id="cb24-106"><a href="#cb24-106" aria-hidden="true" tabindex="-1"></a>columns <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"word"</span>, <span class="st">"lemma"</span>, <span class="st">"tag_en"</span>, <span class="st">"upos"</span>, <span class="st">"feats"</span>, <span class="st">"token_id"</span>, <span class="st">"dep"</span>, <span class="st">"dep_head_lemma"</span>, <span class="st">"dep_head_tag_en"</span>, <span class="st">"dep_head_upos"</span>, <span class="st">"dep_head_feats"</span>, <span class="st">"dep_head_id"</span>)</span>
-<span id="cb24-107"><a href="#cb24-107" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb24-108"><a href="#cb24-108" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-109"><a href="#cb24-109" aria-hidden="true" tabindex="-1"></a>Pretvorba hierarhične xml strukture v dvodimenzionalno tabelo. </span>
-<span id="cb24-110"><a href="#cb24-110" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-113"><a href="#cb24-113" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb24-114"><a href="#cb24-114" aria-hidden="true" tabindex="-1"></a>zdf <span class="ot">&lt;-</span> <span class="fu">xml_to_df</span>(pot[<span class="dv">1</span>], <span class="at">records.tag =</span> <span class="st">"text"</span>, <span class="at">fields =</span> <span class="st">"tags"</span>,</span>
-<span id="cb24-115"><a href="#cb24-115" aria-hidden="true" tabindex="-1"></a>                 <span class="at">field.names =</span> <span class="st">"id"</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb24-116"><a href="#cb24-116" aria-hidden="true" tabindex="-1"></a>  <span class="co"># pretvori stolpce v vrstice</span></span>
-<span id="cb24-117"><a href="#cb24-117" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">starts_with</span>(<span class="st">"maj68"</span>), </span>
-<span id="cb24-118"><a href="#cb24-118" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_to =</span> <span class="st">"sentence_id"</span>, <span class="at">values_to =</span> <span class="st">"value"</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb24-119"><a href="#cb24-119" aria-hidden="true" tabindex="-1"></a>  <span class="co"># razdeli stolpec na več stolpcev</span></span>
-<span id="cb24-120"><a href="#cb24-120" aria-hidden="true" tabindex="-1"></a>  <span class="fu">separate</span>(value, <span class="at">into =</span> <span class="fu">c</span>(<span class="st">"delimiter"</span>, <span class="st">"value"</span>), </span>
-<span id="cb24-121"><a href="#cb24-121" aria-hidden="true" tabindex="-1"></a>           <span class="at">sep =</span> <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>, <span class="at">extra =</span> <span class="st">"merge"</span>, <span class="at">fill =</span> <span class="st">"right"</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb24-122"><a href="#cb24-122" aria-hidden="true" tabindex="-1"></a>  <span class="co"># ustvari vrstice iz stolpcev</span></span>
-<span id="cb24-123"><a href="#cb24-123" aria-hidden="true" tabindex="-1"></a>  <span class="fu">separate_rows</span>(value, <span class="at">sep =</span> <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb24-124"><a href="#cb24-124" aria-hidden="true" tabindex="-1"></a>  <span class="co"># razdeli stolpec na več stolpcev</span></span>
-<span id="cb24-125"><a href="#cb24-125" aria-hidden="true" tabindex="-1"></a>  <span class="fu">separate</span>(value, <span class="at">into =</span> columns, </span>
-<span id="cb24-126"><a href="#cb24-126" aria-hidden="true" tabindex="-1"></a>           <span class="at">sep =</span> <span class="st">"</span><span class="sc">\t</span><span class="st">"</span>, <span class="at">extra =</span> <span class="st">"merge"</span>, <span class="at">fill =</span> <span class="st">"right"</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb24-127"><a href="#cb24-127" aria-hidden="true" tabindex="-1"></a>  <span class="co"># pripravljamo text_id za kasnejše združevanje tabel: </span></span>
-<span id="cb24-128"><a href="#cb24-128" aria-hidden="true" tabindex="-1"></a>  <span class="co"># positive lookahead: match q followed by u</span></span>
-<span id="cb24-129"><a href="#cb24-129" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">text_id =</span> <span class="fu">str_extract</span>(sentence_id, <span class="st">".+(?=</span><span class="sc">\\</span><span class="st">.)"</span>),</span>
-<span id="cb24-130"><a href="#cb24-130" aria-hidden="true" tabindex="-1"></a>         <span class="at">text_id =</span> <span class="fu">str_remove</span>(text_id, <span class="st">"</span><span class="sc">\\</span><span class="st">.$"</span>),</span>
-<span id="cb24-131"><a href="#cb24-131" aria-hidden="true" tabindex="-1"></a>         <span class="at">text_id =</span> <span class="fu">str_replace</span>(text_id, <span class="st">"</span><span class="sc">\\</span><span class="st">."</span>, <span class="st">"-"</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb24-132"><a href="#cb24-132" aria-hidden="true" tabindex="-1"></a>  <span class="co"># postavi stolpec text_id na prvo mesto</span></span>
-<span id="cb24-133"><a href="#cb24-133" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(text_id, sentence_id<span class="sc">:</span>dep_head_id)</span>
-<span id="cb24-134"><a href="#cb24-134" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-135"><a href="#cb24-135" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb24-136"><a href="#cb24-136" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-137"><a href="#cb24-137" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Združevanje tabel</span></span>
-<span id="cb24-138"><a href="#cb24-138" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-139"><a href="#cb24-139" aria-hidden="true" tabindex="-1"></a>Združevanje tabele, ki vsebuje metapodatke, s tabelo, ki vsebuje slovnično analizo besednih oblik. </span>
-<span id="cb24-140"><a href="#cb24-140" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-143"><a href="#cb24-143" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb24-144"><a href="#cb24-144" aria-hidden="true" tabindex="-1"></a>literatura68 <span class="ot">&lt;-</span> xdf <span class="sc">%&gt;%</span> </span>
-<span id="cb24-145"><a href="#cb24-145" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(zdf, <span class="at">by =</span> <span class="st">"text_id"</span>)</span>
-<span id="cb24-146"><a href="#cb24-146" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(literatura68)</span>
-<span id="cb24-147"><a href="#cb24-147" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(literatura68)</span>
-<span id="cb24-148"><a href="#cb24-148" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb24-149"><a href="#cb24-149" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-150"><a href="#cb24-150" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Preverba</span></span>
-<span id="cb24-151"><a href="#cb24-151" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-152"><a href="#cb24-152" aria-hidden="true" tabindex="-1"></a>Preden zaženemo zanko za pretvorbo xml datotek, je dobro preveriti, ali so vse xml datoteke brez napake. Da bi preprečili *error “xmlParseEntityRef: noname”*, preverjamo, ali je v gradivu izgubljen znak &amp; (ampersand) in ga zamenjamo z <span class="dv">&amp;amp;</span> - s pravilnim kodiranjem. </span>
-<span id="cb24-153"><a href="#cb24-153" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-154"><a href="#cb24-154" aria-hidden="true" tabindex="-1"></a>https://stackoverflow.com/questions/29831427/convert-to-amp-while-preserving-existing-entity-references</span>
-<span id="cb24-155"><a href="#cb24-155" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-156"><a href="#cb24-156" aria-hidden="true" tabindex="-1"></a>Naslednja programska zanka zamenja osamele znake <span class="sc">\\</span>&amp; (ampersand) in jih zamenja z ustreznim <span class="sc">\\</span><span class="dv">&amp;amp;</span>  </span>
-<span id="cb24-157"><a href="#cb24-157" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-158"><a href="#cb24-158" aria-hidden="true" tabindex="-1"></a>Na mojem prenosniku je pregled in zamenjava trajala 568 sekund.  </span>
-<span id="cb24-159"><a href="#cb24-159" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-162"><a href="#cb24-162" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb24-163"><a href="#cb24-163" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb24-164"><a href="#cb24-164" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-165"><a href="#cb24-165" aria-hidden="true" tabindex="-1"></a>tictoc<span class="sc">::</span><span class="fu">tic</span>()</span>
-<span id="cb24-166"><a href="#cb24-166" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(pot)){</span>
-<span id="cb24-167"><a href="#cb24-167" aria-hidden="true" tabindex="-1"></a>  <span class="fu">read_lines</span>(pot[i]) <span class="sc">%&gt;%</span> </span>
-<span id="cb24-168"><a href="#cb24-168" aria-hidden="true" tabindex="-1"></a>  <span class="co"># negative lookahead to locate single &amp; and replace them</span></span>
-<span id="cb24-169"><a href="#cb24-169" aria-hidden="true" tabindex="-1"></a>  <span class="fu">str_replace_all</span>(<span class="at">pattern =</span> <span class="st">'&amp;(?![_a-zA-Z]</span><span class="sc">\\</span><span class="st">w*;)(?!#</span><span class="sc">\\</span><span class="st">d+;)'</span>, </span>
-<span id="cb24-170"><a href="#cb24-170" aria-hidden="true" tabindex="-1"></a>       <span class="at">replacement =</span> <span class="st">'&amp;amp;'</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb24-171"><a href="#cb24-171" aria-hidden="true" tabindex="-1"></a>    <span class="fu">write_lines</span>(pot[i])</span>
-<span id="cb24-172"><a href="#cb24-172" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb24-173"><a href="#cb24-173" aria-hidden="true" tabindex="-1"></a>tictoc<span class="sc">::</span><span class="fu">toc</span>()</span>
-<span id="cb24-174"><a href="#cb24-174" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb24-175"><a href="#cb24-175" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-176"><a href="#cb24-176" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Recept</span></span>
-<span id="cb24-177"><a href="#cb24-177" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-178"><a href="#cb24-178" aria-hidden="true" tabindex="-1"></a>Pretvoriti želimo vse xml dokumente (delitev na povedi) in zato bomo sestavili programsko zanko -- *for-loop*. </span>
-<span id="cb24-179"><a href="#cb24-179" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-180"><a href="#cb24-180" aria-hidden="true" tabindex="-1"></a>Uporaba regularnih izrazov (regex) je ponekod nepogrešljiva, npr. tudi v spodnjem programskem odstavku, kjer smo potrebovali *lookahead*.</span>
-<span id="cb24-181"><a href="#cb24-181" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-182"><a href="#cb24-182" aria-hidden="true" tabindex="-1"></a>regex: https://www.regular-expressions.info/lookaround.html  </span>
-<span id="cb24-183"><a href="#cb24-183" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-186"><a href="#cb24-186" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb24-187"><a href="#cb24-187" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb24-188"><a href="#cb24-188" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
-<span id="cb24-189"><a href="#cb24-189" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: false</span></span>
-<span id="cb24-190"><a href="#cb24-190" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-191"><a href="#cb24-191" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(xmlconvert)</span>
-<span id="cb24-192"><a href="#cb24-192" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-193"><a href="#cb24-193" aria-hidden="true" tabindex="-1"></a><span class="co"># Positional attributes</span></span>
-<span id="cb24-194"><a href="#cb24-194" aria-hidden="true" tabindex="-1"></a>columns <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"word"</span>, <span class="st">"lemma"</span>, <span class="st">"tag_en"</span>, <span class="st">"upos"</span>, <span class="st">"feats"</span>, <span class="st">"token_id"</span>, <span class="st">"dep"</span>, <span class="st">"dep_head_lemma"</span>, <span class="st">"dep_head_tag_en"</span>, <span class="st">"dep_head_upos"</span>, <span class="st">"dep_head_feats"</span>, <span class="st">"dep_head_id"</span>)</span>
-<span id="cb24-195"><a href="#cb24-195" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-196"><a href="#cb24-196" aria-hidden="true" tabindex="-1"></a>tictoc<span class="sc">::</span><span class="fu">tic</span>()</span>
-<span id="cb24-197"><a href="#cb24-197" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-198"><a href="#cb24-198" aria-hidden="true" tabindex="-1"></a>litxml <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
-<span id="cb24-199"><a href="#cb24-199" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-200"><a href="#cb24-200" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(pot)){</span>
-<span id="cb24-201"><a href="#cb24-201" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb24-202"><a href="#cb24-202" aria-hidden="true" tabindex="-1"></a>  <span class="fu">Sys.time</span>()</span>
-<span id="cb24-203"><a href="#cb24-203" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb24-204"><a href="#cb24-204" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"Pridobivam metapodatke xml datoteke: </span><span class="sc">\n</span><span class="st">"</span>, pot[i]))</span>
-<span id="cb24-205"><a href="#cb24-205" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb24-206"><a href="#cb24-206" aria-hidden="true" tabindex="-1"></a>  xdf <span class="ot">&lt;-</span> <span class="fu">xml_to_df</span>(pot[i], <span class="at">records.tag =</span> <span class="st">"text"</span>, </span>
-<span id="cb24-207"><a href="#cb24-207" aria-hidden="true" tabindex="-1"></a>                   <span class="at">fields =</span> <span class="st">"attributes"</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb24-208"><a href="#cb24-208" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rename</span>(<span class="at">text_id =</span> id) <span class="sc">%&gt;%</span> </span>
-<span id="cb24-209"><a href="#cb24-209" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">c</span>(text_id<span class="sc">:</span>author, gender, </span>
-<span id="cb24-210"><a href="#cb24-210" aria-hidden="true" tabindex="-1"></a>                    monograph<span class="sc">:</span>facs), as.character)) <span class="sc">%&gt;%</span> </span>
-<span id="cb24-211"><a href="#cb24-211" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">c</span>(birth, year), as.numeric))</span>
-<span id="cb24-212"><a href="#cb24-212" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb24-213"><a href="#cb24-213" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"Preoblikujem slovnično analizo iz xml datoteke: </span><span class="sc">\n</span><span class="st">"</span>, pot[i]))</span>
-<span id="cb24-214"><a href="#cb24-214" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb24-215"><a href="#cb24-215" aria-hidden="true" tabindex="-1"></a>  zdf <span class="ot">&lt;-</span> <span class="fu">xml_to_df</span>(pot[i], <span class="at">records.tag =</span> <span class="st">"text"</span>, <span class="at">fields =</span> <span class="st">"tags"</span>,</span>
-<span id="cb24-216"><a href="#cb24-216" aria-hidden="true" tabindex="-1"></a>                   <span class="at">field.names =</span> <span class="st">"id"</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb24-217"><a href="#cb24-217" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">starts_with</span>(<span class="st">"maj68"</span>), </span>
-<span id="cb24-218"><a href="#cb24-218" aria-hidden="true" tabindex="-1"></a>                 <span class="at">names_to =</span> <span class="st">"sentence_id"</span>, <span class="at">values_to =</span> <span class="st">"value"</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb24-219"><a href="#cb24-219" aria-hidden="true" tabindex="-1"></a>    <span class="fu">separate</span>(value, <span class="at">into =</span> <span class="fu">c</span>(<span class="st">"delimiter"</span>, <span class="st">"value"</span>), </span>
-<span id="cb24-220"><a href="#cb24-220" aria-hidden="true" tabindex="-1"></a>             <span class="at">sep =</span> <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>, <span class="at">extra =</span> <span class="st">"merge"</span>, <span class="at">fill =</span> <span class="st">"right"</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb24-221"><a href="#cb24-221" aria-hidden="true" tabindex="-1"></a>    <span class="fu">separate_rows</span>(value, <span class="at">sep =</span> <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb24-222"><a href="#cb24-222" aria-hidden="true" tabindex="-1"></a>    <span class="fu">separate</span>(value, <span class="at">into =</span> columns, </span>
-<span id="cb24-223"><a href="#cb24-223" aria-hidden="true" tabindex="-1"></a>             <span class="at">sep =</span> <span class="st">"</span><span class="sc">\t</span><span class="st">"</span>, <span class="at">extra =</span> <span class="st">"merge"</span>, <span class="at">fill =</span> <span class="st">"right"</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb24-224"><a href="#cb24-224" aria-hidden="true" tabindex="-1"></a>    <span class="co"># positive lookahead: match q followed by u</span></span>
-<span id="cb24-225"><a href="#cb24-225" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">text_id =</span> <span class="fu">str_extract</span>(sentence_id, <span class="st">".+(?=</span><span class="sc">\\</span><span class="st">.)"</span>),</span>
-<span id="cb24-226"><a href="#cb24-226" aria-hidden="true" tabindex="-1"></a>           <span class="at">text_id =</span> <span class="fu">str_remove</span>(text_id, <span class="st">"</span><span class="sc">\\</span><span class="st">.$"</span>),</span>
-<span id="cb24-227"><a href="#cb24-227" aria-hidden="true" tabindex="-1"></a>           <span class="at">text_id =</span> <span class="fu">str_replace</span>(text_id, <span class="st">"</span><span class="sc">\\</span><span class="st">."</span>, <span class="st">"-"</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb24-228"><a href="#cb24-228" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(text_id, sentence_id<span class="sc">:</span>dep_head_id)</span>
-<span id="cb24-229"><a href="#cb24-229" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb24-230"><a href="#cb24-230" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="st">"Združujem obe tabeli: </span><span class="sc">\n</span><span class="st">"</span>)</span>
-<span id="cb24-231"><a href="#cb24-231" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb24-232"><a href="#cb24-232" aria-hidden="true" tabindex="-1"></a>  slovnica <span class="ot">=</span> xdf <span class="sc">%&gt;%</span> </span>
-<span id="cb24-233"><a href="#cb24-233" aria-hidden="true" tabindex="-1"></a>    <span class="fu">left_join</span>(zdf, <span class="at">by =</span> <span class="st">"text_id"</span>)</span>
-<span id="cb24-234"><a href="#cb24-234" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb24-235"><a href="#cb24-235" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="st">"Tabelo dodajam prejšnjim zapisom: </span><span class="sc">\n</span><span class="st">"</span>)</span>
-<span id="cb24-236"><a href="#cb24-236" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb24-237"><a href="#cb24-237" aria-hidden="true" tabindex="-1"></a>  litxml <span class="ot">=</span> <span class="fu">bind_rows</span>(litxml, slovnica)</span>
-<span id="cb24-238"><a href="#cb24-238" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb24-239"><a href="#cb24-239" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-240"><a href="#cb24-240" aria-hidden="true" tabindex="-1"></a>tictoc<span class="sc">::</span><span class="fu">toc</span>()</span>
-<span id="cb24-241"><a href="#cb24-241" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-242"><a href="#cb24-242" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(litxml)</span>
-<span id="cb24-243"><a href="#cb24-243" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb24-244"><a href="#cb24-244" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-245"><a href="#cb24-245" aria-hidden="true" tabindex="-1"></a>Pretvorba xml zapisa v tabelo je trajal 9798 sekund. Tabela ima več kot milijon 600 tisoč zapisov in 31 stolpcev. </span>
-<span id="cb24-246"><a href="#cb24-246" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-247"><a href="#cb24-247" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-248"><a href="#cb24-248" aria-hidden="true" tabindex="-1"></a><span class="fu">## Shrani</span></span>
-<span id="cb24-249"><a href="#cb24-249" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-250"><a href="#cb24-250" aria-hidden="true" tabindex="-1"></a>Shranimo podatkovni niz v splošni dostopni tabelarni obliki, tako da ga lahko (ponovno) odpremo z <span class="in">`Excelom`</span> ali v <span class="in">`RStudiu`</span> za poizvedbe.  </span>
-<span id="cb24-251"><a href="#cb24-251" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-254"><a href="#cb24-254" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb24-255"><a href="#cb24-255" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb24-256"><a href="#cb24-256" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-257"><a href="#cb24-257" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv2</span>(litxml, <span class="st">"data/clarin_slovenska_literatura_maj1968.csv"</span>)</span>
-<span id="cb24-258"><a href="#cb24-258" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb24-259"><a href="#cb24-259" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-260"><a href="#cb24-260" aria-hidden="true" tabindex="-1"></a>Podatkovni niz zasede na disku približno 653 MB.  </span>
-<span id="cb24-261"><a href="#cb24-261" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-262"><a href="#cb24-262" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-263"><a href="#cb24-263" aria-hidden="true" tabindex="-1"></a><span class="fu">## Druge knjižnice</span></span>
-<span id="cb24-264"><a href="#cb24-264" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-265"><a href="#cb24-265" aria-hidden="true" tabindex="-1"></a>Z drugimi knjižnicami (<span class="in">`XML`</span>, <span class="in">`xml2`</span>, <span class="in">`rvest`</span>) je postopek nekoliko bolj zamotan -- vsaj v tem primeru je tako. </span>
-<span id="cb24-266"><a href="#cb24-266" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-267"><a href="#cb24-267" aria-hidden="true" tabindex="-1"></a>https://megapteraphile.wordpress.com/2020/03/29/converting-xml-to-tibble-in-r/</span>
-<span id="cb24-268"><a href="#cb24-268" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-269"><a href="#cb24-269" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-270"><a href="#cb24-270" aria-hidden="true" tabindex="-1"></a><span class="fu">## Nekaj preprostih poizvedb</span></span>
-<span id="cb24-271"><a href="#cb24-271" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-272"><a href="#cb24-272" aria-hidden="true" tabindex="-1"></a>(Ponovno) odpremo tabelo.</span>
-<span id="cb24-273"><a href="#cb24-273" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-276"><a href="#cb24-276" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb24-277"><a href="#cb24-277" aria-hidden="true" tabindex="-1"></a>litxml <span class="ot">&lt;-</span> <span class="fu">read_csv2</span>(<span class="st">"data/clarin_slovenska_literatura_maj1968.csv"</span>)</span>
-<span id="cb24-278"><a href="#cb24-278" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb24-279"><a href="#cb24-279" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-280"><a href="#cb24-280" aria-hidden="true" tabindex="-1"></a>Tabela vsebuje 195 avtorjev in avtorskih dvojic, njihova dela,  slovnično analizo besednih oblik in nekaj metapodatkov o avtorjih in delih. </span>
-<span id="cb24-281"><a href="#cb24-281" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-284"><a href="#cb24-284" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb24-285"><a href="#cb24-285" aria-hidden="true" tabindex="-1"></a>litxml <span class="sc">%&gt;%</span> </span>
-<span id="cb24-286"><a href="#cb24-286" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(author, <span class="at">sort =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb24-287"><a href="#cb24-287" aria-hidden="true" tabindex="-1"></a>  rmarkdown<span class="sc">::</span><span class="fu">paged_table</span>()</span>
-<span id="cb24-288"><a href="#cb24-288" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb24-289"><a href="#cb24-289" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-290"><a href="#cb24-290" aria-hidden="true" tabindex="-1"></a>Kdo je sodeloval z Brankom Gradišnikom?</span>
-<span id="cb24-291"><a href="#cb24-291" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-294"><a href="#cb24-294" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb24-295"><a href="#cb24-295" aria-hidden="true" tabindex="-1"></a>litxml <span class="sc">%&gt;%</span> </span>
-<span id="cb24-296"><a href="#cb24-296" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">str_detect</span>(author, <span class="st">"Gradišnik"</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb24-297"><a href="#cb24-297" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(author, title) <span class="sc">%&gt;%</span> </span>
-<span id="cb24-298"><a href="#cb24-298" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>()</span>
-<span id="cb24-299"><a href="#cb24-299" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb24-300"><a href="#cb24-300" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb24-301"><a href="#cb24-301" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-302"><a href="#cb24-302" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-305"><a href="#cb24-305" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb24-306"><a href="#cb24-306" aria-hidden="true" tabindex="-1"></a>litxml <span class="sc">%&gt;%</span> </span>
-<span id="cb24-307"><a href="#cb24-307" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(author) <span class="sc">%&gt;%</span> </span>
-<span id="cb24-308"><a href="#cb24-308" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">str_detect</span>(word, <span class="st">"^[:alpha:]+"</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb24-309"><a href="#cb24-309" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(word, <span class="at">sort =</span> T) <span class="sc">%&gt;%</span> </span>
-<span id="cb24-310"><a href="#cb24-310" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">10</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb24-311"><a href="#cb24-311" aria-hidden="true" tabindex="-1"></a>  rmarkdown<span class="sc">::</span><span class="fu">paged_table</span>()</span>
-<span id="cb24-312"><a href="#cb24-312" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<div class="sourceCode" id="cb29" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># Kolokacije in sentiment {#sec-delavnica4}</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="fu">## Paketki</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: false</span></span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(xml2)</span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(XML)</span>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(xmlconvert)</span>
+<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rvest)</span>
+<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb29-17"><a href="#cb29-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-18"><a href="#cb29-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-19"><a href="#cb29-19" aria-hidden="true" tabindex="-1"></a><span class="fu">## Pretvorba XML datotek</span></span>
+<span id="cb29-20"><a href="#cb29-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-21"><a href="#cb29-21" aria-hidden="true" tabindex="-1"></a>Datoteke v obliki xml lahko pretvorimo v podatkovni niz. </span>
+<span id="cb29-22"><a href="#cb29-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-23"><a href="#cb29-23" aria-hidden="true" tabindex="-1"></a>S spletnega portala <span class="co">[</span><span class="ot">clarin.si</span><span class="co">](https://www.clarin.si/repository/xmlui/handle/11356/1491)</span> smo naložili v shranili literarni korpus v obliki xml, ki poleg besedil vsebuje tudi različne metapodatke.  </span>
+<span id="cb29-24"><a href="#cb29-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-25"><a href="#cb29-25" aria-hidden="true" tabindex="-1"></a><span class="fu">### Seznam xml datotek</span></span>
+<span id="cb29-26"><a href="#cb29-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-27"><a href="#cb29-27" aria-hidden="true" tabindex="-1"></a>Najprej ustvarimo seznam relevantnih xml datotek. Datoteke imajo pripono *vert*.</span>
+<span id="cb29-28"><a href="#cb29-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-29"><a href="#cb29-29" aria-hidden="true" tabindex="-1"></a><span class="in">```{r warning=FALSE, message=FALSE}</span></span>
+<span id="cb29-30"><a href="#cb29-30" aria-hidden="true" tabindex="-1"></a>seznam <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="st">"slovenski_korpusi/maj68.vert/"</span>,</span>
+<span id="cb29-31"><a href="#cb29-31" aria-hidden="true" tabindex="-1"></a>                     <span class="at">pattern =</span> <span class="st">"*.vert"</span>,</span>
+<span id="cb29-32"><a href="#cb29-32" aria-hidden="true" tabindex="-1"></a>                     <span class="at">full.names =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb29-33"><a href="#cb29-33" aria-hidden="true" tabindex="-1"></a>wd <span class="ot">&lt;-</span> <span class="fu">getwd</span>()</span>
+<span id="cb29-34"><a href="#cb29-34" aria-hidden="true" tabindex="-1"></a>pot <span class="ot">&lt;-</span> <span class="fu">paste0</span>(wd, <span class="st">"/"</span>, seznam)</span>
+<span id="cb29-35"><a href="#cb29-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-36"><a href="#cb29-36" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(pot, <span class="dv">3</span>)</span>
+<span id="cb29-37"><a href="#cb29-37" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb29-38"><a href="#cb29-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-39"><a href="#cb29-39" aria-hidden="true" tabindex="-1"></a><span class="fu">### Pretvorba z xmlconvert</span></span>
+<span id="cb29-40"><a href="#cb29-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-41"><a href="#cb29-41" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Metapodatki</span></span>
+<span id="cb29-42"><a href="#cb29-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-43"><a href="#cb29-43" aria-hidden="true" tabindex="-1"></a>Vsaka xml datoteka v tej zbirki vsebuje nekaj *metapodatkov*. Najprej vse potrebne postopke preizkusimo na primeru ene izmed razpoložljivih xml datotek z zgoraj ustvarjenega seznama, ki smo mu dodelili ime *pot*.  </span>
+<span id="cb29-44"><a href="#cb29-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-47"><a href="#cb29-47" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb29-48"><a href="#cb29-48" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(xmlconvert)</span>
+<span id="cb29-49"><a href="#cb29-49" aria-hidden="true" tabindex="-1"></a>xdf <span class="ot">&lt;-</span> <span class="fu">xml_to_df</span>(pot[<span class="dv">1</span>], <span class="at">records.tag =</span> <span class="st">"text"</span>, </span>
+<span id="cb29-50"><a href="#cb29-50" aria-hidden="true" tabindex="-1"></a>                 <span class="at">fields =</span> <span class="st">"attributes"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb29-51"><a href="#cb29-51" aria-hidden="true" tabindex="-1"></a>  <span class="co"># preimenovanje stolpca</span></span>
+<span id="cb29-52"><a href="#cb29-52" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">text_id =</span> id) <span class="sc">%&gt;%</span> </span>
+<span id="cb29-53"><a href="#cb29-53" aria-hidden="true" tabindex="-1"></a>  <span class="co"># oblikovanje izbranih stolpcev</span></span>
+<span id="cb29-54"><a href="#cb29-54" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">c</span>(text_id<span class="sc">:</span>author, gender, </span>
+<span id="cb29-55"><a href="#cb29-55" aria-hidden="true" tabindex="-1"></a>                  monograph<span class="sc">:</span>facs), as.character)) <span class="sc">%&gt;%</span> </span>
+<span id="cb29-56"><a href="#cb29-56" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">c</span>(birth, year), as.numeric))</span>
+<span id="cb29-57"><a href="#cb29-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-58"><a href="#cb29-58" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(xdf)</span>
+<span id="cb29-59"><a href="#cb29-59" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb29-60"><a href="#cb29-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-61"><a href="#cb29-61" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Slovnična analiza</span></span>
+<span id="cb29-62"><a href="#cb29-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-63"><a href="#cb29-63" aria-hidden="true" tabindex="-1"></a>Besedilo v vzorčni xml datoteki je razdeljeno na 70 povedi (sentence, s). Toliko je stolpcev v tabeli. </span>
+<span id="cb29-64"><a href="#cb29-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-67"><a href="#cb29-67" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb29-68"><a href="#cb29-68" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(xmlconvert)</span>
+<span id="cb29-69"><a href="#cb29-69" aria-hidden="true" tabindex="-1"></a>ydf <span class="ot">&lt;-</span> <span class="fu">xml_to_df</span>(pot[<span class="dv">1</span>], <span class="at">records.tag =</span> <span class="st">"text"</span>, <span class="at">fields =</span> <span class="st">"tags"</span>,</span>
+<span id="cb29-70"><a href="#cb29-70" aria-hidden="true" tabindex="-1"></a>                 <span class="at">field.names =</span> <span class="st">"id"</span>)</span>
+<span id="cb29-71"><a href="#cb29-71" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(ydf)</span>
+<span id="cb29-72"><a href="#cb29-72" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb29-73"><a href="#cb29-73" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-74"><a href="#cb29-74" aria-hidden="true" tabindex="-1"></a>Povedi sestojijo iz 277 stavkov. Toliko je stolpcev v tabeli. </span>
+<span id="cb29-75"><a href="#cb29-75" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-78"><a href="#cb29-78" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb29-79"><a href="#cb29-79" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(xmlconvert)</span>
+<span id="cb29-80"><a href="#cb29-80" aria-hidden="true" tabindex="-1"></a>sdf <span class="ot">&lt;-</span> <span class="fu">xml_to_df</span>(pot[<span class="dv">1</span>], <span class="at">records.tag =</span> <span class="st">"p"</span>, <span class="at">fields =</span> <span class="st">"tags"</span>,</span>
+<span id="cb29-81"><a href="#cb29-81" aria-hidden="true" tabindex="-1"></a>                 <span class="at">field.names =</span> <span class="st">"id"</span>, </span>
+<span id="cb29-82"><a href="#cb29-82" aria-hidden="true" tabindex="-1"></a>                 <span class="at">hierarchy.field.delim =</span> <span class="fu">c</span>(<span class="st">"&lt;s"</span>,<span class="st">"&lt;g"</span>), </span>
+<span id="cb29-83"><a href="#cb29-83" aria-hidden="true" tabindex="-1"></a>                 <span class="at">stringsAsFactors =</span> F)</span>
+<span id="cb29-84"><a href="#cb29-84" aria-hidden="true" tabindex="-1"></a>sdf <span class="ot">&lt;-</span> sdf[<span class="dv">1</span>,]</span>
+<span id="cb29-85"><a href="#cb29-85" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(sdf)</span>
+<span id="cb29-86"><a href="#cb29-86" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb29-87"><a href="#cb29-87" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-88"><a href="#cb29-88" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Pretvorba slovnične analize</span></span>
+<span id="cb29-89"><a href="#cb29-89" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-90"><a href="#cb29-90" aria-hidden="true" tabindex="-1"></a>Imena stolpcev, ki vsebuje slovnično analizo besednih oblik. </span>
+<span id="cb29-91"><a href="#cb29-91" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-94"><a href="#cb29-94" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb29-95"><a href="#cb29-95" aria-hidden="true" tabindex="-1"></a><span class="do">###Positional attributes</span></span>
+<span id="cb29-96"><a href="#cb29-96" aria-hidden="true" tabindex="-1"></a>columns <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"word"</span>, <span class="st">"lemma"</span>, <span class="st">"tag_en"</span>, <span class="st">"upos"</span>, <span class="st">"feats"</span>, <span class="st">"token_id"</span>, <span class="st">"dep"</span>, <span class="st">"dep_head_lemma"</span>, <span class="st">"dep_head_tag_en"</span>, <span class="st">"dep_head_upos"</span>, <span class="st">"dep_head_feats"</span>, <span class="st">"dep_head_id"</span>)</span>
+<span id="cb29-97"><a href="#cb29-97" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb29-98"><a href="#cb29-98" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-99"><a href="#cb29-99" aria-hidden="true" tabindex="-1"></a>Pretvorba hierarhične xml strukture v dvodimenzionalno tabelo. </span>
+<span id="cb29-100"><a href="#cb29-100" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-103"><a href="#cb29-103" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb29-104"><a href="#cb29-104" aria-hidden="true" tabindex="-1"></a>zdf <span class="ot">&lt;-</span> <span class="fu">xml_to_df</span>(pot[<span class="dv">1</span>], <span class="at">records.tag =</span> <span class="st">"text"</span>, <span class="at">fields =</span> <span class="st">"tags"</span>,</span>
+<span id="cb29-105"><a href="#cb29-105" aria-hidden="true" tabindex="-1"></a>                 <span class="at">field.names =</span> <span class="st">"id"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb29-106"><a href="#cb29-106" aria-hidden="true" tabindex="-1"></a>  <span class="co"># pretvori stolpce v vrstice</span></span>
+<span id="cb29-107"><a href="#cb29-107" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">starts_with</span>(<span class="st">"maj68"</span>), </span>
+<span id="cb29-108"><a href="#cb29-108" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_to =</span> <span class="st">"sentence_id"</span>, <span class="at">values_to =</span> <span class="st">"value"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb29-109"><a href="#cb29-109" aria-hidden="true" tabindex="-1"></a>  <span class="co"># razdeli stolpec na več stolpcev</span></span>
+<span id="cb29-110"><a href="#cb29-110" aria-hidden="true" tabindex="-1"></a>  <span class="fu">separate</span>(value, <span class="at">into =</span> <span class="fu">c</span>(<span class="st">"delimiter"</span>, <span class="st">"value"</span>), </span>
+<span id="cb29-111"><a href="#cb29-111" aria-hidden="true" tabindex="-1"></a>           <span class="at">sep =</span> <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>, <span class="at">extra =</span> <span class="st">"merge"</span>, <span class="at">fill =</span> <span class="st">"right"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb29-112"><a href="#cb29-112" aria-hidden="true" tabindex="-1"></a>  <span class="co"># ustvari vrstice iz stolpcev</span></span>
+<span id="cb29-113"><a href="#cb29-113" aria-hidden="true" tabindex="-1"></a>  <span class="fu">separate_rows</span>(value, <span class="at">sep =</span> <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb29-114"><a href="#cb29-114" aria-hidden="true" tabindex="-1"></a>  <span class="co"># razdeli stolpec na več stolpcev</span></span>
+<span id="cb29-115"><a href="#cb29-115" aria-hidden="true" tabindex="-1"></a>  <span class="fu">separate</span>(value, <span class="at">into =</span> columns, </span>
+<span id="cb29-116"><a href="#cb29-116" aria-hidden="true" tabindex="-1"></a>           <span class="at">sep =</span> <span class="st">"</span><span class="sc">\t</span><span class="st">"</span>, <span class="at">extra =</span> <span class="st">"merge"</span>, <span class="at">fill =</span> <span class="st">"right"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb29-117"><a href="#cb29-117" aria-hidden="true" tabindex="-1"></a>  <span class="co"># pripravljamo text_id za kasnejše združevanje tabel: </span></span>
+<span id="cb29-118"><a href="#cb29-118" aria-hidden="true" tabindex="-1"></a>  <span class="co"># positive lookahead: match q followed by u</span></span>
+<span id="cb29-119"><a href="#cb29-119" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">text_id =</span> <span class="fu">str_extract</span>(sentence_id, <span class="st">".+(?=</span><span class="sc">\\</span><span class="st">.)"</span>),</span>
+<span id="cb29-120"><a href="#cb29-120" aria-hidden="true" tabindex="-1"></a>         <span class="at">text_id =</span> <span class="fu">str_remove</span>(text_id, <span class="st">"</span><span class="sc">\\</span><span class="st">.$"</span>),</span>
+<span id="cb29-121"><a href="#cb29-121" aria-hidden="true" tabindex="-1"></a>         <span class="at">text_id =</span> <span class="fu">str_replace</span>(text_id, <span class="st">"</span><span class="sc">\\</span><span class="st">."</span>, <span class="st">"-"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb29-122"><a href="#cb29-122" aria-hidden="true" tabindex="-1"></a>  <span class="co"># postavi stolpec text_id na prvo mesto</span></span>
+<span id="cb29-123"><a href="#cb29-123" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(text_id, sentence_id<span class="sc">:</span>dep_head_id)</span>
+<span id="cb29-124"><a href="#cb29-124" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-125"><a href="#cb29-125" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb29-126"><a href="#cb29-126" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-127"><a href="#cb29-127" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Združevanje tabel</span></span>
+<span id="cb29-128"><a href="#cb29-128" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-129"><a href="#cb29-129" aria-hidden="true" tabindex="-1"></a>Združevanje tabele, ki vsebuje metapodatke, s tabelo, ki vsebuje slovnično analizo besednih oblik. </span>
+<span id="cb29-130"><a href="#cb29-130" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-133"><a href="#cb29-133" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb29-134"><a href="#cb29-134" aria-hidden="true" tabindex="-1"></a>literatura68 <span class="ot">&lt;-</span> xdf <span class="sc">%&gt;%</span> </span>
+<span id="cb29-135"><a href="#cb29-135" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(zdf, <span class="at">by =</span> <span class="st">"text_id"</span>)</span>
+<span id="cb29-136"><a href="#cb29-136" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(literatura68)</span>
+<span id="cb29-137"><a href="#cb29-137" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(literatura68)</span>
+<span id="cb29-138"><a href="#cb29-138" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb29-139"><a href="#cb29-139" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-140"><a href="#cb29-140" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Preverba</span></span>
+<span id="cb29-141"><a href="#cb29-141" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-142"><a href="#cb29-142" aria-hidden="true" tabindex="-1"></a>Preden zaženemo zanko za pretvorbo xml datotek, je dobro preveriti, ali so vse xml datoteke brez napake. Da bi preprečili *error “xmlParseEntityRef: noname”*, preverjamo, ali je v gradivu izgubljen znak &amp; (ampersand) in ga zamenjamo z <span class="dv">&amp;amp;</span> - s pravilnim kodiranjem. </span>
+<span id="cb29-143"><a href="#cb29-143" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-144"><a href="#cb29-144" aria-hidden="true" tabindex="-1"></a>https://stackoverflow.com/questions/29831427/convert-to-amp-while-preserving-existing-entity-references</span>
+<span id="cb29-145"><a href="#cb29-145" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-146"><a href="#cb29-146" aria-hidden="true" tabindex="-1"></a>Naslednja programska zanka zamenja osamele znake <span class="sc">\\</span>&amp; (ampersand) in jih zamenja z ustreznim <span class="sc">\\</span><span class="dv">&amp;amp;</span>  </span>
+<span id="cb29-147"><a href="#cb29-147" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-148"><a href="#cb29-148" aria-hidden="true" tabindex="-1"></a>Na mojem prenosniku je pregled in zamenjava trajala 568 sekund.  </span>
+<span id="cb29-149"><a href="#cb29-149" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-152"><a href="#cb29-152" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb29-153"><a href="#cb29-153" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb29-154"><a href="#cb29-154" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-155"><a href="#cb29-155" aria-hidden="true" tabindex="-1"></a>tictoc<span class="sc">::</span><span class="fu">tic</span>()</span>
+<span id="cb29-156"><a href="#cb29-156" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(pot)){</span>
+<span id="cb29-157"><a href="#cb29-157" aria-hidden="true" tabindex="-1"></a>  <span class="fu">read_lines</span>(pot[i]) <span class="sc">%&gt;%</span> </span>
+<span id="cb29-158"><a href="#cb29-158" aria-hidden="true" tabindex="-1"></a>  <span class="co"># negative lookahead to locate single &amp; and replace them</span></span>
+<span id="cb29-159"><a href="#cb29-159" aria-hidden="true" tabindex="-1"></a>  <span class="fu">str_replace_all</span>(<span class="at">pattern =</span> <span class="st">'&amp;(?![_a-zA-Z]</span><span class="sc">\\</span><span class="st">w*;)(?!#</span><span class="sc">\\</span><span class="st">d+;)'</span>, </span>
+<span id="cb29-160"><a href="#cb29-160" aria-hidden="true" tabindex="-1"></a>       <span class="at">replacement =</span> <span class="st">'&amp;amp;'</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb29-161"><a href="#cb29-161" aria-hidden="true" tabindex="-1"></a>    <span class="fu">write_lines</span>(pot[i])</span>
+<span id="cb29-162"><a href="#cb29-162" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb29-163"><a href="#cb29-163" aria-hidden="true" tabindex="-1"></a>tictoc<span class="sc">::</span><span class="fu">toc</span>()</span>
+<span id="cb29-164"><a href="#cb29-164" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb29-165"><a href="#cb29-165" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-166"><a href="#cb29-166" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Recept</span></span>
+<span id="cb29-167"><a href="#cb29-167" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-168"><a href="#cb29-168" aria-hidden="true" tabindex="-1"></a>Pretvoriti želimo vse xml dokumente (delitev na povedi) in zato bomo sestavili programsko zanko -- *for-loop*. </span>
+<span id="cb29-169"><a href="#cb29-169" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-170"><a href="#cb29-170" aria-hidden="true" tabindex="-1"></a>Uporaba regularnih izrazov (regex) je ponekod nepogrešljiva, npr. tudi v spodnjem programskem odstavku, kjer smo potrebovali *lookahead*.</span>
+<span id="cb29-171"><a href="#cb29-171" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-172"><a href="#cb29-172" aria-hidden="true" tabindex="-1"></a>regex: https://www.regular-expressions.info/lookaround.html  </span>
+<span id="cb29-173"><a href="#cb29-173" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-176"><a href="#cb29-176" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb29-177"><a href="#cb29-177" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb29-178"><a href="#cb29-178" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb29-179"><a href="#cb29-179" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: false</span></span>
+<span id="cb29-180"><a href="#cb29-180" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-181"><a href="#cb29-181" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(xmlconvert)</span>
+<span id="cb29-182"><a href="#cb29-182" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-183"><a href="#cb29-183" aria-hidden="true" tabindex="-1"></a><span class="co"># Positional attributes</span></span>
+<span id="cb29-184"><a href="#cb29-184" aria-hidden="true" tabindex="-1"></a>columns <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"word"</span>, <span class="st">"lemma"</span>, <span class="st">"tag_en"</span>, <span class="st">"upos"</span>, <span class="st">"feats"</span>, <span class="st">"token_id"</span>, <span class="st">"dep"</span>, <span class="st">"dep_head_lemma"</span>, <span class="st">"dep_head_tag_en"</span>, <span class="st">"dep_head_upos"</span>, <span class="st">"dep_head_feats"</span>, <span class="st">"dep_head_id"</span>)</span>
+<span id="cb29-185"><a href="#cb29-185" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-186"><a href="#cb29-186" aria-hidden="true" tabindex="-1"></a>tictoc<span class="sc">::</span><span class="fu">tic</span>()</span>
+<span id="cb29-187"><a href="#cb29-187" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-188"><a href="#cb29-188" aria-hidden="true" tabindex="-1"></a>litxml <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb29-189"><a href="#cb29-189" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-190"><a href="#cb29-190" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(pot)){</span>
+<span id="cb29-191"><a href="#cb29-191" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb29-192"><a href="#cb29-192" aria-hidden="true" tabindex="-1"></a>  <span class="fu">Sys.time</span>()</span>
+<span id="cb29-193"><a href="#cb29-193" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb29-194"><a href="#cb29-194" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"Pridobivam metapodatke xml datoteke: </span><span class="sc">\n</span><span class="st">"</span>, pot[i]))</span>
+<span id="cb29-195"><a href="#cb29-195" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb29-196"><a href="#cb29-196" aria-hidden="true" tabindex="-1"></a>  xdf <span class="ot">&lt;-</span> <span class="fu">xml_to_df</span>(pot[i], <span class="at">records.tag =</span> <span class="st">"text"</span>, </span>
+<span id="cb29-197"><a href="#cb29-197" aria-hidden="true" tabindex="-1"></a>                   <span class="at">fields =</span> <span class="st">"attributes"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb29-198"><a href="#cb29-198" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rename</span>(<span class="at">text_id =</span> id) <span class="sc">%&gt;%</span> </span>
+<span id="cb29-199"><a href="#cb29-199" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">c</span>(text_id<span class="sc">:</span>author, gender, </span>
+<span id="cb29-200"><a href="#cb29-200" aria-hidden="true" tabindex="-1"></a>                    monograph<span class="sc">:</span>facs), as.character)) <span class="sc">%&gt;%</span> </span>
+<span id="cb29-201"><a href="#cb29-201" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">c</span>(birth, year), as.numeric))</span>
+<span id="cb29-202"><a href="#cb29-202" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb29-203"><a href="#cb29-203" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"Preoblikujem slovnično analizo iz xml datoteke: </span><span class="sc">\n</span><span class="st">"</span>, pot[i]))</span>
+<span id="cb29-204"><a href="#cb29-204" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb29-205"><a href="#cb29-205" aria-hidden="true" tabindex="-1"></a>  zdf <span class="ot">&lt;-</span> <span class="fu">xml_to_df</span>(pot[i], <span class="at">records.tag =</span> <span class="st">"text"</span>, <span class="at">fields =</span> <span class="st">"tags"</span>,</span>
+<span id="cb29-206"><a href="#cb29-206" aria-hidden="true" tabindex="-1"></a>                   <span class="at">field.names =</span> <span class="st">"id"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb29-207"><a href="#cb29-207" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">starts_with</span>(<span class="st">"maj68"</span>), </span>
+<span id="cb29-208"><a href="#cb29-208" aria-hidden="true" tabindex="-1"></a>                 <span class="at">names_to =</span> <span class="st">"sentence_id"</span>, <span class="at">values_to =</span> <span class="st">"value"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb29-209"><a href="#cb29-209" aria-hidden="true" tabindex="-1"></a>    <span class="fu">separate</span>(value, <span class="at">into =</span> <span class="fu">c</span>(<span class="st">"delimiter"</span>, <span class="st">"value"</span>), </span>
+<span id="cb29-210"><a href="#cb29-210" aria-hidden="true" tabindex="-1"></a>             <span class="at">sep =</span> <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>, <span class="at">extra =</span> <span class="st">"merge"</span>, <span class="at">fill =</span> <span class="st">"right"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb29-211"><a href="#cb29-211" aria-hidden="true" tabindex="-1"></a>    <span class="fu">separate_rows</span>(value, <span class="at">sep =</span> <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb29-212"><a href="#cb29-212" aria-hidden="true" tabindex="-1"></a>    <span class="fu">separate</span>(value, <span class="at">into =</span> columns, </span>
+<span id="cb29-213"><a href="#cb29-213" aria-hidden="true" tabindex="-1"></a>             <span class="at">sep =</span> <span class="st">"</span><span class="sc">\t</span><span class="st">"</span>, <span class="at">extra =</span> <span class="st">"merge"</span>, <span class="at">fill =</span> <span class="st">"right"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb29-214"><a href="#cb29-214" aria-hidden="true" tabindex="-1"></a>    <span class="co"># positive lookahead: match q followed by u</span></span>
+<span id="cb29-215"><a href="#cb29-215" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">text_id =</span> <span class="fu">str_extract</span>(sentence_id, <span class="st">".+(?=</span><span class="sc">\\</span><span class="st">.)"</span>),</span>
+<span id="cb29-216"><a href="#cb29-216" aria-hidden="true" tabindex="-1"></a>           <span class="at">text_id =</span> <span class="fu">str_remove</span>(text_id, <span class="st">"</span><span class="sc">\\</span><span class="st">.$"</span>),</span>
+<span id="cb29-217"><a href="#cb29-217" aria-hidden="true" tabindex="-1"></a>           <span class="at">text_id =</span> <span class="fu">str_replace</span>(text_id, <span class="st">"</span><span class="sc">\\</span><span class="st">."</span>, <span class="st">"-"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb29-218"><a href="#cb29-218" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(text_id, sentence_id<span class="sc">:</span>dep_head_id)</span>
+<span id="cb29-219"><a href="#cb29-219" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb29-220"><a href="#cb29-220" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="st">"Združujem obe tabeli: </span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb29-221"><a href="#cb29-221" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb29-222"><a href="#cb29-222" aria-hidden="true" tabindex="-1"></a>  slovnica <span class="ot">=</span> xdf <span class="sc">%&gt;%</span> </span>
+<span id="cb29-223"><a href="#cb29-223" aria-hidden="true" tabindex="-1"></a>    <span class="fu">left_join</span>(zdf, <span class="at">by =</span> <span class="st">"text_id"</span>)</span>
+<span id="cb29-224"><a href="#cb29-224" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb29-225"><a href="#cb29-225" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="st">"Tabelo dodajam prejšnjim zapisom: </span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb29-226"><a href="#cb29-226" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb29-227"><a href="#cb29-227" aria-hidden="true" tabindex="-1"></a>  litxml <span class="ot">=</span> <span class="fu">bind_rows</span>(litxml, slovnica)</span>
+<span id="cb29-228"><a href="#cb29-228" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb29-229"><a href="#cb29-229" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-230"><a href="#cb29-230" aria-hidden="true" tabindex="-1"></a>tictoc<span class="sc">::</span><span class="fu">toc</span>()</span>
+<span id="cb29-231"><a href="#cb29-231" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-232"><a href="#cb29-232" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(litxml)</span>
+<span id="cb29-233"><a href="#cb29-233" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb29-234"><a href="#cb29-234" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-235"><a href="#cb29-235" aria-hidden="true" tabindex="-1"></a>Pretvorba xml zapisa v tabelo je trajal 9798 sekund. Tabela ima več kot milijon 600 tisoč zapisov in 31 stolpcev. </span>
+<span id="cb29-236"><a href="#cb29-236" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-237"><a href="#cb29-237" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-238"><a href="#cb29-238" aria-hidden="true" tabindex="-1"></a><span class="fu">## Shrani</span></span>
+<span id="cb29-239"><a href="#cb29-239" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-240"><a href="#cb29-240" aria-hidden="true" tabindex="-1"></a>Shranimo podatkovni niz v splošni dostopni tabelarni obliki, tako da ga lahko (ponovno) odpremo z <span class="in">`Excelom`</span> ali v <span class="in">`RStudiu`</span> za poizvedbe.  </span>
+<span id="cb29-241"><a href="#cb29-241" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-244"><a href="#cb29-244" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb29-245"><a href="#cb29-245" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb29-246"><a href="#cb29-246" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-247"><a href="#cb29-247" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv2</span>(litxml, <span class="st">"data/clarin_slovenska_literatura_maj1968.csv"</span>)</span>
+<span id="cb29-248"><a href="#cb29-248" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb29-249"><a href="#cb29-249" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-250"><a href="#cb29-250" aria-hidden="true" tabindex="-1"></a>Podatkovni niz zasede na disku približno 653 MB.  </span>
+<span id="cb29-251"><a href="#cb29-251" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-252"><a href="#cb29-252" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-253"><a href="#cb29-253" aria-hidden="true" tabindex="-1"></a><span class="fu">## Druge knjižnice</span></span>
+<span id="cb29-254"><a href="#cb29-254" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-255"><a href="#cb29-255" aria-hidden="true" tabindex="-1"></a>Z drugimi knjižnicami (<span class="in">`XML`</span>, <span class="in">`xml2`</span>, <span class="in">`rvest`</span>) je postopek nekoliko bolj zamotan -- vsaj v tem primeru je tako. </span>
+<span id="cb29-256"><a href="#cb29-256" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-257"><a href="#cb29-257" aria-hidden="true" tabindex="-1"></a>https://megapteraphile.wordpress.com/2020/03/29/converting-xml-to-tibble-in-r/</span>
+<span id="cb29-258"><a href="#cb29-258" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-259"><a href="#cb29-259" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-260"><a href="#cb29-260" aria-hidden="true" tabindex="-1"></a><span class="fu">## Nekaj preprostih poizvedb</span></span>
+<span id="cb29-261"><a href="#cb29-261" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-262"><a href="#cb29-262" aria-hidden="true" tabindex="-1"></a>(Ponovno) odpremo tabelo.</span>
+<span id="cb29-263"><a href="#cb29-263" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-266"><a href="#cb29-266" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb29-267"><a href="#cb29-267" aria-hidden="true" tabindex="-1"></a>litxml <span class="ot">&lt;-</span> <span class="fu">read_csv2</span>(<span class="st">"data/clarin_slovenska_literatura_maj1968.csv"</span>)</span>
+<span id="cb29-268"><a href="#cb29-268" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb29-269"><a href="#cb29-269" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-270"><a href="#cb29-270" aria-hidden="true" tabindex="-1"></a>Tabela vsebuje 195 avtorjev in avtorskih dvojic, njihova dela,  slovnično analizo besednih oblik in nekaj metapodatkov o avtorjih in delih. </span>
+<span id="cb29-271"><a href="#cb29-271" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-274"><a href="#cb29-274" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb29-275"><a href="#cb29-275" aria-hidden="true" tabindex="-1"></a>litxml <span class="sc">%&gt;%</span> </span>
+<span id="cb29-276"><a href="#cb29-276" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(author, <span class="at">sort =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb29-277"><a href="#cb29-277" aria-hidden="true" tabindex="-1"></a>  rmarkdown<span class="sc">::</span><span class="fu">paged_table</span>()</span>
+<span id="cb29-278"><a href="#cb29-278" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb29-279"><a href="#cb29-279" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-280"><a href="#cb29-280" aria-hidden="true" tabindex="-1"></a>Kdo je sodeloval z Brankom Gradišnikom?</span>
+<span id="cb29-281"><a href="#cb29-281" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-284"><a href="#cb29-284" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb29-285"><a href="#cb29-285" aria-hidden="true" tabindex="-1"></a>litxml <span class="sc">%&gt;%</span> </span>
+<span id="cb29-286"><a href="#cb29-286" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">str_detect</span>(author, <span class="st">"Gradišnik"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb29-287"><a href="#cb29-287" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(author, title) <span class="sc">%&gt;%</span> </span>
+<span id="cb29-288"><a href="#cb29-288" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>()</span>
+<span id="cb29-289"><a href="#cb29-289" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb29-290"><a href="#cb29-290" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb29-291"><a href="#cb29-291" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-292"><a href="#cb29-292" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-295"><a href="#cb29-295" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb29-296"><a href="#cb29-296" aria-hidden="true" tabindex="-1"></a>litxml <span class="sc">%&gt;%</span> </span>
+<span id="cb29-297"><a href="#cb29-297" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(author) <span class="sc">%&gt;%</span> </span>
+<span id="cb29-298"><a href="#cb29-298" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">str_detect</span>(word, <span class="st">"^[:alpha:]+"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb29-299"><a href="#cb29-299" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(word, <span class="at">sort =</span> T) <span class="sc">%&gt;%</span> </span>
+<span id="cb29-300"><a href="#cb29-300" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">10</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb29-301"><a href="#cb29-301" aria-hidden="true" tabindex="-1"></a>  rmarkdown<span class="sc">::</span><span class="fu">paged_table</span>()</span>
+<span id="cb29-302"><a href="#cb29-302" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb29-303"><a href="#cb29-303" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-304"><a href="#cb29-304" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-305"><a href="#cb29-305" aria-hidden="true" tabindex="-1"></a><span class="fu">## Pretvorba podatkovnega niza v xml</span></span>
+<span id="cb29-306"><a href="#cb29-306" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-309"><a href="#cb29-309" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb29-310"><a href="#cb29-310" aria-hidden="true" tabindex="-1"></a><span class="co"># odstrani številke vrstic</span></span>
+<span id="cb29-311"><a href="#cb29-311" aria-hidden="true" tabindex="-1"></a>litxml <span class="ot">&lt;-</span> litxml[<span class="sc">-</span><span class="dv">1</span>]</span>
+<span id="cb29-312"><a href="#cb29-312" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb29-313"><a href="#cb29-313" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-316"><a href="#cb29-316" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb29-317"><a href="#cb29-317" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(xmlconvert)</span>
+<span id="cb29-318"><a href="#cb29-318" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert to XML with the fields (i.e. dataframe variables/columns) stored in XML tags</span></span>
+<span id="cb29-319"><a href="#cb29-319" aria-hidden="true" tabindex="-1"></a>xmls <span class="ot">&lt;-</span> <span class="fu">df_to_xml</span>(litxml[litxml<span class="sc">$</span>text_id <span class="sc">==</span> <span class="st">"maj68-0001"</span>,], <span class="at">fields =</span> <span class="st">"tags"</span>, <span class="at">record.tag =</span> <span class="st">"text_id"</span>)</span>
+<span id="cb29-320"><a href="#cb29-320" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb29-321"><a href="#cb29-321" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-324"><a href="#cb29-324" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb29-325"><a href="#cb29-325" aria-hidden="true" tabindex="-1"></a><span class="fu">write_lines</span>(xmls, <span class="st">"data/xmls.xml"</span>)</span>
+<span id="cb29-326"><a href="#cb29-326" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb29-327"><a href="#cb29-327" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-328"><a href="#cb29-328" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-331"><a href="#cb29-331" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb29-332"><a href="#cb29-332" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert to XML with the fields (i.e. dataframe variables/columns) stored in attributes</span></span>
+<span id="cb29-333"><a href="#cb29-333" aria-hidden="true" tabindex="-1"></a>xmls2 <span class="ot">&lt;-</span> <span class="fu">df_to_xml</span>(litxml[litxml<span class="sc">$</span>text_id <span class="sc">==</span> <span class="st">"maj68-0001"</span>,], <span class="at">fields=</span><span class="st">"attributes"</span>, <span class="at">record.tag =</span> <span class="st">"text_id"</span>)</span>
+<span id="cb29-334"><a href="#cb29-334" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-335"><a href="#cb29-335" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb29-336"><a href="#cb29-336" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-339"><a href="#cb29-339" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb29-340"><a href="#cb29-340" aria-hidden="true" tabindex="-1"></a><span class="fu">write_lines</span>(xmls2, <span class="st">"data/xmls2.xml"</span>)</span>
+<span id="cb29-341"><a href="#cb29-341" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->

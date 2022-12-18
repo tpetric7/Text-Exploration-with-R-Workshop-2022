@@ -1,1 +1,722 @@
 # Naprednejše korpusne funkcije {#sec-delavnica3}
+
+Twitter
+
+## Nalaganje knjižnic
+
+```{r}
+#| warning: false
+#| message: false
+library(tidyverse)
+library(tidytext)
+library(readxl)
+library(writexl)
+library(quanteda)
+library(quanteda.textstats)
+library(quanteda.textplots)
+library(rtweet)
+library(Twitmo)
+library(ndjson)
+library(plotly)
+library(lubridate)
+library(igraph)
+library(textfeatures)
+```
+
+## Preverjanje pristnosti (avtentikacija)
+
+Za poizvedbe se morate najprej prijaviti na Twitterjevem programskem vmesniku (*API*).
+
+Za poizvedbe je treba ustvariti *Twitter App* <apps.twitter.com>. Opis: gl. <https://mkearney.github.io/nicar_tworkshop/#10>. 
+
+Najpreprostejša prijava z lastno Twitterjevo aplikacijo poteka z naslednjim ukazom: 
+
+```{r}
+#| message: false
+#| warning: false
+rtweet::auth_setup_default()
+```
+
+```{r}
+#| eval: false
+#| include: false
+
+# auth <- rtweet_bot()
+bearer_token <- jsonlite::fromJSON("d:/Users/teodo/Documents/R/Twitter/credentials/twitter_bearer_token_tp.json")
+
+bearer_token <- rtweet_app(bearer_token$access_token)
+```
+
+`R` pošilja vaš čivk. 
+
+```{r}
+#| eval: false
+
+post_tweet(paste0("My first tweet with #rtweet #rstats at ", Sys.time()))
+```
+
+
+Nekaj koristnih naslovov s "kuharskimi" recepti za poizvedovanje v socialnem omrežju *Twitter*:   
+
+<https://cran.r-project.org/web/packages/rtweet/vignettes/rtweet.html>   
+
+<https://mkearney.github.io/nicar_tworkshop/#1>
+
+<https://www.gbailey.uk/twitter_workshop/pt2_collection.html>
+
+<https://rpubs.com/vivvi87/rtweet_notes>
+
+<https://predictivehacks.com/how-to-get-twitter-data-using-r/>
+
+
+## Sprotne poizvedbe
+
+### Prijatelji
+
+Pridobi id prijateljev navedene osebe s funkcijo `get_friends()` knjižnice `rtweet`, tj. katerim uporabnikom navedena oseba sledi.   
+
+```{r}
+#| eval: false
+
+prijatelji_jj <- get_friends("jjansasds")
+prijatelji_al <- get_friends("anzelog")
+
+saveRDS(prijatelji_jj, "data/twitter/politiki/prijatelji_jansa.rds")
+saveRDS(prijatelji_al, "data/twitter/politiki/prijatelji_logar.rds")
+```
+
+Odpiramo shranjeno poizvedbo. 
+
+```{r}
+prijatelji_jj <- read_rds("data/twitter/politiki/prijatelji_jansa.rds")
+prijatelji_al <- read_rds("data/twitter/politiki/prijatelji_logar.rds")
+
+dim(prijatelji_jj)
+dim(prijatelji_al)
+```
+Janez Janša sledi 4060 uporabnikom, Anže Logar pa 959 uporabnikom. 
+
+Kateri prijatelji so skupni oz. katerim uporabnikom sledita oba politika? To lahko hitro ugotovimo s funkcijo `intersect()`.
+
+```{r}
+prijatelji_skupni <- 
+  intersect(prijatelji_jj$to_id, prijatelji_al$to_id) %>% 
+  as_tibble_col(column_name = "skupni_prijatelji")
+dim(prijatelji_skupni)
+```
+
+Mnogim uporabnikom, ki jim sledi *Anže Logar* (tj. 557 od 959), sledi tudi *Janez Janša*.
+
+Kateri so ti skupni prijatelji? To lahko ugotovimo s funkcijo `lookup_users()`.
+
+```{r}
+#| eval: false
+
+prijatelji_jj_data <- lookup_users(prijatelji_jj$to_id)
+prijatelji_al_data <- lookup_users(prijatelji_al$to_id)
+
+saveRDS(prijatelji_jj_data, "data/twitter/politiki/prijatelji_jansa_data.rds")
+saveRDS(prijatelji_al_data, "data/twitter/politiki/prijatelji_logar_data.rds")
+```
+
+Odpiramo shranjeno poizvedbo. 
+
+```{r}
+prijatelji_jj_data <- read_rds("data/twitter/politiki/prijatelji_jansa_data.rds")
+prijatelji_al_data <- read_rds("data/twitter/politiki/prijatelji_logar_data.rds")
+
+dim(prijatelji_jj_data)
+dim(prijatelji_al_data)
+```
+
+```{r}
+prijatelji_skupni_data <- 
+  intersect(prijatelji_jj_data$name, prijatelji_al_data$name) %>% 
+  as_tibble_col(column_name = "imena_skupnih_prijateljev")
+dim(prijatelji_skupni_data)
+```
+
+Poizvedba nam je dala 562 skupnih prijateljev. Tu so imena:  
+
+```{r}
+prijatelji_skupni_data %>% 
+  rmarkdown::paged_table()
+```
+
+Skupni prijatelji so lahko npr. povezani z izbiro pogovorne tematike, značilnih izrazov itd. 
+
+### Sledilci
+
+Ukaz `get_followers()` nam omogoča najti sledilce navedenega uporabnika. 
+
+```{r}
+#| eval: false
+
+npmusar_sledilci <- get_followers("nmusar", 
+                                  retryonratelimit = TRUE)
+npmusar_sledilci_data <- lookup_users(npmusar_sledilci$from_id)
+
+saveRDS(npmusar_sledilci, "data/twitter/politiki/npmusar_sledilci.rds")
+saveRDS(npmusar_sledilci_data, "data/twitter/politiki/npmusar_sledilci_data.rds")
+```
+
+Odpiramo shranjeno poizvedbo. 
+
+```{r}
+npmusar_sledilci_data <- read_rds("data/twitter/politiki/npmusar_sledilci_data.rds")
+
+dim(npmusar_sledilci_data)
+```
+
+```{r}
+npmusar_sledilci_data %>% rmarkdown::paged_table()
+```
+
+```{r}
+npmusar_sledilci_data %>% 
+  filter(str_detect(name, "Janša")) %>% 
+  rmarkdown::paged_table()
+```
+
+### Iskanje čivkov
+
+Funkcija `search_tweets()` nam vrne tabelo čivkov z ozirom na tematsko vprašanje. 
+
+```{r}
+#| eval: false
+
+q <- "ukrajina"
+
+ukraijina <- search_tweets(q = q, 
+                        n = 1000,
+                        # token = rtweet_app(bearer_token$access_token),
+                        include_rts = FALSE,
+                        `-filter` = "replies",
+                        lang = "sl"
+                        )
+
+saveRDS(ukraijina,
+        "data/twitter/politiki/ukraijina_tweets_sl.rds")
+```
+
+Odpiramo shranjeno poizvedbo. 
+
+```{r}
+ukraijina <- read_rds(
+  "data/twitter/politiki/ukraijina_tweets_sl.rds")
+
+dim(ukraijina)
+```
+
+### Časovnica
+
+Privzeto 100 čivkov, zgornja meja n = 3200. Še več, če pridobil bearer_token. 
+
+```{r}
+#| eval: false
+
+fajon_timeline <- get_timeline("tfajon", n = 3200)
+
+saveRDS(fajon_timeline, "data/twitter/politiki/fajon_timeline.rds")
+```
+
+Odpiramo shranjeno poizvedbo. 
+
+```{r}
+fajon_timeline <-
+  read_rds("data/twitter/politiki/fajon_timeline.rds")
+```
+
+
+```{r}
+tline_plot_fajon <- fajon_timeline |> 
+  filter(created_at > "2022-01-01") |> 
+  ts_plot(by = "weeks", trim = 1L, color = "magenta") +
+  geom_point() +
+  theme_minimal() +
+  theme(
+    legend.title = element_blank(),
+    legend.position = "bottom",
+    plot.title = element_text(face = "bold")) +
+  labs(
+    x = NULL, y = NULL,
+    title = "Frequency of Twitter statuses by Tanja Fajon",
+    subtitle = "Twitter status counts aggregated by weeks from 2022",
+    caption = "Source: Data collected from Twitter's REST API via rtweet"
+  )
+
+library(plotly)
+ggplotly(tline_plot_fajon)
+```
+
+### Priljubljeni čivki
+
+Pridobiti želimo 10 zadnjih priljubljenih čikov Tanje Fajon in Mateja Tonina. 
+
+```{r}
+#| eval: false
+
+favorit_fajon <- get_favorites("tfajon", n = 10)
+favorit_tonin <- get_favorites("MatejTonin", n = 10)
+
+saveRDS(favorit_fajon, "data/twitter/politiki/fajon_favorit.rds")
+saveRDS(favorit_tonin, "data/twitter/politiki/tonin_favorit.rds")
+```
+
+Odpiramo shranjeno poizvedbo.  
+
+```{r}
+favorit_fajon <-
+  read_rds("data/twitter/politiki/fajon_favorit.rds")
+favorit_tonin <-
+  read_rds("data/twitter/politiki/tonin_favorit.rds")
+```
+
+
+```{r}
+favorit_fajon %>% 
+  select("text", "created_at", "id_str") %>%
+  rmarkdown::paged_table()
+
+favorit_tonin %>% 
+  select("text", "created_at", "id_str") %>%
+  rmarkdown::paged_table()
+```
+
+### Poglej izbrane čivke
+
+Kontroverzni čivki Donalda Trumpa. 
+
+```{r}
+#| eval: false
+
+
+## status IDs
+status_ids <- c("947235015343202304", "947592785519173637", 
+  "948359545767841792", "832945737625387008")
+## lookup tweets
+twt <- lookup_tweets(status_ids)
+```
+
+
+Kontroverzni čivki Janeza Janša. 
+
+Jansa's tweet, Carpenter's reaction and Fazlic commenting on Carpenter's reaction
+
+```{r}
+# status_id = "1319567043218296833" (Jansa's suport from Trump)
+status = "1320064582170398722" # Comment on Carpenter's tweet by Damir Fazlić
+tw1 <- lookup_statuses(status)
+tw1
+
+```
+
+Janša's provocative tweet
+
+```{r}
+# status_id = "1319567043218296833" (Jansa's suport for Trump)
+status = "1319567043218296833"
+tw <- lookup_statuses(status)
+tw
+
+```
+
+```{r}
+# status_id = "1324075189802512384" (Jansa: lefties can't stand Trump is winner)
+# status_id = "1323913419200864256" (Jansa: Trump is winner)
+status2 = "1323913419200864256"
+tw2 <- lookup_statuses(status2)
+tw2
+
+```
+
+Poizvedba s 5. novembra 2020.
+
+```{r}
+#| eval: false
+
+# status_id = "1323913419200864256" (Jansa's claim that Trump is winner of elections)
+tweets_replies_jj_support2 <- search_tweets(q = "1323913419200864256", 
+                        n = 18000,
+                        include_rts = FALSE,
+                        `-filter` = "replies",
+                        lang = "en")
+```
+
+Shranjena poizvedba s 5. novembra 2020.  
+
+```{r}
+tweets_replies_jj_support2 <- read_rds("data/twitter/politiki/replies_to_jj_support_for_trump.rds")
+
+tweets_replies_jj_support2 %>% 
+  select(text, created_at, name, screen_name) %>% 
+  rmarkdown::paged_table()
+```
+
+### Streaming -- Tok v živo
+
+```{r}
+#| eval: false
+
+library(Twitmo)
+library(ndjson)
+
+## random sample
+nakljucen_tok <- get_tweets(method = 'stream', 
+           location = "SLV", 
+           timeout = 30, 
+           file_name = "data/slv_tweet_stream.json")
+```
+
+```{r}
+nakljucen_tok <- ndjson::stream_in("data/slv_tweet_stream.json")
+
+nakljucen_tok[1:10] %>% 
+  select(text)
+```
+
+
+```{r}
+#| eval: false
+
+st <- stream_tweets(q = "Soccer World Cup", timeout = 30,
+                    file_name = "data/stream_tweets32907e436248.json")
+```
+```{r}
+st <- ndjson::stream_in("data/stream_tweets32907e436248.json")
+
+st %>% 
+  slice_sample(n = 10) %>% 
+  select(text)
+```
+
+```{r}
+#| eval: false
+
+iran <- stream_tweets(q = "Iran", timeout = 30, 
+                    file_name = "data/iran.json")
+```
+
+```{r}
+iran <- ndjson::stream_in("data/iran.json")
+
+iran %>% 
+  slice_sample(n = 10) %>% 
+  select(text)
+```
+
+Druge rtweet funkcije:   
+
+
+    search_users()
+    lookup_users()
+    get_trends()
+    stream_tweets()
+    lists_members()
+    lists_statuses()
+
+    lookup_coords()
+    tweet_shot()
+    post_*()
+    ts_data()
+    lat_lng()
+    emojis
+    stopwordslangs
+
+### Analiza omrežja
+
+```{r}
+#| eval: false
+
+## get friends of multiple accounts
+fds <- get_friends(c("nmusar", "anzelog", "tfajon"), 
+                   retryonratelimit = TRUE)
+
+## frequency count of accounts followed by the users queried above
+tbl <- table(fds$from_id)
+
+## subset fds data to only those followed by 5 or more
+fds3 <- subset(fds, from_id %in% names(tbl[tbl > 15L]))
+
+fds3_names <- lookup_users(fds3$to_id)
+fds3_names <- fds3_names %>% 
+  rename(to_id = id_str)
+fds3_names <- fds3_names %>% 
+  select(to_id, name)
+
+fds3 <- fds3 %>% left_join(fds3_names, by = "to_id")
+fds3 <- fds3 %>% select(1,3,2)
+
+## convert fds3 to matrix
+mat <- as.matrix(fds3)
+saveRDS(mat, "data/mat.rds")
+
+fds3 <- fds3 %>% select(1,2)
+## convert fds3 to matrix
+mat <- as.matrix(fds3)
+saveRDS(mat, "data/mat.rds")
+
+## convert to graph object
+mat <- igraph::graph_from_edgelist(mat)
+saveRDS(mat, "data/mat_igraph.rds")
+```
+
+
+```{r}
+mat <- read_rds("data/mat_igraph.rds")
+## plot network
+plot(mat)
+```
+
+
+### Sentiment analysis
+
+```{r}
+#| eval: false
+
+## function to round time (created_at)
+round_time <- function(x, secs) as.POSIXct(hms::round_hms(x, secs))
+
+## function to calculate sentiment scores
+sent_scores <- function(x) syuzhet::get_sentiment(plain_tweets(x)) - .5
+
+## calc data set with sentiment variable
+tt_sent <- tt %>%
+  mutate(days = round_time(created_at, 60 * 60 * 24),
+    sentiment = sent_scores(text))
+
+## aggregate by rounded time interval
+tt_sent  %>% 
+  group_by(days) %>%
+  summarise(sentiment = sum(sentiment, na.rm = TRUE)) %>%
+  ggplot(aes(x = weeks, y = sentiment)) +
+  geom_point(aes(colour = sentiment > 0)) + 
+  geom_smooth(method = "loess", span = .2) + 
+  scale_color_manual(values = c("#dd3333", "#22aa33")) + 
+  geom_hline(yintercept = 0, linetype = 2, colour = "#000000cc") + 
+  theme_minimal(base_family = "Helvetica Neue")
+```
+
+```{r}
+#| eval: false
+
+## aggregate text features by the hour
+tt_tft <- tt %>% 
+  filter(created_at > "2010-12-31") %>%
+  mutate(hours = round_time(created_at, 60 * 60)) %>%
+  group_by(hours) %>%
+  textfeatures::textfeatures() %>%
+  print()
+```
+
+```{r}
+#| eval: false
+
+## plot [smoothing] text features over time
+tt_tft %>%
+  filter(hours > "2014-05-31") %>%
+  mutate_if(is.numeric, function(x) scale(x)[, 1]) %>%
+  gather(feature, n, -hours) %>%
+  ggplot(aes(x = hours, y = n, colour = feature)) + 
+  geom_vline(xintercept = as.POSIXct("2016-11-08"),
+    colour = "#aa000077", size = .9, linetype = 2) +
+  geom_smooth(method = "loess", span = .1) + 
+  facet_wrap(~ feature, ncol = 6)
+```
+
+
+------
+
+## Že opravljene poizvedbe
+
+### Časovnice
+
+Časovnice slovenskih politikov na Twitterju.
+
+```{r}
+seznam_polit <- list.files(path = "data/twitter/politiki/",
+                           pattern = "_2022-12-16.rds",
+                           full.names = TRUE)
+
+seznam_imen <- str_replace(
+  seznam_polit, 
+  pattern = "(^.*politiki/)(.*)(_time.*.rds$)",
+  replacement = "\\2")
+
+politiki_df <- NULL
+
+for(i in 1:length(seznam_polit)){
+  x <- read_rds(seznam_polit[i]) %>% 
+    mutate(author = seznam_imen[i])
+  politiki_df <- bind_rows(politiki_df, x)
+}
+
+write_xlsx(politiki_df, 
+           "data/twitter/politiki/twitter_politiki_df.xlsx")
+
+dim(politiki_df)
+```
+
+```{r}
+politiki_df %>%
+  group_by(created_at, author) %>% 
+  count(author, sort = TRUE) %>% 
+  ungroup() %>% 
+  group_by(author) %>% 
+  filter(created_at > "2018-01-01") %>%
+  ts_plot("weeks", color = "blue") +
+  labs(x = "", y = "") +
+  facet_wrap(~ author, scales = "free_y")
+```
+
+```{r}
+p1 <- politiki_df %>% 
+  filter(created_at > "2018-01-01") %>%
+  group_by(author) %>% 
+  ts_plot("days", color = "red") +
+  theme_minimal() +
+  theme(plot.title = ggplot2::element_text(face = "bold")) +
+  labs(
+    x = NULL, y = NULL,
+    title = "Frequency of Twitter statuses",
+    subtitle = "Twitter status (tweet) counts aggregated using week intervals",
+    caption = "\nSource: Data collected from Twitter's REST API via rtweet"
+  ) +
+  facet_wrap(~ author, scales = "free_y")
+
+library(plotly)
+ggplotly(p1)
+```
+
+### Jeziki
+
+Preštej jezike:
+
+```{r}
+politiki_df %>% 
+  count(lang, sort = TRUE)
+```
+
+Izberi samo čivke v slovenščini:
+
+```{r}
+politiki_df <- politiki_df %>% 
+  filter(lang == "sl")
+dim(politiki_df)
+```
+
+### Vsota besed (tokens)
+
+Vsota besed (tokens), najdaljši in najkrajši čivki.
+
+```{r}
+politiki_tokens_sum <- politiki_df %>% 
+  group_by(author) %>% 
+  summarise(tokens_sum = sum(ntoken(text)), 
+            tokens_min = min(ntoken(text)),
+            tokens_max = max(ntoken(text)),
+            char_max = max(nchar(text))) %>% 
+  arrange(-tokens_sum)
+
+politiki_tokens_sum %>% rmarkdown::paged_table()
+```
+
+### Povprečna dolžina čivka
+
+Koliko besed (z ločili in simboli vred) čivkajo politiki v povprečju?
+
+```{r}
+politiki_token_mean <- politiki_df %>% 
+  group_by(author) %>% 
+  summarise(median_token = median(ntoken(text)), 
+            mean_token = mean(ntoken(text)),
+            sd_token = sd(ntoken(text))) %>% 
+  arrange(-mean_token)
+politiki_token_mean
+```
+
+### Povedi
+
+```{r}
+politiki_povedi <- politiki_df %>% 
+  unnest_tokens(poved, text, "sentences")
+```
+
+```{r}
+politiki_povedi %>% 
+  group_by(author) %>% 
+  summarise(median_sent = median(ntoken(poved)), 
+            mean_sent = mean(ntoken(poved)),
+            sd_sent = sd(ntoken(poved)),
+            char_sent = mean(nchar(poved))) %>% 
+  arrange(-mean_sent)
+```
+
+### Ngrami
+
+```{r}
+politiki_ngrams <- politiki_df %>% 
+  unnest_tokens(ngram, text, "ngrams", n = 2)
+```
+
+```{r}
+politiki_ngrams %>% 
+  group_by(author) %>% 
+  count(ngram, sort = TRUE)
+
+```
+
+### Besede
+
+```{r}
+politiki_besede <- politiki_df %>% 
+  unnest_tokens(word, text, "words")
+```
+
+```{r}
+politiki_besede %>% 
+  group_by(author) %>% 
+  count(word, sort = TRUE)
+
+```
+
+-------
+
+    Pogovori o ukrepih proti covidu
+
+```{r}
+#| eval: false
+#| include: false
+
+# naredi seznam datotek v mapi
+seznam_corona <- list.files(path = "data/twitter/corona/", 
+                              pattern = ".xlsx", 
+                              full.names = TRUE)
+# odpri in vtakni vse relevantne xlsx datoteke v podatkovni niz
+corona_df <- map_dfr(seznam_corona, read_xlsx)
+dim(corona_df)
+```
+
+    Pogovori o vojni v Ukrajini
+
+```{r}
+#| eval: false
+#| include: false
+
+# naredi seznam datotek v mapi
+seznam_ukrajina <- list.files(path = "data/twitter/ukrajina/", 
+                              pattern = ".xlsx", 
+                              full.names = TRUE)
+# odpri in vtakni vse relevantne xlsx datoteke v podatkovni niz
+ukrajina_df <- map_dfr(seznam_ukrajina, read_xlsx)
+
+dim(ukrajina_df)
+```
+
+```{r}
+#| eval: false
+#| include: false
+
+ukrajina_df %>% 
+  count(lang)
+```

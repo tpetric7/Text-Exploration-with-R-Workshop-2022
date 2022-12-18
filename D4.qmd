@@ -6,21 +6,11 @@
 #| warning: false
 #| message: false
 
-packages = c("tidyverse", "tidytext", "janitor", "scales", "widyr", 
-             "quanteda", "quanteda.textplots", "quanteda.textstats",
-             "wordcloud2", "ggwordcloud", "udpipe", "syuzhet",
-             "ggtext", "corpustools", "xml2", "XML", "rvest", 
-             "readtext", "readxl", "writexl", "xlsx", "stopwords", 
-             "xmlconvert", "lubridate")
-
-# Install packages not yet installed
-installed_packages <- packages %in% rownames(installed.packages())
-if (any(installed_packages == FALSE)) {
-  install.packages(packages[!installed_packages])
-}
-
-# Packages loading
-invisible(lapply(packages, library, character.only = TRUE))
+library(tidyverse)
+library(xml2)
+library(XML)
+library(xmlconvert)
+library(rvest)
 ```
 
 
@@ -283,3 +273,31 @@ litxml %>%
   rmarkdown::paged_table()
 ```
 
+
+## Pretvorba podatkovnega niza v xml
+
+```{r}
+# odstrani številke vrstic
+litxml <- litxml[-1]
+```
+
+```{r}
+library(xmlconvert)
+# Convert to XML with the fields (i.e. dataframe variables/columns) stored in XML tags
+xmls <- df_to_xml(litxml[litxml$text_id == "maj68-0001",], fields = "tags", record.tag = "text_id")
+```
+
+```{r}
+write_lines(xmls, "data/xmls.xml")
+```
+
+
+```{r}
+# Convert to XML with the fields (i.e. dataframe variables/columns) stored in attributes
+xmls2 <- df_to_xml(litxml[litxml$text_id == "maj68-0001",], fields="attributes", record.tag = "text_id")
+
+```
+
+```{r}
+write_lines(xmls2, "data/xmls2.xml")
+```

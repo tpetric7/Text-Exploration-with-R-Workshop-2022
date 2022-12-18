@@ -13,6 +13,39 @@ knitr::include_graphics("pictures/R_delavnica_shema.png")
 knitr::include_graphics("pictures/R_delavnica_oris_vsebin.png")
 ```
 
+`R` ima vrsto že vgrajenih knjižnic za statistično analizo, potrebujemo pa še nekaj dodatnih. Naslednji programski odstavek poskrbi za automatizirano namestitev dodatnih knjižnic, ki jih želimo uporabljati za delo z besedili in besedilnimi zbirkami. 
+
+```{r}
+#| warning: false
+#| message: false
+
+packages = c("tidyverse", "tidytext", "janitor", "scales",
+             "widyr", "quanteda", "quanteda.textplots", 
+             "quanteda.textstats", "wordcloud2", 
+             "ggwordcloud", "udpipe", "syuzhet", "ggtext", 
+             "corpustools", "xml2", "XML", "rvest", 
+             "readtext", "readxl", "writexl", 
+             "stopwords", "xmlconvert", "lubridate", 
+             "rtweet", "plotly", "Twitmo", 
+             "jsonlite", "ndjson", "igraph", 
+             "textfeatures") # xlsx
+
+# Install packages not yet installed
+installed_packages <- packages %in% rownames(installed.packages())
+if (any(installed_packages == FALSE)) {
+  install.packages(packages[!installed_packages])
+}
+
+```
+
+Če bi želeli naložiti vse zgoraj navedene knjižnice v pomnilnik (RAM), bi to lahko naredili z naslednjim ukazom.  
+
+```{r}
+# Packages loading
+invisible(lapply(packages, library, character.only = TRUE))
+```
+
+
 [^intro-1]: Knjiga je bila sestavljeno z orodjem `Quarto` <https://quarto.org/docs/books/>.
 
 -----
@@ -61,6 +94,8 @@ To je simbol za svarilo (rmdwarning).
 To je logotip za napako pri sestavljanju skripta (rmderror).
 :::
 
+Naslednji programski odstavek (program chunk) poskrbi za samodejno dodajanje naslovov v bibliografijo quarto knjige. Tu uporabljamo razširjen format `bib`.
+
 ```{r include=FALSE}
 # automatically create a bib database for R packages
 knitr::write_bib(c(
@@ -68,9 +103,8 @@ knitr::write_bib(c(
              "quanteda", "quanteda.textplots", "quanteda.textstats",
              "wordcloud2", "ggwordcloud", "udpipe", "syuzhet",
              "ggtext", "corpustools", "xml2", "XML", "rvest", 
-             "readtext", "readxl", "writexl", "xlsx", "stopwords", 
-             "xmlconvert", "lubridate"), 
-  'packages.bib')
+             "readtext", "readxl", "writexl", "stopwords", 
+             "xmlconvert", "lubridate", "rtweet"), 
+  'packages.bib') # "xlsx"
 ```
 
-packages = c()
