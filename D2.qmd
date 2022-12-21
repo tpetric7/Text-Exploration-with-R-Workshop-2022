@@ -1,5 +1,19 @@
 # Quanteda korpusne funkcije {#sec-delavnica2}
 
+```{r}
+#| echo: false
+#| fig-keep: 'all'
+#| out-width: "100%"
+#| fig-link: "https://quanteda.io/reference/textplot_network.html"
+
+im <- magick::image_read("https://quanteda.io/reference/textplot_network-1.png")
+im <- magick::image_background(im, color = "white")
+magick::image_write(im, "pictures/quanteda_fcm_example.png")
+
+knitr::include_graphics("pictures/quanteda_fcm_example.png", 
+                        dpi = 300)
+```
+
 ## Nalaganje knjižnic
 
 ```{r}
@@ -32,6 +46,13 @@ library(writexl)
 df <- read_csv2("data/slovenska_literatura_1968.csv") %>% 
   select(-`...1`, -n)
 ```
+
+Čiščenje besedil v stolpcu *text*: precej je odvečnih presledkov, kar moti poizvedbe. 
+
+```{r}
+df <- df %>% mutate(text = str_squish(text))
+```
+
 
 ## Izbor proznih del
 
@@ -117,15 +138,38 @@ besede <- tokens_select(toks, pattern = stop_sl,
 
 ## Kwic konkordance
 
-```{r}
-kwic(toks, pattern = c("ura", "tišina"))
+V poizvedbenem nizu je mogoče navesti en izraz ali tudi več. Če je navedenih več izrazov (tj. 2 ali več), potem potrebujete povezovalno funkcijo `c()`, ki povezuje več nizov v en funkcijski argument. 
 
+Konkordanco lahko uporabljamo tudi z nekaterimi grafičnimi funkcijami knjižnice `quanteda` (npr. `textplot_xray()`). 
+
+```{r}
+conc <- kwic(toks, pattern = c("ura", "tišina"))
+conc
+
+textplot_xray(conc)
+```
+
+Izboljšan izpis tabele omogoča funkcija `as_tibble()` iz knjižnične zbirke `tidyverse`. Tabelo lahko preoblikujemo s funkcijami `tidyverse`, ni pa uporabna za funkcije knjižnice `quanteda`. 
+
+```{r}
 kwic(toks, pattern = c("ur*", "tišin*"), 
      case_insensitive = TRUE) %>% 
   as_tibble() %>% 
   rmarkdown::paged_table()
 
 ```
+
+
+```{r}
+kwic(corp, pattern = phrase("dobr* d*"), window = 2)
+
+kwic(corp, pattern = phrase("dobr* d*"), window = 5, 
+     case_insensitive = TRUE) %>% 
+  as_tibble() %>% 
+  rmarkdown::paged_table()
+
+```
+
 
 ```{r}
 kwic(toks, "*ica", valuetype = "glob", 
@@ -142,6 +186,39 @@ kwic(toks, pattern = c("\\b.*[nl]ica\\b"),
   as_tibble() %>% 
   rmarkdown::paged_table()
 ```
+
+```{r}
+kwic(corp, pattern = phrase("dob[r]?.* d.*"),
+     valuetype = "regex", 
+     case_insensitive = FALSE) %>% 
+  as_tibble() %>% 
+  rmarkdown::paged_table()
+```
+
+Opcija `window` nam izpisuje navedeno število besed (pojavnic, tokens) na levi in desni strani ključne besede, privzeto po pet besed. 
+
+Če želimo v konkordanci na levi in desni strani ključne besede izpisati cele povedi, potem lahko s knjižnico `quanteda` ustvarimo korpus povedi z ukazom `corpus_reshape()` (namesto besednih pojavnic). Druga možnost je, da uporabljamo kar funkcijo `tokens()` namesto `corpus_reshape()`. Poizvedbo opravimo na osnovi korpusa povedi in s pomočjo regularnih izrazov. Razmik (`window`) nastavimo na 1. 
+
+```{r}
+# ustvari jezikovno gradivo povedi
+corps <- corpus_reshape(corp)
+# ali seznam povedi
+tokss <- tokens(corp, what = "sentence")
+
+# regex \\b pomeni rob besede (border)
+kwic(tokss, pattern = "\\bdobro\\b", 
+     window = 1,
+     valuetype = "regex", 
+     case_insensitive = FALSE)
+
+kwic(tokss, pattern = "\\bdobro\\b", 
+     window = 1,
+     valuetype = "regex", 
+     case_insensitive = FALSE) %>% 
+  as_tibble() %>% 
+  rmarkdown::paged_table()
+```
+
 
 ## Pogostnost
 
@@ -162,6 +239,7 @@ pogostnost <- textstat_frequency(matrika, groups = c("Kavčič", "Partljič"))
 pogostnost %>% 
   group_by(group) %>% 
   filter(str_detect(feature, "^[:alpha:]")) %>% 
+  # filter(group == "Partljič") %>% 
   slice_head(n = 5) %>% 
   rmarkdown::paged_table()
 
@@ -233,6 +311,13 @@ textplot_xray(kwic_majda)
 
 ```
 
+```{r}
+kwic_mesto <- kwic(besede, pattern = "mest*")
+textplot_xray(kwic_mesto)
+
+```
+
+
 ## Slovarska raznolikost besedil
 
 ```{r}
@@ -242,18 +327,24 @@ textstat_lexdiv(matrika, measure = "all") %>%
 
 ## Podobnost besedil
 
+Naslove besedil v jezikovnem gradivu potegnemo iz zgoraj sestavljenega seznama *df_dolzina*. 
+
 ```{r}
 df_naslovi <- df_dolzina[c(2, 8, 9), ] %>% 
   pull(title_disp)
 df_naslovi
 ```
+Sestavimo tabelo z novim izborom proznih del, tokrat s tremi literarnimi deli.  
 
 ```{r}
 df_izbor3 <- df %>% 
+  # ohranimo le tri prozna dela iz celotne tabele 
   filter(title_disp %in% df_naslovi)
 
 df_izbor3 %>% rmarkdown::paged_table()
 ```
+
+Sestavimo nov corpus, seznam pojavnic in matriko dokumentov in pojavnic. 
 
 ```{r}
 corp3 <- corpus(df_izbor3, 
@@ -262,12 +353,30 @@ toks3 <- tokens(corp3, remove_numbers = TRUE, remove_punct = T,
                remove_symbols = T, remove_url = T, 
                remove_separators = FALSE)
 mat3 <- dfm(toks3, padding = TRUE)
-
 ```
+
+Programska funkcija `textstat_simil()` iz knjižnice `quanteda` omogoča izračun količnika podobnosti besedil. Ena izmed priljubljenih metod je kotna funkcija kosinusove razdalje - `cosine`. 
+
+Če je kosinus = 1, sta besedili povsem enaki, če je kosinus = 0 povsem različni. 
 
 ```{r}
 textstat_simil(mat3, method = "cosine", margin = "documents")
 ```
+
+Namesto kosinusa lahko uporabljamo tudi druge metode. Privzeta je korelacija:   
+"correlation" (default), "cosine", "jaccard", "ejaccard", "dice", "edice", "simple matching", and "hamann".
+
+```{r}
+textstat_simil(mat3, method = "dice", 
+               margin = "documents")
+```
+
+Razlike med besedili so majhne, saj se večina besednih oblik (tj. funkcijske besede) pojavlja v vseh treh besedilih. 
+
+Nasprotna funkcija je `textstat_dist()`, ki meri različnost besedil. Privzeta metoda je evklidska razdalja (znana tudi kot pitagorejska razdalja ali hipotenuza v pravokotnem tritkotniku:   
+"euclidean" (default), "manhattan", "maximum", "canberra", and "minkowski".
+
+Narišemo lahko tudi *dendrogram*, in sicer s funkcijo `hclust()`, ki se naloži v pomnilnik ob zagonu programa `R`. 
 
 ```{r}
 # plot a dendrogram after converting the object into distances
@@ -278,6 +387,8 @@ plot(hclust(as.dist(dist1)))
 
 
 ## Ključne besede
+
+Metod za določitev ključnih besed v besedilih je veliko. V knjižnici `quanteda` (zdaj že nekaj časa posebna knjižnica `quanteda.textstats`) najdemo hitro in preprosto funkcijo `textstat_keyness()`.
 
 ```{r message=FALSE, warning=FALSE}
 df_izbor
@@ -290,6 +401,10 @@ key_partljic %>% rmarkdown::paged_table()
 
 ```
 
+Besedne oblike, ki so v primerjavi z drugim besedilom (ali besedili) najbolj značilne za določeno besedilo, imajo visoko vrednost hi kvadrata (*chi2*) in se na seznamu privzeto znajdejo na vrhu tabele, v proznih delih pogosto imena glavnih likov.  
+
+S programsko funkcijo `textplot_keyness()` lahko tudi narišemo diagram z najbolj značilnimi besednimi oblikami primerjanih besedil. 
+
 ```{r message=FALSE, warning=FALSE}
 textplot_keyness(key_kavcic)
 textplot_keyness(key_partljic)
@@ -299,30 +414,75 @@ textplot_keyness(key_partljic)
 
 ## Razumljivost besedila
 
+Razumljivost besedila in s tem primernost besedila za določeno starostno skupino ali bralce z določeno stopnje izobrazbe ocenjujemo na osnovi različnih meril, med najpreprostejšimi in pogosto uporabljenimi sta dolžina povedi in dolžina besednih oblik. Knjižnica `quanteda` ponuja celo paleto merskih metod (gl. vgrajeno pomoč, `help`):   
+
 ```{r}
 textstat_readability(corp, measure = c("Flesch", "Flesch.Kincaid", "FOG", "FOG.PSK", "FOG.NRI")) %>% 
   rmarkdown::paged_table()
 ```
 
+Višji koeficient *Flesch* pomeni, da je izrazna plat besedila bolj zahtevna. Za angleščino so izdelali priporočila za potencialne skupine bralcev (npr. ali je besedilo z določeno indeksno vrednostjo jezikovno primerno za otroke 5. razreda osnovne šole).  
+
+<https://en.wikipedia.org/wiki/Flesch%E2%80%93Kincaid_readability_tests>
+
+Za uporabo v slovenščini je treba formule za izračun koeficientov prilagoditi. 
+
+
 ## Kookurenčna mreža (FCM)
+
+Katere besedne oblike se pogosto sopojavljajo, je mogoče prikazovati v mrežnih diagramih. 
+
+Iz matrike dokumentov in besednih oblik (`dfm`) izberemo ustrezne besedne oblike za prikaz povezanosti. Za izbor uporabljamo programsko funkcijo `dfm_select()`.   
+
+Ukaz `topfeatures()` sestavi seznam najpogosteje nastopajočih besednih oblik, funkcija `names()` potegne besedne oblike iz seznama imen in pogostnosti pojavljanja. 
 
 ```{r}
 dfm_tags <- dfm_select(
+  # omejujemo na matriko drugega besedila
   matrika[2,], 
-  pattern = (c("jože", "tomaž", "beti", "veronika", 
-               "majda", "miro", "danica", "rekel", 
-               "železnik", "vino")))
-toptag <- names(topfeatures(dfm_tags, 50))
-head(toptag)
+  # katere besede želimo vključiti
+  pattern = (c("jože", "tomaž", "beti", "veronika", "poslanec", 
+               "majda", "miro", "danica", "rekel", "žena", 
+               "železnik", "vino", "kavo", "mož", "otrok", 
+               "upravitelj", "gostilno")))
+
+toptag <- names(topfeatures(dfm_tags, 50, decreasing = TRUE))
+head(toptag, 10)
 ```
 
 
 ```{r}
-# Construct feature-cooccurrence matrix (fcm) of tags
-fcm_tom <- fcm(matrika[2,]) # besedilo 2 je tom.txt
-head(fcm_tom)
-top_fcm <- fcm_select(fcm_tom, pattern = toptag)
-textplot_network(top_fcm, min_freq = 0.6, edge_alpha = 0.8, edge_size = 5)
+#| out-width: "100%"
+#| out-height: "100%"
 
+# Construct feature-cooccurrence matrix (fcm) of tags
+fcm_tis <- fcm(matrika[2,]) # besedilo 2 je Tišina
+head(fcm_tis)
+
+top_fcm <- fcm_select(fcm_tis, pattern = toptag)
+
+textplot_network(top_fcm, min_freq = 0.1, 
+                 edge_alpha = 0.8, edge_size = 5)
 ```
+
+```{r}
+png("pictures/textplot_network_partljic.png", 
+    width = 700, height = 500,)
+textplot_network(top_fcm, min_freq = 0.1, 
+                 edge_alpha = 0.8, edge_size = 5)
+dev.off()
+```
+
+
+
+Kookurenčno matriko (`fcm`) lahko pretvorimo v tabelo za uporabo s programskimi funkcijami `tidyverse`. Uporabljamo `as_tibble()` ali v novejšem času `convert()`. 
+
+```{r}
+cooc_tabela <- fcm_tis %>% as_tibble()
+cooc_tabela <- fcm_tis %>% convert(to = "data.frame")
+head(cooc_tabela)
+```
+
+Kookurenčne tabele po navadi dopolnjujemo z merami asociacije, ki nam povedo, kako močno sta izraza povezana in ali je povezanost nenaključna. 
+
 

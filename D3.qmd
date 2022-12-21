@@ -1,6 +1,20 @@
 # Naprednejše korpusne funkcije {#sec-delavnica3}
 
-Twitter
+Twitter kot primer socialnega omrežja
+
+```{r}
+#| echo: false
+#| fig-keep: 'all'
+#| out-width: "100%"
+#| fig-link: "https://theconversation.com/the-math-behind-trumps-tweets-100314"
+im <- magick::image_read("https://images.theconversation.com/files/228680/original/file-20180721-142432-io1eym.png?ixlib=rb-1.1.0&q=45&auto=format&w=754&h=754&fit=crop&dpr=1")
+im <- magick::image_background(im, color = "white")
+magick::image_write(im, "pictures/twitter_trump_network.png")
+
+knitr::include_graphics("pictures/twitter_trump_network.png", 
+                        dpi = 300)
+```
+
 
 ## Nalaganje knjižnic
 
@@ -51,7 +65,6 @@ bearer_token <- rtweet_app(bearer_token$access_token)
 
 ```{r}
 #| eval: false
-
 post_tweet(paste0("My first tweet with #rtweet #rstats at ", Sys.time()))
 ```
 
