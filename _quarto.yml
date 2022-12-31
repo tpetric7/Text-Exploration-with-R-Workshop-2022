@@ -25,6 +25,7 @@ book:
       chapters: 
         - D3.qmd
         - D4.qmd
+    - dodatek.qmd
     - summary.qmd
     - references.qmd
   page-navigation: true

@@ -21,13 +21,13 @@ knitr::include_graphics("pictures/R_delavnica_oris_vsebin.png")
 
 packages = c("tidyverse", "tidytext", "janitor", "scales",
              "widyr", "quanteda", "quanteda.textplots", 
-             "quanteda.textstats", "wordcloud2", 
+             "quanteda.textstats", "wordcloud2", "GGally", 
              "ggwordcloud", "udpipe", "syuzhet", "ggtext", 
-             "corpustools", "xml2", "XML", "rvest", 
-             "readtext", "readxl", "writexl", 
-             "stopwords", "xmlconvert", "lubridate", 
-             "rtweet", "plotly", "Twitmo", 
-             "jsonlite", "ndjson", "igraph", 
+             "corpustools", "xml2", "XML", "rvest", "network", 
+             "readtext", "readxl", "writexl", "flextable", 
+             "stopwords", "xmlconvert", "lubridate", "emo", 
+             "rtweet", "plotly", "Twitmo", "tictoc", "meme",
+             "jsonlite", "ndjson", "igraph", "rmarkdown", 
              "textfeatures", "knitr", "magick") # xlsx
 
 # Install packages not yet installed

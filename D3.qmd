@@ -1,6 +1,4 @@
-# Naprednejše korpusne funkcije {#sec-delavnica3}
-
-Twitter kot primer socialnega omrežja
+# Socialna omrežja in podnapisi {#sec-delavnica3}
 
 ```{r}
 #| echo: false
@@ -13,6 +11,12 @@ magick::image_write(im, "pictures/twitter_trump_network.png")
 
 knitr::include_graphics("pictures/twitter_trump_network.png", 
                         dpi = 300)
+```
+
+Primer preprostega animiranega zemljevida, ki prikazuje časovni potek čivkov o smrti bobnarja rockovske skupine *Rolling Stones*, *Charlieja Wattsa*. Zajeti so bili čivki v devetdnevnem obdobju v angleščini, nemščini in slovenščini. [Petrič 2022](https://tpetric7.github.io/raj2022-book/rolling-stones-auf-twitter.html#zeitlicher-geographischer-verlauf)     
+
+```{r}
+knitr::include_graphics("pictures/rolling_stones_tweets_animated.gif")
 ```
 
 
@@ -37,7 +41,9 @@ library(igraph)
 library(textfeatures)
 ```
 
-## Preverjanje pristnosti (avtentikacija)
+## Poizvedbe v omrežju *Twitter*
+
+### Preverjanje pristnosti (avtentikacija)
 
 Za poizvedbe se morate najprej prijaviti na Twitterjevem programskem vmesniku (*API*).
 
@@ -82,9 +88,9 @@ Nekaj koristnih naslovov s "kuharskimi" recepti za poizvedovanje v socialnem omr
 <https://predictivehacks.com/how-to-get-twitter-data-using-r/>
 
 
-## Sprotne poizvedbe
+### Sprotne poizvedbe
 
-### Prijatelji
+#### Prijatelji
 
 Pridobi id prijateljev navedene osebe s funkcijo `get_friends()` knjižnice `rtweet`, tj. katerim uporabnikom navedena oseba sledi.   
 
@@ -158,7 +164,7 @@ prijatelji_skupni_data %>%
 
 Skupni prijatelji so lahko npr. povezani z izbiro pogovorne tematike, značilnih izrazov itd. 
 
-### Sledilci
+#### Sledilci
 
 Ukaz `get_followers()` nam omogoča najti sledilce navedenega uporabnika. 
 
@@ -191,7 +197,7 @@ npmusar_sledilci_data %>%
   rmarkdown::paged_table()
 ```
 
-### Iskanje čivkov
+#### Iskanje čivkov
 
 Funkcija `search_tweets()` nam vrne tabelo čivkov z ozirom na tematsko vprašanje. 
 
@@ -221,7 +227,7 @@ ukraijina <- read_rds(
 dim(ukraijina)
 ```
 
-### Časovnica
+#### Časovnica
 
 Privzeto 100 čivkov, zgornja meja n = 3200. Še več, če pridobil bearer_token. 
 
@@ -262,7 +268,7 @@ library(plotly)
 ggplotly(tline_plot_fajon)
 ```
 
-### Priljubljeni čivki
+#### Priljubljeni čivki
 
 Pridobiti želimo 10 zadnjih priljubljenih čikov Tanje Fajon in Mateja Tonina. 
 
@@ -296,7 +302,7 @@ favorit_tonin %>%
   rmarkdown::paged_table()
 ```
 
-### Poglej izbrane čivke
+#### Poglej izbrane čivke
 
 Kontroverzni čivki Donalda Trumpa. 
 
@@ -366,7 +372,7 @@ tweets_replies_jj_support2 %>%
   rmarkdown::paged_table()
 ```
 
-### Streaming -- Tok v živo
+#### Streaming -- Tok v živo
 
 ```{r}
 #| eval: false
@@ -436,7 +442,10 @@ Druge rtweet funkcije:
     emojis
     stopwordslangs
 
-### Analiza omrežja
+#### Analiza omrežja
+
+Analiza in upodobitev omrežij s knjižnico `igraph`:   
+https://kateto.net/netscix2016.html 
 
 ```{r}
 #| eval: false
@@ -470,19 +479,65 @@ mat <- as.matrix(fds3)
 saveRDS(mat, "data/mat.rds")
 
 ## convert to graph object
-mat <- igraph::graph_from_edgelist(mat)
+mat <- igraph::graph_from_edgelist(mat, directed = TRUE)
 saveRDS(mat, "data/mat_igraph.rds")
 ```
 
-
 ```{r}
 mat <- read_rds("data/mat_igraph.rds")
+```
+
+```{r}
+head(mat)
+```
+
+```{r}
+mat
+
+# mat[]
+```
+
+```{r}
+V(mat)$name[1:5]
+
+```
+
+```{r}
 ## plot network
-plot(mat)
+# plot(mat)
+
+plot(mat, layout = layout_nicely(mat), 
+     edge.arrow.size=.25, vertex.color="gold", vertex.size=5, 
+     vertex.frame.color="gray", # vertex.shape = "none", 
+     vertex.label.color=c("pink","skyblue"), edge.curved=0.2, 
+     vertex.label.cex=0.3, vertex.label.dist=5)
+```
+
+```{r}
+mats <- simplify_and_colorize(mat)
+mats <- delete.edges(mats, which(E(mats)$weight <= 0.1)) # condition
+mats <- delete.vertices(mats, which(degree(mats) <= 1)) # condition
+plot(mats, layout = layout_nicely(mats), vertex.size=5)
+
+mats <- simplify(mat, remove.multiple = T, 
+                              remove.loops = F, 
+                              edge.attr.comb=c(weight="sum", 
+                                               type="ignore"))
+mats <- delete.edges(mats, which(E(mats)$weight <= 0.1)) # condition
+mats <- delete.vertices(mats, which(degree(mats) <= 1)) # condition
+plot(mats, vertex.label.dist=1.5, vertex.label = NA)
+```
+
+Pretvori povezave (edge) in vozlišča (vertex) v tabele (dataframe). 
+
+```{r}
+as_data_frame(mat, what="edges") %>% rmarkdown::paged_table()
+
+as_data_frame(mat, what="vertices") %>% rmarkdown::paged_table()
 ```
 
 
-### Sentiment analysis
+#### Sentimentna analiza
 
 ```{r}
 #| eval: false
@@ -540,9 +595,9 @@ tt_tft %>%
 
 ------
 
-## Že opravljene poizvedbe
+### Že opravljene poizvedbe
 
-### Časovnice
+#### Časovnice
 
 Časovnice slovenskih politikov na Twitterju.
 
@@ -601,7 +656,7 @@ library(plotly)
 ggplotly(p1)
 ```
 
-### Jeziki
+#### Jeziki
 
 Preštej jezike:
 
@@ -618,7 +673,7 @@ politiki_df <- politiki_df %>%
 dim(politiki_df)
 ```
 
-### Vsota besed (tokens)
+#### Vsota besed (tokens)
 
 Vsota besed (tokens), najdaljši in najkrajši čivki.
 
@@ -634,7 +689,7 @@ politiki_tokens_sum <- politiki_df %>%
 politiki_tokens_sum %>% rmarkdown::paged_table()
 ```
 
-### Povprečna dolžina čivka
+#### Povprečna dolžina čivka
 
 Koliko besed (z ločili in simboli vred) čivkajo politiki v povprečju?
 
@@ -648,7 +703,7 @@ politiki_token_mean <- politiki_df %>%
 politiki_token_mean
 ```
 
-### Povedi
+#### Povedi
 
 ```{r}
 politiki_povedi <- politiki_df %>% 
@@ -665,7 +720,7 @@ politiki_povedi %>%
   arrange(-mean_sent)
 ```
 
-### Ngrami
+#### Ngrami
 
 ```{r}
 politiki_ngrams <- politiki_df %>% 
@@ -679,7 +734,7 @@ politiki_ngrams %>%
 
 ```
 
-### Besede
+#### Besede
 
 ```{r}
 politiki_besede <- politiki_df %>% 
@@ -733,3 +788,881 @@ dim(ukrajina_df)
 ukrajina_df %>% 
   count(lang)
 ```
+
+
+## Označevanje in lematizacija besed v podnapisih
+
+### Prilaganje podnapisov
+
+Za jezikovno gradivo izberemo podnapise filma *Avatar*, ki so bili prevedeni v slovenščino. Primerjave podnapisov v več jezikih najdete v spletni knjigi [Petrič 2022](https://tpetric7.github.io/raj2022-book/untertitel.html)  
+
+```{r}
+avatar_slv <- read_lines("data/sub/Avatar_slv.txt")
+head(avatar_slv, 10)
+```
+
+Podnapisi nimajo primerne oblike za jezikovno analizo. Potrebujemo le vrstice z dialogom. Le-te želimo pretvoriti v obliko tabele, kar nam omogoča oblikovanje in analizo besedila s programskimi funkcijami `tidyverse` ali `quanteda`. 
+
+```{r}
+c1 = avatar_slv %>% 
+  as_tibble() %>% 
+  mutate(row_tc = row_number()) %>% 
+  filter(str_detect(value, "-->")) %>% 
+  rename(timecode = value)
+
+c2 = avatar_slv %>% 
+  as_tibble() %>% 
+  mutate(row_id = row_number()) %>% 
+  filter(str_detect(value, "[a-zA-Z]")) %>% 
+  rename(text = value) %>% 
+  mutate(text = str_replace(text, "\\<i\\>", "")) %>% 
+  mutate(text = str_replace(text, "\\</i\\>", "")) %>% 
+  mutate(language = "slv")
+
+# avatar_slv = bind_cols(a1,a2)
+#   select(timecode, text) %>% 
+#   separate(timecode, into = c("start", "end"), sep = "\\-\\-\\>")
+# tail(avatar_slv)
+
+avatxt = c2 %>% 
+  # opcija: dodaj stolpec s prvotnimi številkami vrstic v podnapisih
+  mutate(sentence_id = row_number()) %>% 
+  # regex: odstrani pomišljaj pred besedo
+  mutate(text = str_replace(text, "(–)([a-zA-ZčšžČŠŽ]+)", "\\2"))
+
+head(avatxt)
+```
+
+### Uporaba udpipe
+
+Za označevanje (POS Tagging) in lematizacijo besedilnih enot nam je več knjižnic na razpolago, najpogosteje uporabljeni pa sta `spacyr` in `udpipe`. Knjižnica `spacyr` zahteva namestitev programskih knjižnic v jeziku `Python` in za zdaj ne omogoča označevanja slovenskih besednih oblik. To sta dva tehtna razloga za uporabo knjižnice `udpipe`. 
+
+Najprej si moramo priskrbeti jezikovni model za slovenščino z interneta. V sledečem programskem odstavku `R` preverja, ali je navedena datoteka (*destfile* = ...) že v delovni mapi. Če je še ni, potem jo potegne s privzetega strežnika na računalnik. Če je jezikovni model že v delovni mapi, preskoči nalaganje z interneta in naloži model z diska v delovni pomnilnik računalnika. 
+
+```{r message=FALSE, warning=FALSE}
+library(udpipe)
+destfile = "slovenian-ssj-ud-2.5-191206.udpipe"
+
+if(!file.exists(destfile)){
+   jezikovni_model <- udpipe_download_model(language = "slovenian")
+   udmodel_sl <- udpipe_load_model(jezikovni_model$file_model)
+   } else {
+  file_model = destfile
+  udmodel_sl <- udpipe_load_model(file_model)
+}
+
+```
+
+Naslednji programski odstavek vsebuje funkcijo tipa *"Sam svoj mojster"* `r emo::ji("thinking")`. Lastnoročna izdelana funkcija poskrbi za to, da tabeli dodamo več stolpcev, ki vsebujejo označbe besednih oblik in količine za merjenje dolžine besed ali povedi. 
+
+```{r message=FALSE, warning=FALSE}
+tokenize_annotate = function(tbl){
+  tbl %>% 
+  unnest_tokens(word, token, drop = F) %>% 
+  cbind_morphological(term = "feats",  
+                      which = c("PronType","NumType","Poss","Reflex",
+                                "Foreign","Abbr","Typo",
+                                "Gender","Animacy","NounClass",
+                                "Case","Number","Definite","Degree",
+                                "VerbForm","Person","Tense","Mood",
+                                "Aspect","Voice","Evident",
+                                "Polarity","Polite","Clusivity")) %>% 
+  mutate(txt = str_replace_all(sentence, "[:punct:]", "")) %>% 
+  mutate(sentlen = quanteda::ntoken(txt)) %>% 
+  mutate(syllables = nsyllable::nsyllable(txt)) %>% 
+  mutate(types = quanteda::ntype(txt)) %>% 
+  mutate(wordlen = syllables/sentlen) %>% 
+  mutate(ttr = types/sentlen) %>% 
+  select(-txt, -feats)
+}
+
+```
+
+Po potrebi lahko poskrbimo tudi za ohranitev stolpcev iz prvotne tabele, ki bi se sicer v procesu označevanja besedilnih enot izgubile.
+
+```{r}
+#| eval: false
+
+# keep columns of interest
+# these columns will be fed into doc_id of udpipe
+# afterwards the doc_id column will be separated
+keepcol <- paste(avatxt$row_id, avatxt$language, 
+                 sep = "_")
+```
+
+Programski odstavek, ki poskrbi za označevanje besednih oblik. 
+
+```{r message=FALSE, warning=FALSE}
+#| eval: false
+
+udp <- udpipe_annotate(
+  # jezikovni model za slovenščino
+  object = udmodel_sl, 
+  # izbrani podnapisi
+  x = as.character(avatxt$text),
+  # opcija: prilagodimo doc_id
+  doc_id = as.character(keepcol),
+  # pokaže potek označevanja, če TRUE
+  trace = TRUE)
+
+udp <- as.data.frame(udp) 
+  
+udpiped <- udp %>% 
+  # gornja lastnoročna izdelana funkcija
+  tokenize_annotate() %>% 
+  # oblikovanje vsebine stolpcev
+  mutate(token_id = as.numeric(token_id),
+         head_token_id = as.numeric(head_token_id)) %>% 
+  # razdeli stolpec doc_id na več novih
+  separate(doc_id, 
+           into = c("row_id", "language"), 
+           sep = "_", extra = "merge")
+
+# shrani tabelo v varčni obliki (le R zna brati take datoteke)
+saveRDS(udpiped, "data/avatar_slv_udpiped.rds")
+```
+
+Da malo pospešimo delo, bomo kar naložili že pripravljeno datoteko z diska. 
+
+```{r}
+udpiped <- read_rds("data/avatar_slv_udpiped.rds")
+head(udpiped, 3) %>% rmarkdown::paged_table()
+```
+
+### Besedne vrste
+
+Katere besedne vrste in koliko pojavnic je program prepoznal?
+
+```{r}
+bes_vrste <- udpiped %>% 
+  count(upos, sort = T) %>% 
+  mutate(pct = round(100*n/sum(n), 2))
+bes_vrste %>% 
+  rmarkdown::paged_table()
+```
+
+
+```{r}
+bes_vrste %>% 
+  # izloči ločila in neznano besedno vrsto
+  filter(!upos %in% c("X", "PUNCT")) %>% 
+  # razvrščaj besedne vrste po odstotkih
+  mutate(upos = fct_reorder(upos, pct)) %>% 
+  # pct delimo s 100, ker bomo spodaj uveljavili "percent_format"
+  ggplot(aes(pct/100, upos, color = upos)) +
+  # nariši črte
+  geom_segment(aes(x = 0, xend = pct/100, y = upos, yend = upos)) +
+  # dodaj pike oz. bucke
+  geom_point(size = 3) +
+  # uporabi oblikovalno predlogo
+  theme_light() +
+  # uveljavi oblikovanje x osi (enota je odstotek)
+  scale_x_continuous(labels = percent_format(accuracy = 1)) +
+  # imena osi niso potrebna
+  labs(x = "", y = "") +
+  # odstrani legendo
+  theme(legend.position = "none")
+```
+
+### Samostalniki
+
+Kateri samostalniki so bili najpogosteje uporabljeni v podnapisih?
+
+```{r}
+samostalniki <- udpiped %>% 
+  # izberi le samostalnike
+  filter(upos == "NOUN") %>% 
+  # opcija: samo male črke
+  # mutate(lemma = tolower(lemma)) %>% 
+  # preštej in razvrščaj
+  count(lemma, sort = T) %>% 
+  # dodaj stolpec z odstotki
+  mutate(pct = round(100*n/sum(n), 2))
+
+samostalniki %>% 
+  rmarkdown::paged_table()
+```
+
+```{r}
+samostalniki %>% 
+  # razvrščaj slovarske enote glede na odstotkovno pogostnost
+  mutate(lemma = fct_reorder(lemma, pct)) %>% 
+  # pokaži samo prvih 20
+  head(20) %>% 
+  ggplot(aes(pct/100, lemma, color = lemma)) +
+  # nariši črto
+  geom_segment(aes(x = 0, xend = pct/100, y = lemma, yend = lemma)) +
+  # nariši točko oz. bucko
+  geom_point(size = 3) +
+  # izberi oblikovalno predlogo
+  theme_light() +
+  # x os naj ima odstotke kot enoto
+  scale_x_continuous(labels = percent_format(accuracy = 1)) +
+  # brez imen osi
+  labs(x = "", y = "") +
+  # brez legende
+  theme(legend.position = "none")
+```
+
+S funkcijo `xray()` knjižnice `quanteda.textplots` lahko pokažemo, v katerih vrsticah podnapisov (ki ima 1606 vrstic) se pojavljajo izbrane besede, npr. imena glavnih likov filma. 
+
+```{r}
+textplot_xray(
+  kwic(avatxt %>% pull(text), 
+                 pattern = c("Grace","Tsu'tey")), 
+  scale = "relative")
+
+```
+
+V katerih oblikah in v katerih vrsticah podnapisov nastopa slovarska enota (lemma) *brat*?
+
+```{r}
+udpiped %>% 
+  # izberi vrstice s slovarsko enoto "brat"
+  filter(lemma == "brat") %>% 
+  # izberi stolpce za prikaz
+  select(sentence, token, lemma, upos, xpos, dep_rel) %>% 
+  rmarkdown::paged_table()
+```
+
+Z naslednjo poizvedbo želimo najti samostalnike v množinski obliki. 
+
+```{r}
+#Find all plural nouns (tokens)
+udpiped %>% 
+  # nastavimo ustrezne filtre za izbor vrstic tabele
+  filter(language == "slv" & # tu nepotrebno, ker imamo samo slv
+           upos == "NOUN" & 
+           morph_number == "Plur") %>% 
+  select(sentence, token, lemma, upos, xpos, morph_number) %>% 
+  rmarkdown::paged_table()
+```
+
+V sledečem programskem odstavku sestavljamo tabelo o pogostnosti edninskih množinskih in dvojinskih oblik samostalnikov. 
+
+```{r}
+udpiped %>% 
+  # izberemo relevantne stolpce
+  dplyr::select(language, token, lemma, upos, morph_number) %>% 
+  # tu ni potrebno, ker imamo samo slv podnapise
+  group_by(language) %>% 
+  # izbere le vrstice s samostalniki
+  filter(upos == "NOUN") %>% 
+  # preštej vrstice v stolpcu o številu
+  count(morph_number) %>% 
+  # preoblikuj tabelo iz dolge v široko obliko (lažje beremo)
+  pivot_wider(names_from = language, values_from = n) %>% 
+  # mutate(across(everything(), ~ replace_na(.x, 0))) %>% 
+  # v vseh stolpcih zamenjaj NA z ničlo
+  mutate_if(is.numeric, ~ replace_na(.x, 0)) %>% 
+  # v stolpcu zamenjaj črkovni niz "0" z opisno vrednostjo "Unknown"
+  mutate(morph_number = 
+           str_replace(morph_number, "0", "Unknown")) %>% 
+  # uredi stopnje v kategoriji število po zaznamovanosti
+  mutate(morph_number = 
+           fct_relevel(
+             morph_number, levels =
+                         c("Sing","Plur","Dual","Unknown"))) %>% 
+  # dodal naknadno: odstotke
+  mutate(pct = round(100*slv/sum(slv), 2)) %>% 
+  # razvrščaj po stopnjah kategorije število
+  arrange(morph_number) %>% 
+  rmarkdown::paged_table()
+```
+
+### Pridevniške oblike 
+
+```{r}
+udpiped %>% 
+  # grupiranje tu ni potrebno, ker imamo samo slv podnapise
+  group_by(language) %>% 
+  # izbor jezikov tu ni potreben
+  filter(language == "eng" | 
+           language == "deu" | language == "slv") %>% 
+  # izberi le vrstice s pridevniki
+  filter(upos == "ADJ") %>% 
+  # preštej stopnjevalne oblike in razvrščaj
+  count(morph_degree, sort = TRUE) %>% 
+  # dodaj stolpec z odstotki
+  mutate(pct = round(100*n/sum(n),2)) %>% 
+  # preoblikuj dolgo tabelo v široko obliko
+  pivot_wider(names_from = language, values_from = c(n, pct)) %>% 
+  # mutate(across(everything(), ~ replace_na(.x, 0))) %>% 
+  # v vseh stolpcih zamenjaj NA z ničlo
+  mutate_if(is.numeric, ~ replace_na(.x, 0)) %>% 
+  # v stolpcu zamenjaj niz "0" z opisom "Unknown"
+  mutate(morph_degree = 
+           str_replace(morph_degree, "0", "Unknown")) %>% 
+  # uredi vrstni red stopnjevalnih stopenj pridevnikov
+  mutate(morph_degree = 
+           fct_relevel(
+             morph_degree, levels =
+                         c("Pos","Cmp","Sup","Abs","Unkown"))) %>% 
+  # razvrščaj
+  arrange(morph_degree) %>% 
+  rmarkdown::paged_table()
+```
+
+
+### Skladenjske analize
+
+#### UD shema
+
+Tipološke za označevanje besedilnih enot: *Universal Stanford Dependencies: A cross-linguistic typology* (de Marneffe et al. 2014).
+
+```{r}
+knitr::include_graphics("pictures/Screenshot 2021-08-27 at 12-14-22 Universal Dependency Relations.png")
+```
+
+#### Dependenčni odnosi
+
+V naslednjem programskem odstavku sestavljamo tabelo za prikaz skladenjskih prvin po kategorijah UD (gl. zgoraj), in sicer na enak način kot v prejšnjih odstavkih (gl. pojasnila tam). 
+
+```{r}
+udpiped %>% 
+  group_by(language) %>% 
+  filter(language == "eng" | 
+           language == "deu" | language == "slv") %>% 
+  count(dep_rel, sort = TRUE) %>% 
+  mutate(pct = round(100*n/sum(n),2)) %>% 
+  pivot_wider(names_from = language, values_from = c(n, pct)) %>% 
+  # mutate(across(everything(), ~ replace_na(.x, 0))) %>% 
+  mutate_if(is.numeric, ~ replace_na(.x, 0)) %>% 
+  mutate(dep_rel = 
+           str_replace(dep_rel, "0", "Unknown")) %>% 
+  rmarkdown::paged_table()
+```
+
+*Koren* odvisnostnega odnosa (root of dependency relation) nam pove, ali je bilo zaporedje besed identificirano kot stavek. Običajno se določi s pomočjo (osebne) glagolske oblike v stavku. V eliptičnih stavkih je ena od besednih oblik, ki se pojavi, povezana s korenom.
+
+Iz tabele (gl. *root*, koren) je razvidno, da je v slovenskih podnapisih prepoznanih 1807 stavčnih enot.
+
+Naslednji programski odstavek vsebuje lastnoročno izdelano *funkcijo za risanje dependenčnih odnosov v stavkih*. Prevzeli smo jo od [poišči](poglej), potem pa prilagodili našim potrebam. Spodaj jo bomo videli v akciji. 
+
+```{r}
+library(igraph)
+library(ggraph)
+library(ggplot2)
+
+plot_annotation <- function(x, size = 3){
+  stopifnot(is.data.frame(x) & all(c("sentence_id", "token_id", "head_token_id", "dep_rel", "token_id", "token", "lemma", "upos", "xpos", "feats") %in% colnames(x)))
+  x <- x[!is.na(x$head_token_id), ]
+  x <- x[x$sentence_id %in% min(x$sentence_id), ]
+  edges <- x[x$head_token_id != 0, c("token_id", "head_token_id", "dep_rel")]
+  edges$label <- edges$dep_rel
+  g <- graph_from_data_frame(edges,
+                             vertices = x[, c("token_id", "token", "lemma", "upos", "xpos", "feats")],
+                             directed = TRUE)
+  windowsFonts("Arial Narrow" = windowsFont("Arial"))
+  ggraph(g, layout = "linear") +
+    geom_edge_arc(ggplot2::aes(label = dep_rel, vjust = -0.20),
+                  arrow = grid::arrow(length = unit(4, 'mm'), ends = "last", type = "closed"),
+                  end_cap = ggraph::label_rect("wordswordswords"),
+                  label_colour = "red", check_overlap = TRUE, label_size = size) +
+    geom_node_label(ggplot2::aes(label = token), col = "darkgreen", size = size, fontface = "bold") +
+    geom_node_text(ggplot2::aes(label = upos), nudge_y = -0.35, size = size) +
+    theme_graph(base_family = "Arial Narrow") +
+    labs(title = "udpipe output", subtitle = "tokenisation, parts of speech tagging & dependency relations")
+}
+```
+
+Cilj naslednjega programskega odstavka je narisati diagram, ki prikazuje dependenčne odnose med stavčnimi prvinami. Stavek je iz slovenskih podnapisov za film *Avatar*. 
+
+```{r}
+#| warning: false
+#| message: false
+
+# Slovenian: v navednicah izbrani stavek
+mytext = "Začel sem sanjati o letenju" %>% 
+  # pretvori gornji niz po kodirni shemi utf8
+  enc2utf8()
+# izberi stavek in jezikovni model in označuj oblike
+x = udpipe(mytext, "slovenian")
+# nariši oblikoskladenjsko označen stavek (gl. funkcijo zgoraj)
+x3 = plot_annotation(x, size = 3)
+x3
+```
+
+#### Osebki
+
+Koliko osebkov najdemo s programom? Prilagodimo zgoraj že večkrat sestavljeno tabelo novi poizvedbi. 
+
+```{r}
+udpiped %>% 
+  group_by(language) %>% 
+  filter(language == "eng" | 
+           language == "deu" | language == "slv") %>% 
+  filter(str_detect(dep_rel, "nsubj")) %>% 
+  count(dep_rel, sort = TRUE) %>% 
+  mutate(pct = round(100*n/sum(n),2)) %>% 
+  pivot_wider(names_from = language, values_from = c(n, pct)) %>% 
+  # mutate(across(everything(), ~ replace_na(.x, 0))) %>% 
+  mutate_if(is.numeric, ~ replace_na(.x, 0)) %>% 
+  mutate(dep_rel = 
+           str_replace(dep_rel, "0", "Unknown")) %>% 
+  rmarkdown::paged_table()
+```
+
+Oglejmo si nekaj vrstic, ki vsebujejo osebek. Prekopiramo še eno tabelo, jo nekoliko prilagodimo novi poizvedbi. 
+
+```{r}
+udpiped %>% 
+  group_by(language) %>% 
+  filter(language == "slv") %>% 
+  filter(str_detect(dep_rel, "nsubj")) %>% 
+  ungroup() %>% 
+  select(sentence, sentence_id) %>% 
+  distinct() %>% 
+  head(5) %>% rmarkdown::paged_table()
+```
+
+Izberimo vrstico neposredno iz tabele podnapisov in narišimo dependenčne odnose v izbranem stavku. Kako je osebek upodobljen v odvisnostnem diagramu?
+
+```{r}
+avatxt %>% 
+  filter(language == "slv") %>% 
+  filter(str_detect(text, "dobi svojega avatarja")) %>% 
+  select(text) %>% rmarkdown::paged_table()
+
+# Slovenian
+mytext = "Vsak upravljavec dobi svojega avatarja" %>% enc2utf8()
+x = udpipe(mytext, "slovenian")
+x3 = plot_annotation(x, size = 3)
+x3
+```
+
+#### Zaimki in samostalniki
+
+Cilj naslednjega programskega odstavka je ugotoviti, v katerih stavčnih vlogah (osebek, tožilniški (strukturni) predmet, dajalniški predmet ali slovarsko določeni predmet) nastopajo zaimki in samostalniki. Prekopiramo zgoraj že večkrat uporabljeno tabelo in jo prilagodimo novim zahtevam. 
+
+```{r}
+udpiped %>% 
+  group_by(language) %>% 
+  filter(upos == "NOUN" | upos == "PRON") %>% 
+  filter(str_detect(dep_rel, "nsubj|obj|obl")) %>% 
+  count(upos, dep_rel) %>% 
+  mutate(pct = round(100*n/sum(n),2)) %>% 
+  pivot_wider(names_from = language, values_from = c(n, pct)) %>% 
+  # mutate(across(everything(), ~ replace_na(.x, 0))) %>% 
+  mutate_if(is.numeric, ~ replace_na(.x, 0)) %>% 
+  arrange(upos) %>% 
+  rmarkdown::paged_table()
+```
+
+Recikliramo tabelo, tokrat za prikaz števila in deležev osebkov z ozirom na zaimensko ali samostalniško obliko. 
+
+```{r}
+udpiped %>% 
+  group_by(language) %>% 
+  filter(language == "eng" | 
+           language == "deu" | language == "slv") %>% 
+  filter(upos == "NOUN" | upos == "PRON") %>% 
+  filter(str_detect(dep_rel, "nsubj")) %>% 
+  count(upos, dep_rel) %>% 
+  mutate(pct = round(100*n/sum(n),2)) %>% 
+  pivot_wider(names_from = language, values_from = c(n, pct)) %>% 
+  # mutate(across(everything(), ~ replace_na(.x, 0))) %>% 
+  mutate_if(is.numeric, ~ replace_na(.x, 0)) %>% 
+  arrange(upos) %>% 
+  rmarkdown::paged_table()
+```
+
+Izdelamo lastno (večkrat uporabno) funkcijo za pretvorbo dolgih tabel v široke tabele (ki jih ljudje lažje beremo). 
+
+```{r}
+pivot_by_nsubj <- function(tbl) {
+  tbl %>% 
+    filter(upos == "NOUN" | upos == "PRON") %>% 
+    filter(str_detect(dep_rel, "nsubj")) %>% 
+    count(upos, dep_rel) %>% 
+    group_by(upos) %>% 
+    mutate(pct = round(100*n/sum(n),2)) %>% 
+    pivot_wider(names_from = upos, values_from = c(n, pct)) %>% 
+    mutate_if(is.numeric, ~ replace_na(.x, 0))
+    # mutate(across(everything(), ~ replace_na(.x, 0))) 
+}
+
+# uporabi gornjo funkcijo
+x = udpiped %>% 
+  filter(language == "slv") %>% 
+  pivot_by_nsubj()
+
+x %>% rmarkdown::paged_table()
+```
+
+Oglejmo si nekaj primerov iz podnapisov filma *Avatar*, ki vsebujejo samostalnik ali zaimek v vlogi osebka!
+
+```{r}
+udpiped %>% 
+  select(sentence, upos, dep_rel, language) %>% 
+  filter(language == "slv") %>% 
+  filter(upos == "NOUN" | upos == "PRON") %>% 
+  filter(str_detect(dep_rel, "nsubj")) %>% 
+  rmarkdown::paged_table()
+```
+
+Prekopiramo tabelo in jo prilagodimo za prikaz pogostnosti tožilniškega predmeta v samostalniški ali zaimenski obliki. 
+
+```{r}
+x = udpiped %>% 
+  group_by(language) %>% 
+  filter(upos == "NOUN" | upos == "PRON") %>% 
+  filter(dep_rel == "obj") %>% 
+  count(upos, dep_rel) %>% 
+  mutate(pct = round(100*n/sum(n),2)) %>% 
+  pivot_wider(names_from = language, values_from = c(n, pct)) %>% 
+  # mutate(across(everything(), ~ replace_na(.x, 0))) %>% 
+  mutate_if(is.numeric, ~ replace_na(.x, 0)) %>% 
+  arrange(upos)
+
+x %>% rmarkdown::paged_table()
+
+```
+
+V naslednjem programskem odstavku sestavljamo preglednico za prikaz samostalnikov in zaimkov v vlogi osebka ali tožilniškega predmeta. Tabelo smo spet prekopirali in nekoliko prilagodili novim zahtevam. 
+
+```{r}
+udpiped %>% 
+  group_by(language) %>% 
+  filter(upos == "NOUN" | upos == "PRON") %>% 
+  filter(dep_rel == "nsubj" | dep_rel == "obj") %>% 
+  count(upos, dep_rel) %>% 
+  # group_by(upos) %>% 
+  mutate(pct = round(100*n/sum(n),2)) %>% 
+  pivot_wider(names_from = language, values_from = c(n, pct)) %>% 
+  # mutate(across(everything(), ~ replace_na(.x, 0))) %>% 
+  mutate_if(is.numeric, ~ replace_na(.x, 0)) %>% 
+  arrange(upos) %>% 
+  rmarkdown::paged_table()
+```
+
+Lastnoročno izdelana funkcija v naslednjem programskem odstavku za pretvorbo dolge tabele v široko obliko je skoraj enaka kot malo prej sestavljena, razlika je le, da tokrat vključujemo osebke in preme (tožilniške) predmete. 
+
+```{r}
+pivot_by_obj <- function(tbl) {
+  tbl %>% 
+    filter(upos == "NOUN" | upos == "PRON") %>% 
+    filter(dep_rel == "nsubj" | dep_rel == "obj") %>% 
+    count(upos, dep_rel) %>% 
+    group_by(upos) %>%
+    mutate(pct = round(100*n/sum(n),2)) %>% 
+    pivot_wider(names_from = upos, values_from = c(n, pct)) %>% 
+    mutate_if(is.numeric, ~ replace_na(.x, 0))
+    # mutate(across(everything(), ~ replace_na(.x, 0)))
+}
+
+# uporabi gornjo funkcijo
+x = udpiped %>% 
+  filter(language == "slv") %>% 
+  pivot_by_obj()
+  
+x %>% rmarkdown::paged_table()
+```
+
+S hi kvadrat preizkusom lahko ugotovimo neodvisnost (odvisnost) obeh vzorcev (samostalniškega in zaimenskega). V tem primeru je p vrednost manjša kot mejna vrednost (p < 0,05), tj. statistična značilna. Vzorca nista neodvisna: skladenjska vloga (osebek ali predmet) je povezana s besedno vrsto (zaimek ali samostalnik)
+
+```{r}
+# Base-R
+hi <- chisq.test(x[,c(2:3)])
+hi
+
+# opazovane pogostnosti
+hi$observed
+# pričakovane pogostnosti po ničelni domnevi (tj. da ni razlike med vzorcema oz. da sta vzorca neodvisna)
+hi$expected
+```
+
+V spletni knjigi [Petrič 2022](https://tpetric7.github.io/raj2022-book/untertitel.html#syntax-dependenz) je še več skladenjskih analiz s programom `udpipe`, ki si jih lahko ogledate (npr. besedni vrstni red v samostalniških besednih zvezah ali stavkih). 
+
+
+## Označevanje: YouTube
+
+### Preberi in združi
+
+Sledeče podatkovne nize smo pridobili s pomočjo *YouTube Data Tools* (https://tools.digitalmethods.net/netvizz/youtube/). Orodje je sprogramiral "Bernhard Rieder [...] an associate professor in New Media and Digital Culture at the University of Amsterdam and a researcher with the Digital Methods Initiative." (http://thepoliticsofsystems.net/about/).
+
+Dva video posnetka na portalu *YouTube* sta povezana z znanima slovenskima politikoma, *Zoranom Jankovićem* in *Janezom Janšo*. Gledalci oddaje 24 ur so po ogledu oddali svoje pripombe. V tretjem video posnetku (file = 2) je novinarka spraševala ljudi, kaj delajo za božič. Gledalci so po ogledu oddali svoje pripombe.  
+
+```{r}
+gpath <-list.files(path = "data/youtube/",
+                   pattern = "_comments.csv", 
+                   full.names = TRUE)
+
+comments <- map_dfr(gpath, read_csv, .id = "file") %>% 
+  # dodelimo vsaki datoteki prepoznavno ime
+  # namesto ifelse() uporabljamo case_when()
+  mutate(file = case_when(
+    file == "1" ~ "24ur_Jansa",
+    file == "2" ~ "24ur_bozic",
+    file == "3" ~ "24ur_Jankovic",
+    TRUE ~ "other"
+  ))
+
+names(comments)
+```
+
+
+### Nezaželene besede
+
+```{r}
+stop_sl <- quanteda::stopwords(language = "sl", 
+                               source = "stopwords-iso")
+
+stop_sl <- c(quanteda::stopwords(language = "sl", 
+                       source = "stopwords-iso"), 
+             "\n", " ", "[\\d]+", "quot", "še", "^www.+", "^http.+", 
+             "search_query")
+
+stop_sl_tidy <- stop_sl %>% as_tibble() %>% rename(word = value)
+
+# remove stopwords and punctuation and digits
+stop_sl_collapsed <- paste0(paste0('\\b', stop_sl, '\\b', 
+     collapse = "|"), '|[[:punct:]]+', "[\\d]+")
+
+# another variant
+stops <- paste0(stop_sl, collapse = "\\b|\\b")
+```
+
+Nekaj naključno izbranih pripomb gledalcev. 
+
+```{r}
+comments %>% slice_sample(n = 10)
+```
+
+### Uporaba udpipe
+
+Najprej naložimo jezikovni model za slovenščino v pomnilnik računalnika. Prekopiramo programski odstavek iz prejšnjega poglavja. 
+
+```{r message=FALSE, warning=FALSE}
+#| eval: false
+
+library(udpipe)
+destfile = "slovenian-ssj-ud-2.5-191206.udpipe"
+
+if(!file.exists(destfile)){
+   jezikovni_model <- udpipe_download_model(language = "slovenian")
+   udmodel_sl <- udpipe_load_model(jezikovni_model$file_model)
+   } else {
+  file_model = destfile
+  udmodel_sl <- udpipe_load_model(file_model)
+}
+
+```
+
+Prekopiramo tudi programski odstavek z lastnoročno izdelano programsko funkcijo za prilagajanje in dopolnjevanje tabele. 
+
+```{r message=FALSE, warning=FALSE}
+#| eval: false
+
+tokenize_annotate = function(tbl){
+  tbl %>% 
+  unnest_tokens(word, token, drop = F) %>% 
+  cbind_morphological(term = "feats",  
+                      which = c("PronType","NumType","Poss","Reflex",
+                                "Foreign","Abbr","Typo",
+                                "Gender","Animacy","NounClass",
+                                "Case","Number","Definite","Degree",
+                                "VerbForm","Person","Tense","Mood",
+                                "Aspect","Voice","Evident",
+                                "Polarity","Polite","Clusivity")) %>% 
+  mutate(txt = str_replace_all(sentence, "[:punct:]", "")) %>% 
+  mutate(sentlen = quanteda::ntoken(txt)) %>% 
+  mutate(syllables = nsyllable::nsyllable(txt)) %>% 
+  mutate(types = quanteda::ntype(txt)) %>% 
+  mutate(wordlen = syllables/sentlen) %>% 
+  mutate(ttr = types/sentlen) %>% 
+  select(-txt, -feats)
+}
+
+```
+
+Naslednji trije programski odstavki (podobno kot v prejšnjem poglavju) poskrbijo za označevanje besednih oblik v prispevkih gledalcev YouTube video prispevka, dodajamo pa tudi stolpec za razlikovanje treh vzorcev. 
+
+```{r message=FALSE, warning=FALSE}
+#| eval: false
+jansa <- comments %>% filter(file == "24ur_Jansa")
+x = udpipe_annotate(udmodel_sl, x = jansa$text, trace = F)
+jansa_ud = as.data.frame(x)
+
+jansa_udpiped <- jansa_ud %>% 
+  tokenize_annotate() %>% 
+  mutate(file = "jansa") %>% 
+  mutate(token_id = as.numeric(token_id),
+         head_token_id = as.numeric(head_token_id))
+
+```
+
+```{r message=FALSE, warning=FALSE}
+#| eval: false
+bozic <- comments %>% filter(file == "24ur_bozic")
+x = udpipe_annotate(udmodel_sl, x = bozic$text, trace = F)
+bozic_ud = as.data.frame(x)
+
+bozic_udpiped <- bozic_ud %>% 
+  tokenize_annotate() %>% 
+  mutate(file = "bozic") %>% 
+  mutate(token_id = as.numeric(token_id),
+         head_token_id = as.numeric(head_token_id))
+
+```
+
+```{r message=FALSE, warning=FALSE}
+#| eval: false
+janko <- comments %>% filter(file == "24ur_Jankovic")
+x = udpipe_annotate(udmodel_sl, x = janko$text, trace = F)
+janko_ud = as.data.frame(x)
+
+janko_udpiped <- janko_ud %>% 
+  tokenize_annotate() %>% 
+  mutate(file = "jankovic") %>% 
+  mutate(token_id = as.numeric(token_id),
+         head_token_id = as.numeric(head_token_id))
+
+```
+
+Združujemo vzorce v eno tabelo. 
+
+```{r}
+#| eval: false
+g_udpiped <- bind_rows(jansa_udpiped, bozic_udpiped, janko_udpiped)
+dim(g_udpiped)
+```
+Shranimo za kasnejšo ponovno uporabo, in sicer v varčni obliki `rds`. Te datoteke odpira le `R`. 
+
+```{r}
+#| eval: false
+saveRDS(g_udpiped, 
+        "data/youtube_comments_sl_jansa-bozic-jankovic.rds")
+```
+
+Da prihranimo nekaj časa, prejšnjih pet odstavkov ni bilo izvedenih (#| `eval: false`). Zato datoteko v naslednjem odstavku naložimo v pomnilnik. 
+
+```{r}
+g_udpiped <- read_rds("data/youtube_comments_sl_jansa-bozic-jankovic.rds")
+```
+
+
+### Glagoli
+
+Na hitro poglejmo, kateri glagoli v prispevkih gledalcev prevladujejo. 
+
+V preglednici opazimo nekaj napak: besedila bi bilo treba sistematično pregledovati in popraviti najbolj moteče nepravilnosti kot npr. manjkajoč presledek za piko (npr. *tega.Zelo*) in očitne tipkovne napake gledalcev pri pisanju prispevkov (npr. *jepostavil*). 
+
+```{r}
+g_udpiped %>% 
+  filter(upos == "VERB") %>% 
+  select(token, lemma, upos, xpos) %>% 
+  rmarkdown::paged_table()
+```
+
+Katere oblikoslovne oblike glagolov prevladujejo?
+
+```{r}
+g_udpiped %>% 
+  filter(upos == "VERB") %>% 
+  select(token, lemma, upos, xpos) %>% 
+  count(xpos, sort = T) %>% 
+  rmarkdown::paged_table()
+```
+
+Ali se pogostnost glagolov razlikuje glede na tematiko video prispevka, ki so si ga gledalci ogledali?
+
+```{r}
+verbs_in_comments <- g_udpiped %>%
+  filter(upos == "VERB") %>% 
+  filter(!str_detect(lemma, "^http")) %>% 
+  filter(!str_detect(lemma, ";sti")) %>% 
+  group_by(file) %>% 
+  count(lemma, sort = T) %>% 
+  mutate(pct = round(100*n/sum(n),2)) %>% 
+  pivot_wider(names_from = file, values_from = c(pct, n), values_fill = 0) %>% 
+  arrange(-pct_jansa)
+
+verbs_in_comments %>% rmarkdown::paged_table()
+
+# write.csv2(verbs_in_comments, "data/youtube_sl_verbs_comments.csv")
+```
+
+Pripombe gledalcev k trem oddajam v obliki besednih oblakov:   
+
+```{r}
+#| out-width: "100%"
+#| fig-width: 15
+#| fig-height: 5
+
+p0 <- g_udpiped %>%
+  filter(upos == "VERB") %>% 
+  filter(!str_detect(lemma, "^http")) %>% 
+  filter(!str_detect(lemma, ";sti")) %>% 
+  group_by(file) %>% 
+  count(lemma, sort = T) %>% 
+  mutate(pct = round(100*n/sum(n),2)) %>% 
+  slice_head(n = 40) %>% 
+  ggplot(aes(pct/100, label = lemma, size = log(pct), color = pct)) +
+  geom_text_wordcloud() +
+  theme_light() +
+  scale_x_continuous(labels = scales::percent_format(accuracy = 1)) +
+  labs(x="") +
+  facet_grid(~ file, scales = "free")
+
+ggsave("pictures/youtube_comments_sl_verbs.png", dpi = 300,
+       width = 10, height = 4)
+
+p0
+```
+
+Glagol *biti* je seveda najpogostejši glagol v vseh treh skupinah, vendar s precej višjim odstotkom v prispevkih o božiču. V pripombah k oddajam o politikoma poleg glagola *biti* izstopa predvsem glagol *imeti*. Mogoče se bo ta (pogostnostna) razlika pokazala tudi pri kolokacijah, pri katerih so sestavni del glagolske oblike. 
+
+Podoben pregled značilnih slovarskih enot bi lahko naredili tudi npr. za samostalnike in pridevnike. 
+
+Preštejmo še druge besede.  
+
+```{r}
+# count words and remove numbers (if still present)
+word_count <- g_udpiped %>% 
+  count(word, sort = T, name = "Freq_word") %>% 
+  filter(!str_detect(word, "[\\d]+"))
+
+# Number of words
+N <- nrow(word_count)
+```
+
+```{r}
+words_video <- words %>% 
+  group_by(file) %>% 
+  # anti_join(stop_sl_tidy, by = "word") %>% # 6435 words
+  # filter(!str_detect(word, stop_sl_collapsed)) %>% # 6294 words
+  filter(!str_detect(word, stops)) %>% # 5278 words
+  count(word, sort = T) %>% 
+  drop_na() %>% 
+  group_by(file) %>% 
+  mutate(pct = round(100*n/sum(n), 3))
+
+dim(words_video)
+```
+
+```{r}
+words_video %>% 
+  pivot_wider(names_from = file, values_from = n,
+              values_fill = 0) %>% 
+  ungroup()
+```
+
+```{r out.width="100%", fig.width=10, fig.height=5}
+library(ggwordcloud)
+p1 <- words_video %>% 
+  slice_head(n = 50) %>% 
+  mutate(angle = 45 * sample(-2:2, n(), replace = TRUE, 
+                             prob = c(1, 1, 4, 1, 1))) %>% 
+  ggplot(aes(label = word, size = pct, color = n), angle = angle) +
+  geom_text_wordcloud(shape = "circle", rm_outside = TRUE) +
+  scale_size_area(max_size = 20) +
+  # scale_radius(range = c(0, 16), limits = c(0, NA)) +
+  facet_wrap(~ file, scales = "free")
+
+ggsave("pictures/youtube_sl_words_per_video.png", dpi = 300, 
+       width = 10, height = 5)
+
+p1
+```
+

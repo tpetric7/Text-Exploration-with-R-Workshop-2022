@@ -27,12 +27,8 @@ library(quanteda.textplots)
 library(tidyverse)
 library(tidytext)
 library(wordcloud2)
-library(udpipe)
 library(janitor)
 library(scales)
-library(widyr)
-library(syuzhet)
-library(corpustools)
 library(lubridate)
 library(readxl)
 library(writexl)
@@ -88,7 +84,6 @@ df_izbor %>% rmarkdown::paged_table()
 ```
 
 
-
 ## Quanteda korpus
 
 Knjižnica `quanteda` ima nekaj zelo priročnih in hitrih funkcij za prikaz konkordanc in diagramov. 
@@ -98,8 +93,9 @@ S knjižnico `quanteda` bomo ustvarili korpus (`corpus`), ga razdrobili na manj�
 V sledečem programskem odstavku so gradniki, ki jih potrebujemo za statistične in grafične funkcije knjižnice `quanteda`.
 
 ```{r}
-corp <- corpus(df_izbor, 
-               text_field = "text", docid_field = "doc_id")
+corp <- corpus(df_izbor %>% mutate(ids = title), 
+               text_field = "text", docid_field = "ids", 
+               unique_docnames = TRUE)
 toks <- tokens(corp, remove_numbers = TRUE, remove_punct = T,
                remove_symbols = T, remove_url = T, 
                remove_separators = FALSE)
@@ -121,10 +117,11 @@ povzetek
 ## Seznam nezaželenih besed
 
 ```{r}
+library(stopwords)
 stop_sl <- stopwords(language = "sl", source = "stopwords-iso")
 
 stop_sl <- c(stopwords(language = "sl", 
-                       source = "stopwords-iso"), "\n", " ")
+                       source = "stopwords-iso"), "\n", " ", "  ")
 
 ```
 
@@ -133,6 +130,28 @@ Odstranjujemo.
 ```{r}
 besede <- tokens_select(toks, pattern = stop_sl, 
                        selection = "remove", padding = FALSE)
+```
+
+Alternativna oblika odstranjevanja: uveljavljamo `padding`.
+
+```{r}
+# odstrani nezaželene besedne oblike
+toks1 <- tokens_remove(toks, pattern = stop_sl, padding = TRUE)
+```
+
+Namesto besednih oblik so lahko tudi povedi (sentences) osnovna enota, kar dosežemo s funkcjo `corpus_reshape()`. 
+
+```{r}
+# ustvari korpus, ki vsebuje povedi kot osnovno enoto
+corps <- corpus_reshape(corp, to = "sentences")
+```
+
+Zgoraj smo že videli, da lahko tabelo z besedili pretvorimo v korpus knjižnice `quanteda`. Mogoča je tudi obratna pot, tj. da korpus knjižnice `quanteda` pretvorimo v obliko tabele, ki omogoča uporabo programskih funkcij knjižnic `tidyverse` in `tidytext` - `tidy()`: 
+
+```{r}
+library(tidytext)
+corp_tidy <- corp %>% tidy()
+corps_tidy <- tidy(corps)
 ```
 
 
@@ -228,8 +247,8 @@ matrika = dfm_select(mat, selection = "remove",
 matrika
 ```
 
-maj68-0073	Vladimir Kavčič (1932)	
-maj68-0147	Tone Partljič (1940)
+maj68-0073	Vladimir Kavčič (1932): Tišina	
+maj68-0147	Tone Partljič (1940): Ribe na plitvini
 
 ```{r}
 pogostnost <- textstat_frequency(matrika, groups = c("maj68-0073", "maj68-0147"))
@@ -347,8 +366,8 @@ df_izbor3 %>% rmarkdown::paged_table()
 Sestavimo nov corpus, seznam pojavnic in matriko dokumentov in pojavnic. 
 
 ```{r}
-corp3 <- corpus(df_izbor3, 
-               text_field = "text", docid_field = "doc_id")
+corp3 <- corpus(df_izbor3 %>% mutate(ids = title), 
+               text_field = "text", docid_field = "ids")
 toks3 <- tokens(corp3, remove_numbers = TRUE, remove_punct = T,
                remove_symbols = T, remove_url = T, 
                remove_separators = FALSE)
@@ -388,20 +407,20 @@ plot(hclust(as.dist(dist1)))
 
 ## Ključne besede
 
-Metod za določitev ključnih besed v besedilih je veliko. V knjižnici `quanteda` (zdaj že nekaj časa posebna knjižnica `quanteda.textstats`) najdemo hitro in preprosto funkcijo `textstat_keyness()`.
+Metod za določitev ključnih besed v besedilih je več. V knjižnici `quanteda` (zdaj že nekaj časa v posebni knjižnici `quanteda.textstats`) najdemo hitro in preprosto funkcijo `textstat_keyness()`.
 
 ```{r message=FALSE, warning=FALSE}
 df_izbor
 
-key_kavcic <- textstat_keyness(matrika, target = "maj68-0073")
-key_kavcic %>% rmarkdown::paged_table()
+key_kavcic <- textstat_keyness(matrika, target = "Tišina")
+key_kavcic %>% rmarkdown::paged_table() # maj68-0073
 
-key_partljic <- textstat_keyness(matrika, target = "maj68-0147")
-key_partljic %>% rmarkdown::paged_table()
+key_partljic <- textstat_keyness(matrika, target = "Ribe na plitvini")
+key_partljic %>% rmarkdown::paged_table() # maj68-0147
 
 ```
 
-Besedne oblike, ki so v primerjavi z drugim besedilom (ali besedili) najbolj značilne za določeno besedilo, imajo visoko vrednost hi kvadrata (*chi2*) in se na seznamu privzeto znajdejo na vrhu tabele, v proznih delih pogosto imena glavnih likov.  
+Besedne oblike, ki so v primerjavi z drugim besedilom (ali besedili) najbolj značilne za določeno besedilo, imajo visoko vrednost hi kvadrata (*chi2*) in se na seznamu privzeto znajdejo na začetku tabele, v proznih delih pa so to npr. imena glavnih likov.  
 
 S programsko funkcijo `textplot_keyness()` lahko tudi narišemo diagram z najbolj značilnimi besednimi oblikami primerjanih besedil. 
 
@@ -483,6 +502,6 @@ cooc_tabela <- fcm_tis %>% convert(to = "data.frame")
 head(cooc_tabela)
 ```
 
-Kookurenčne tabele po navadi dopolnjujemo z merami asociacije, ki nam povedo, kako močno sta izraza povezana in ali je povezanost nenaključna. 
+Kookurenčne tabele po navadi dopolnjujemo z merami asociacije, ki nam povedo, kako močno sta izraza povezana in / ali je povezanost nenaključna (tj. statistično značilna). 
 
 

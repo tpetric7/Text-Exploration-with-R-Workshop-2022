@@ -251,7 +251,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./D3.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Naprednejše korpusne funkcije</span></a>
+  <a href="./D3.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Socialna omrežja in podnapisi</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -263,7 +263,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./summary.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Summary</span></a>
+  <a href="./dodatek.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Dodatek: Pretvorba XML datotek</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./summary.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Summary</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -316,13 +321,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>packages <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"tidyverse"</span>, <span class="st">"tidytext"</span>, <span class="st">"janitor"</span>, <span class="st">"scales"</span>,</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>             <span class="st">"widyr"</span>, <span class="st">"quanteda"</span>, <span class="st">"quanteda.textplots"</span>, </span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>             <span class="st">"quanteda.textstats"</span>, <span class="st">"wordcloud2"</span>, </span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>             <span class="st">"quanteda.textstats"</span>, <span class="st">"wordcloud2"</span>, <span class="st">"GGally"</span>, </span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>             <span class="st">"ggwordcloud"</span>, <span class="st">"udpipe"</span>, <span class="st">"syuzhet"</span>, <span class="st">"ggtext"</span>, </span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>             <span class="st">"corpustools"</span>, <span class="st">"xml2"</span>, <span class="st">"XML"</span>, <span class="st">"rvest"</span>, </span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>             <span class="st">"readtext"</span>, <span class="st">"readxl"</span>, <span class="st">"writexl"</span>, </span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>             <span class="st">"stopwords"</span>, <span class="st">"xmlconvert"</span>, <span class="st">"lubridate"</span>, </span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>             <span class="st">"rtweet"</span>, <span class="st">"plotly"</span>, <span class="st">"Twitmo"</span>, </span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>             <span class="st">"jsonlite"</span>, <span class="st">"ndjson"</span>, <span class="st">"igraph"</span>, </span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>             <span class="st">"corpustools"</span>, <span class="st">"xml2"</span>, <span class="st">"XML"</span>, <span class="st">"rvest"</span>, <span class="st">"network"</span>, </span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>             <span class="st">"readtext"</span>, <span class="st">"readxl"</span>, <span class="st">"writexl"</span>, <span class="st">"flextable"</span>, </span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>             <span class="st">"stopwords"</span>, <span class="st">"xmlconvert"</span>, <span class="st">"lubridate"</span>, <span class="st">"emo"</span>, </span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>             <span class="st">"rtweet"</span>, <span class="st">"plotly"</span>, <span class="st">"Twitmo"</span>, <span class="st">"tictoc"</span>, <span class="st">"meme"</span>,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>             <span class="st">"jsonlite"</span>, <span class="st">"ndjson"</span>, <span class="st">"igraph"</span>, <span class="st">"rmarkdown"</span>, </span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>             <span class="st">"textfeatures"</span>, <span class="st">"knitr"</span>, <span class="st">"magick"</span>) <span class="co"># xlsx</span></span>
 <span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Install packages not yet installed</span></span>
@@ -717,13 +722,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>packages <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"tidyverse"</span>, <span class="st">"tidytext"</span>, <span class="st">"janitor"</span>, <span class="st">"scales"</span>,</span>
 <span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>             <span class="st">"widyr"</span>, <span class="st">"quanteda"</span>, <span class="st">"quanteda.textplots"</span>, </span>
-<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>             <span class="st">"quanteda.textstats"</span>, <span class="st">"wordcloud2"</span>, </span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>             <span class="st">"quanteda.textstats"</span>, <span class="st">"wordcloud2"</span>, <span class="st">"GGally"</span>, </span>
 <span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>             <span class="st">"ggwordcloud"</span>, <span class="st">"udpipe"</span>, <span class="st">"syuzhet"</span>, <span class="st">"ggtext"</span>, </span>
-<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>             <span class="st">"corpustools"</span>, <span class="st">"xml2"</span>, <span class="st">"XML"</span>, <span class="st">"rvest"</span>, </span>
-<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>             <span class="st">"readtext"</span>, <span class="st">"readxl"</span>, <span class="st">"writexl"</span>, </span>
-<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>             <span class="st">"stopwords"</span>, <span class="st">"xmlconvert"</span>, <span class="st">"lubridate"</span>, </span>
-<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>             <span class="st">"rtweet"</span>, <span class="st">"plotly"</span>, <span class="st">"Twitmo"</span>, </span>
-<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>             <span class="st">"jsonlite"</span>, <span class="st">"ndjson"</span>, <span class="st">"igraph"</span>, </span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>             <span class="st">"corpustools"</span>, <span class="st">"xml2"</span>, <span class="st">"XML"</span>, <span class="st">"rvest"</span>, <span class="st">"network"</span>, </span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>             <span class="st">"readtext"</span>, <span class="st">"readxl"</span>, <span class="st">"writexl"</span>, <span class="st">"flextable"</span>, </span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>             <span class="st">"stopwords"</span>, <span class="st">"xmlconvert"</span>, <span class="st">"lubridate"</span>, <span class="st">"emo"</span>, </span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>             <span class="st">"rtweet"</span>, <span class="st">"plotly"</span>, <span class="st">"Twitmo"</span>, <span class="st">"tictoc"</span>, <span class="st">"meme"</span>,</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>             <span class="st">"jsonlite"</span>, <span class="st">"ndjson"</span>, <span class="st">"igraph"</span>, <span class="st">"rmarkdown"</span>, </span>
 <span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>             <span class="st">"textfeatures"</span>, <span class="st">"knitr"</span>, <span class="st">"magick"</span>) <span class="co"># xlsx</span></span>
 <span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a><span class="co"># Install packages not yet installed</span></span>
