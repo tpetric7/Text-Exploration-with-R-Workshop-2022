@@ -9,9 +9,10 @@
 im <- magick::image_read("https://quanteda.io/reference/textplot_network-1.png")
 im <- magick::image_background(im, color = "white")
 magick::image_write(im, "pictures/quanteda_fcm_example.png")
+```
 
-knitr::include_graphics("pictures/quanteda_fcm_example.png", 
-                        dpi = 300)
+```{r}
+knitr::include_graphics("pictures/quanteda_fcm_example.png")
 ```
 
 ## Nalaganje knjižnic
@@ -499,7 +500,7 @@ Kookurenčno matriko (`fcm`) lahko pretvorimo v tabelo za uporabo s programskimi
 ```{r}
 cooc_tabela <- fcm_tis %>% as_tibble()
 cooc_tabela <- fcm_tis %>% convert(to = "data.frame")
-head(cooc_tabela)
+head(cooc_tabela) %>% rmarkdown::paged_table()
 ```
 
 Kookurenčne tabele po navadi dopolnjujemo z merami asociacije, ki nam povedo, kako močno sta izraza povezana in / ali je povezanost nenaključna (tj. statistično značilna). 

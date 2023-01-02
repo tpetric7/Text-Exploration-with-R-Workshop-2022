@@ -1,5 +1,13 @@
 # Dodatek: Pretvorba XML datotek
 
+```{r}
+#| fig-keep: 'all'
+#| out-width: "100%"
+#| fig-link: "https://commons.wikimedia.org/wiki/File:Xml_logo.svg"
+knitr::include_graphics("pictures/Xml_logo.png")
+```
+
+
 ## Paketki
 
 ```{r}

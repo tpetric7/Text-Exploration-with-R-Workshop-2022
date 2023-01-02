@@ -1,5 +1,14 @@
 # Kolokacije in sentiment {#sec-delavnica4}
 
+```{r}
+#| echo: false
+#| fig-keep: 'all'
+#| out-width: "100%"
+#| fig-link: "https://eflmagazine.com/teach-collocations-part-2/"
+knitr::include_graphics("pictures/collocation.png")
+```
+
+
 ## Knjižnice
 
 ```{r}
@@ -35,22 +44,20 @@ library(tm)
 
 ```
 
-
 ## Kolokacije in mere asociacije
 
-Tole poglavje se opira na naslednje spletno gradivo:   
+Tole poglavje se opira na naslednje spletno gradivo:\
 Schweinberger, Martin. `r format(Sys.time(), '%Y')`. *Analyzing Co-Occurrences and Collocations in R*. Brisbane: The University of Queensland. url: https://slcladal.github.io/coll.html (Version `r format(Sys.time(), '%Y.%m.%d')`).
 
 in na
 
 še eno spletno gradivo !!!
 
-
 ### Preberi in združi
 
-Podatkovne nize smo pridobili s pomočjo *YouTube Data Tools* (https://tools.digitalmethods.net/netvizz/youtube/). Orodje je sprogramiral "Bernhard Rieder [...] an associate professor in New Media and Digital Culture at the University of Amsterdam and a researcher with the Digital Methods Initiative." (http://thepoliticsofsystems.net/about/).
+Podatkovne nize smo pridobili s pomočjo *YouTube Data Tools* (https://tools.digitalmethods.net/netvizz/youtube/). Orodje je sprogramiral "Bernhard Rieder \[...\] an associate professor in New Media and Digital Culture at the University of Amsterdam and a researcher with the Digital Methods Initiative." (http://thepoliticsofsystems.net/about/).
 
-Dva video posnetka na portalu *YouTube* sta povezana z znanima slovenskima politikoma, *Zoranom Jankovićem* in *Janezom Janšo*. Gledalci oddaje 24 ur so po ogledu oddali svoje pripombe. V tretjem video posnetku (file = 2) je novinarka spraševala ljudi, kaj delajo za božič. Gledalci so po ogledu oddali svoje pripombe.  
+Dva video posnetka na portalu *YouTube* sta povezana z znanima slovenskima politikoma, *Zoranom Jankovićem* in *Janezom Janšo*. Gledalci oddaje 24 ur so po ogledu oddali svoje pripombe. V tretjem video posnetku (file = 2) je novinarka spraševala ljudi, kaj delajo za božič. Gledalci so po ogledu oddali svoje pripombe.
 
 ```{r}
 gpath <-list.files(path = "data/youtube/",
@@ -76,7 +83,6 @@ comments <- map_dfr(gpath, read_csv, .id = "file") %>%
 
 names(comments)
 ```
-
 
 ### Nezaželene besede
 
@@ -104,7 +110,7 @@ stops <- paste0(stop_sl, collapse = "\\b|\\b")
 comments %>% slice_sample(n = 10)
 ```
 
-V nadaljevanju bomo uporabljali programske funkcije knjižnic `quanteda` in `tidytext`. Zato bomo ustvarili vzporedna korpusa - eden bo v obliki tabele (`tidy`), drugi pa v obliki seznama besedilnih enot (`quanteda corpus`). Besedilna enota bo poved, ki je za iskanje kolokacij v besedilih primerna enota. 
+V nadaljevanju bomo uporabljali programske funkcije knjižnic `quanteda` in `tidytext`. Zato bomo ustvarili vzporedna korpusa - eden bo v obliki tabele (`tidy`), drugi pa v obliki seznama besedilnih enot (`quanteda corpus`). Besedilna enota bo poved, ki je za iskanje kolokacij v besedilih primerna enota.
 
 ```{r}
 library(quanteda)
@@ -124,7 +130,7 @@ gtoks1 <- tokens_remove(gtoks, pattern = stop_sl, padding = TRUE)
 gcorp_sent <- corpus_reshape(gcorp, to = "sentences")
 ```
 
-V prejšnjem poglavju smo že videli, da lahko tabelo z besedili pretvorimo v korpus knjižnice `quanteda`. Mogoča je tudi obratna pot, tj. da korpus knjižnice `quanteda` pretvorimo v obliko tabele, ki omogoča uporabo programskih funkcij knjižnic `tidyverse` in `tidytext` (*tidy* format): 
+V prejšnjem poglavju smo že videli, da lahko tabelo z besedili pretvorimo v korpus knjižnice `quanteda`. Mogoča je tudi obratna pot, tj. da korpus knjižnice `quanteda` pretvorimo v obliko tabele, ki omogoča uporabo programskih funkcij knjižnic `tidyverse` in `tidytext` (*tidy* format):
 
 ```{r}
 library(tidytext)
@@ -132,14 +138,13 @@ gcorp_tidy <- gcorp %>% tidy()
 gcorp_sent_tidy <- tidy(gcorp_sent)
 ```
 
-
 ### Kontingenčne tabele (tidy)
 
 *Kolokacije* so izrazi, ki se skupaj pojavljajo (statistično značilno) pogosteje, kot bi pričakovali po naključju. Tipičen primer kolokacije v angleščini je *Merry Christmas* ali v slovenščini *Dober dan*, ker se posamezni besedi pogosteje pojavljata skupaj, kot bi pričakovali, če bi bili besedi samo naključno nanizani.
 
-*N-grami* so sorodni kolokacijam, saj predstavljajo besede, ki se pojavljajo skupaj (bi-grami sta dve besedi, ki se pojavljata skupaj, tri-grami so tri besede in tako naprej). Sestavljanje n-gramskih seznamov je zelo enostavno. 
+*N-grami* so sorodni kolokacijam, saj predstavljajo besede, ki se pojavljajo skupaj (bi-grami sta dve besedi, ki se pojavljata skupaj, tri-grami so tri besede in tako naprej). Sestavljanje n-gramskih seznamov je zelo enostavno.
 
-Za sestavljanje kontinengčnih tabel želimo najprej določiti, koliko je posameznih besed v gradivu. 
+Za sestavljanje kontinengčnih tabel želimo najprej določiti, koliko je posameznih besed v gradivu.
 
 ```{r}
 words <- gcorp_sent_tidy %>% 
@@ -170,7 +175,7 @@ ngram_count <- ngrams %>%
 NG <- nrow(ngram_count)
 ```
 
-Med zgoraj navedenimi ngrami je precej nezanimivih. Zato bomo izločili ngrame, ki vsebujejo nezaželene besede (stopwords). 
+Med zgoraj navedenimi ngrami je precej nezanimivih. Zato bomo izločili ngrame, ki vsebujejo nezaželene besede (stopwords).
 
 Prvi (daljši) način: stolpec ngram razdelimo na dva stolpca, izločimo nezaželene besede v obeh stolpcih, potem pa preštejemo preostale ngrame.
 
@@ -192,7 +197,7 @@ ngrams_video <- ngrams_filtered %>%
   mutate(pct = round(100*n/sum(n), 3))
 ```
 
-Drugi (krajši) način: stolpec ngram filtriramo s seznamom nezaželenih besede, ki smo jih zgoraj sestavili v vzorec za uporabo regularnih izrazov. 
+Drugi (krajši) način: stolpec ngram filtriramo s seznamom nezaželenih besede, ki smo jih zgoraj sestavili v vzorec za uporabo regularnih izrazov.
 
 ```{r}
 #| eval: false
@@ -230,7 +235,6 @@ ggsave("pictures/youtube_sl_ngrams_per_video.png", dpi = 300,
 
 p2
 ```
-
 
 ```{r}
 library(wordcloud2)
@@ -274,7 +278,7 @@ ngrams_filtered_count %>%
   rmarkdown::paged_table()
 ```
 
-V kontingenčno tabelo želimo zajeti vse besede. Sestavimo dve pomožni tabeli, ki ju združimo v končno kontingenčno tabelo. 
+V kontingenčno tabelo želimo zajeti vse besede. Sestavimo dve pomožni tabeli, ki ju združimo v končno kontingenčno tabelo.
 
 ```{r}
 ngram_count1 <- ngrams %>% 
@@ -291,7 +295,7 @@ ngram_count2 <- ngrams %>%
 
 ```
 
-Pogostnost izraza (*term frequency*) pogosto *normaliziramo*; pogostnost besedne oblike delimo z dolžino besedila, torej z vsoto vseh pojavnic v besedilu: TF = Freq(term) / sum(terms in doc).  
+Pogostnost izraza (*term frequency*) pogosto *normaliziramo*; pogostnost besedne oblike delimo z dolžino besedila, torej z vsoto vseh pojavnic v besedilu: TF = Freq(term) / sum(terms in doc).
 
 ```{r}
 ngram_freqs <- ngram_count1 %>% 
@@ -404,7 +408,7 @@ contingency_tab %>%
   rmarkdown::paged_table()
 ```
 
-Odstranimo nezaželene besede in manj pogoste bigrame. 
+Odstranimo nezaželene besede in manj pogoste bigrame.
 
 ```{r}
 # stops <- paste0(stop_de, collapse = "\\b|\\b")
@@ -417,7 +421,7 @@ contingency_tab_stps <- contingency_tab %>%
 
 ```
 
-Med preostali bigrami izstopajo ngrami iz imena in priimka, ki kažejo veliko *asociacijsko moč* (MI, Dice) in *statistično značilnost* (log_lik). 
+Med preostali bigrami izstopajo ngrami iz imena in priimka, ki kažejo veliko *asociacijsko moč* (MI, Dice) in *statistično značilnost* (log_lik).
 
 ```{r}
 contingency_tab_stps %>% 
@@ -435,17 +439,16 @@ contingency_tab_stps %>%
   rmarkdown::paged_table()
 ```
 
-[Association measures](http://www.collocations.de/AM/section5.html):  
-Point estimates of *association strength*. 
+[Association measures](http://www.collocations.de/AM/section5.html):\
+Point estimates of *association strength*.
 
 "The *association measures* presented in this section belong to the *degree of association group*. They are maximum-likelihood estimates for various coefficients of association strength (cf. Section 1). As such, all the measures are subject to large sampling errors, especially for low-frequency data. See Section 6 for an attempt to control random variation and avoid inflated association scores.
 
 In Section 1 the two most common coefficients of association strength were introduced, the mu-value μ and the odds ratio θ. Church & Hanks (1990) used the maximum-likelihood estimate for the logarithm of μ as an association measure, which they interpreted (and motivated) as pointwise mutual information (MI), a concept from information theory. This *MI measure* is particularly prone to overestimate low-frequency data (where E11 is small), but it has nonetheless become a de facto standard in (mainly British) lexicography, often in combination with the t-score measure."
 
-$$MI = log{\frac{O_{11}}{E_{11}}}$$
-"In mathematical statistics, the *odds ratio* θ is often preferred to μ because of its convenient formal properties (cf. Agresti, 1990, Ch. 2). While the mu-value (and thus the MI score) has an intuitive interpretation (namely, that cooccurrences are μ times more likely than by chance), it is difficult to interpret θ (and thus the odds-ratio measure) in such meaningful terms."
+$$MI = log{\frac{O_{11}}{E_{11}}}$$ "In mathematical statistics, the *odds ratio* θ is often preferred to μ because of its convenient formal properties (cf. Agresti, 1990, Ch. 2). While the mu-value (and thus the MI score) has an intuitive interpretation (namely, that cooccurrences are μ times more likely than by chance), it is difficult to interpret θ (and thus the odds-ratio measure) in such meaningful terms."
 
-"The best-known coefficient from this group is the *Dice coefficient*, (aka. "mutual expectation") whose link function is the harmonic mean (Weisstein, 1999, s.v. Harmonic Mean)."
+"The best-known coefficient from this group is the *Dice coefficient*, (aka."mutual expectation") whose link function is the harmonic mean (Weisstein, 1999, s.v. Harmonic Mean)."
 
 $$Dice = \frac{2*O_{11}}{R_{1} + C_{1}}$$
 
@@ -453,13 +456,12 @@ $$Dice = \frac{2*O_{11}}{R_{1} + C_{1}}$$
 
 $$Jaccard = \frac{O_{11}}{O_{11} + O_{12} + O_{21}}$$
 
-[Asymptotic hypothesis tests](http://www.collocations.de/AM/section4.html):  
-"*Asymptotic hypothesis tests* address two problems of the exact tests: (i) their numerical complexity and (ii) the difficulty of defining more "extreme" outcomes. Instead of the exact p-value, they use a much simpler equation called a test statistic. ... Association measures based on asymptotic hypothesis tests often use the test statistic itself as an association score because of its convenience. When converted into a p-value, the score can directly be compared with those of the exact hypothesis tests. ... Note that the logarithm is undefined when there are empty cells (with Oij = 0). For such cells, the entire term evaluates to zero (because 0 * log(0) = 0 by continuous extension) and can simply be omitted from the summation."   
+[Asymptotic hypothesis tests](http://www.collocations.de/AM/section4.html):\
+"*Asymptotic hypothesis tests* address two problems of the exact tests: (i) their numerical complexity and (ii) the difficulty of defining more"extreme" outcomes. Instead of the exact p-value, they use a much simpler equation called a test statistic. ... Association measures based on asymptotic hypothesis tests often use the test statistic itself as an association score because of its convenience. When converted into a p-value, the score can directly be compared with those of the exact hypothesis tests. ... Note that the logarithm is undefined when there are empty cells (with Oij = 0). For such cells, the entire term evaluates to zero (because 0 \* log(0) = 0 by continuous extension) and can simply be omitted from the summation."
 
 $$log-likelihood = 2*\sum_{ij}{O_{ij} log{\frac{O_{ij}}{E_{ij}}}}$$
 
 "Since the log-likelihood statistic has an asymptotic χ2 (chi-squared) distribution, its scores can directly be compared with those of the chi-squared measure. ... Numerical simulation shows that log-likelihood is much more conservative than chi-squared and gives an excellent approximation to the exact p-values of the Fisher measure. Therefore, it has generally been accepted as an accurate and convenient standard measure for the *significance of association*."
-
 
 ### N-Grami s knjižnico quanteda
 
@@ -478,7 +480,6 @@ BiGrams <- gtoks %>%
 
 head(BiGrams, 20) %>% rmarkdown::paged_table()
 ```
-
 
 ```{r}
 BiGrams %>% 
@@ -522,7 +523,7 @@ Strogo gledano smo pridobili samo *n-grame*, ne pa tudi kolokacij, saj za *kolok
 
 ### Kolokacije
 
-V primerjavi z ngrami je bistveno težje prepoznati kolokacije, saj  so lahko med sestavnimi deli kolokacije tudi druge besede.
+V primerjavi z ngrami je bistveno težje prepoznati kolokacije, saj so lahko med sestavnimi deli kolokacije tudi druge besede.
 
 V prvem koraku bomo prispevke gledalcev s knjižnico `quanteda` razdelili na posamezne stavke.
 
@@ -609,9 +610,9 @@ coll_df <- collocates %>% as.data.frame() %>%
 # writexl::write_xlsx(coll_df, "data/gendering_collocates_dff.xlsx")
 ```
 
-S funkcijo `ncol()` lahko preverimo, koliko izrazov (besed ali elementov) je predstavljenih v matriki sopojavljanja (*kookurenčni matriki*). V našem jezikovnem gradivu: 5829. 
+S funkcijo `ncol()` lahko preverimo, koliko izrazov (besed ali elementov) je predstavljenih v matriki sopojavljanja (*kookurenčni matriki*). V našem jezikovnem gradivu: 5829.
 
-S funkcijo `summary()` lahko preverimo, kako pogosto se izrazi (term) pojavljajo v jezikovnem gradivu. Tako izvemo, da je najmanjša pogostost besede v jezikovnem gradivu (Min.) enaka 1 in največja (Max.) enaka 9664. 
+S funkcijo `summary()` lahko preverimo, kako pogosto se izrazi (term) pojavljajo v jezikovnem gradivu. Tako izvemo, da je najmanjša pogostost besede v jezikovnem gradivu (Min.) enaka 1 in največja (Max.) enaka 9664.
 
 Velika razlika med *mediano* (24,00) in *povprečjem* (59,45) kaže, da pogostnosti besede niso normalno porazdeljene. To je za jezikovna gradiva povsem običajno.
 
@@ -620,7 +621,6 @@ Velika razlika med *mediano* (24,00) in *povprečjem* (59,45) kaže, da pogostno
 ncol(collocates)
 summary(rowSums(collocates))
 ```
-
 
 ### Upodobitev kolokacij
 
@@ -653,12 +653,11 @@ coocs <- calculateCoocStatistics(coocTerm, a_dfm, measure="LOGLIK")
 coocs[1:20]
 ```
 
-Rezultat kaže, da je beseda *smrt* najmočneje povezana z besedo *komunizmu*, kar v tem jezikovnem gradivu ne preseneča. Z ozirom na precejšnjo moč povezave bi lahko trdili, da sta besedni obliki *smrt komunizmu* (podobno kot *smrt fašizmu*) kolokata in vsaj v prispevkih določenih gledalcev oddaje, ki so napisali te pripombe, celo leksikalizirane. 
+Rezultat kaže, da je beseda *smrt* najmočneje povezana z besedo *komunizmu*, kar v tem jezikovnem gradivu ne preseneča. Z ozirom na precejšnjo moč povezave bi lahko trdili, da sta besedni obliki *smrt komunizmu* (podobno kot *smrt fašizmu*) kolokata in vsaj v prispevkih določenih gledalcev oddaje, ki so napisali te pripombe, celo leksikalizirane.
 
+#### Moč asociacije {.unnumbered}
 
-#### Moč asociacije {-}
-
-Pripravimo tabelo z vrednostmi moči asociacije. 
+Pripravimo tabelo z vrednostmi moči asociacije.
 
 ```{r}
 coocdf <- coocs %>%
@@ -674,7 +673,7 @@ coocdf %>%
   head(15)
 ```
 
-Preprosta upodobitev moči asociacije. 
+Preprosta upodobitev moči asociacije.
 
 ```{r}
 coocdf %>% 
@@ -687,10 +686,9 @@ ggplot(aes(x = reorder(Term, CollStrength, mean),
   labs(y = "")
 ```
 
+#### Dendrogrami {.unnumbered}
 
-#### Dendrogrami{-}
-
-Dendrogrami (drevesni diagrami) prikazujejo, katere skupne značilnosti imajo podobni elementi. Dendrogrami potemtakem označujejo skupine, saj prikazujejo elemente (besede), ki so podobni ali različni glede na njihovo asociacijsko moč. 
+Dendrogrami (drevesni diagrami) prikazujejo, katere skupne značilnosti imajo podobni elementi. Dendrogrami potemtakem označujejo skupine, saj prikazujejo elemente (besede), ki so podobni ali različni glede na njihovo asociacijsko moč.
 
 Za uporabo te metode moramo najprej ustvariti matriko razdalje iz naše matrike sopojavljanja (kookurenčne matrike).
 
@@ -715,11 +713,11 @@ ggdendrogram(clustertexts) +
   ggtitle("Terms strongly collocating with *komunizmu*")
 ```
 
-#### Omrežni diagrami {-}
+#### Omrežni diagrami {.unnumbered}
 
-Omrežni grafi so zelo uporabno orodje za prikaz odnosov (ali odsotnosti odnosov) med besedami. 
+Omrežni grafi so zelo uporabno orodje za prikaz odnosov (ali odsotnosti odnosov) med besedami.
 
-##### Osnovni diagrami {-}
+##### Osnovni diagrami {.unnumbered}
 
 Mrežni diagram bomo ustvarili s funkcijo `network` iz knjižnice `network`.
 
@@ -738,7 +736,7 @@ network.vertex.names(net) = rownames(collocates_redux)
 net
 ```
 
-Sledi slika omrežja. 
+Sledi slika omrežja.
 
 ```{r warning=F, message=F}
 library(GGally)
@@ -787,7 +785,7 @@ network::set.edge.attribute(
          ifelse(net %e% "weights" <= .5, 2, 1)))
 ```
 
-Informativnejša različica omrežnega diagrama. 
+Informativnejša različica omrežnega diagrama.
 
 ```{r net4}
 ggnet2(net, 
@@ -802,10 +800,9 @@ ggnet2(net,
   guides(scale = "none")
 ```
 
+##### Biplot {.unnumbered}
 
-##### Biplot {-}
-
-*Biplot* se uporabljajo za prikaz rezultatov korespondenčnih analiz. Uporabni so zlasti takrat, ko nas ne zanima en določen ključni izraz in njegove kolokacije, temveč semantična podobnost številnih izrazov. Besede kot take lahko štejemo za pomensko podobne, če imajo podoben profil sopojavnosti – tj. da se sopojavljajo z istimi besedami. 
+*Biplot* se uporabljajo za prikaz rezultatov korespondenčnih analiz. Uporabni so zlasti takrat, ko nas ne zanima en določen ključni izraz in njegove kolokacije, temveč semantična podobnost številnih izrazov. Besede kot take lahko štejemo za pomensko podobne, če imajo podoben profil sopojavnosti -- tj. da se sopojavljajo z istimi besedami.
 
 ```{r}
 # perform correspondence analysis
@@ -815,8 +812,7 @@ res.ca <- CA(collocates_redux, graph = FALSE)
 fviz_ca_row(res.ca, repel = TRUE, col.row = "gray20")
 ```
 
-
-Biplot nam pokaže, da se *komunizumu* in *smrt* vedeta kot Kolokata, saj sta na diagramu  razmeroma blizu (čeprav manj kot *smrt* in *fasizmu*). Biplot nam tudi pokaže druge kolokate kot npr. *rdeči* in *levicarje*. 
+Biplot nam pokaže, da se *komunizumu* in *smrt* vedeta kot Kolokata, saj sta na diagramu razmeroma blizu (čeprav manj kot *smrt* in *fasizmu*). Biplot nam tudi pokaže druge kolokate kot npr. *rdeči* in *levicarje*.
 
 ### Statistična značilnost kolokacij
 
@@ -824,10 +820,10 @@ Da bi ugotovili, katere besede se skupaj pojavljajo bistveno pogosteje, kot bi p
 
 Za določitev, kateri izrazi se pomembno ujemajo s ključnim izrazom (*komunizmu*), uporabljamo večkratne (ali ponavljajoče se) eksaktne *Fisherjeve preizkuse*, ki zahtevajo naslednje podatke:
 
-* a = kolikokrat se `coocTerm` pojavlja s členom j (tj. O11)   
-* b = kolikokrat se `coocTerm` pojavlja brez izraza j (tj. O12)   
-* c = Kolikokrat se drugi izrazi pojavljajo s členom j (tj. O21)   
-* d = število izrazov, ki niso `coocTerm` ali izraz j (tj. O22)   
+-   a = kolikokrat se `coocTerm` pojavlja s členom j (tj. O11)\
+-   b = kolikokrat se `coocTerm` pojavlja brez izraza j (tj. O12)\
+-   c = Kolikokrat se drugi izrazi pojavljajo s členom j (tj. O21)\
+-   d = število izrazov, ki niso `coocTerm` ali izraz j (tj. O22)
 
 Najprej sestavljamo tabelo z gornjimi količinami.
 
@@ -991,6 +987,694 @@ coocStatz %>%
 
 Rezultati kažejo, da se beseda *komunizmu* v prispevkih gledalcev močno ujema z besedami *smrt, nacijonalsocijalizmu* in *fasizmu*. Popravljene vrednosti p kažejo, da so to po Benjamini-Hochbergovem popravku za večkratno/ponavljajoče se testiranje [glejte @field2012discovering] edine pomembne kolokate besede *komunizmu* v prispevkih gledalcev oddaje. Popravki so potrebni pri izvajanju več testov, ker bi bila sicer zanesljivost rezultata testa močno zmanjšana, saj ponavljajoče testiranje povzroči znatno inflacijo $\alpha$-napake. Benjamini-Hochbergov popravek ima prednost pred bolj priljubljenim Bonferronijevim popravkom, ker je manj konzervativen in je zato manj verjetno, da bo povzročil $\beta$-napake [glej znova @field2012discovering].
 
-
 ## Sentimentna analiza
+
+Sentimentno analizo (tj. analiza razpoloženja piscev v besedilih o neki tematiki) je mogoče opraviti na več načinov. Najosnovnejši pristop za sentimentno analizo je uporaba posebnega slovarja, ki dodeli slovarskim enotam vrednost na čustveni lestvici, npr. ali ima neka beseda pozitiven ali negativen čustveni naboj, ali ima neka beseda visoko, nevtralno ali nizko vrednost na čustveni lestvici, ali izraža besedo določeno čustveno kategorijo (npr. veselje, žalost, jezo, ...).
+
+Sentimentni slovarji so najbolj učinkoviti, če je besedišče v besedilih bolj predvidljivo, tako da lahko pripravimo ustrezen sentimentni slovar (npr. za prispevke na Twitterju o določenih političnih temah), bodisi z ocenami preizkusnih oseb ali s prevodom slovarja in sentimentnih vrednosti iz drugega jezika (npr. angleščine).
+
+V oblikoslovno revnih jezikih (npr. angleščini) je uporaba sentimentnega slovarja po navadi preprostejša in uspešnejša kot v oblikoslovno bogatih jezikih (npr. v nemščini ali slovenščini).
+
+Knjižnica s številnimi možnostmi za analizo razpoloženja (sentimenta) (v različnih jezikih) je `syuzhet`. Tudi `udpipe` ponuja dodatne možnosti za sentimentno analizo, in sicer z negacijsko inverzijo.
+
+### Slovarske enote
+
+V sentimentnem slovarju za slovenščino, ki ga bomo spodaj izbrali in pripravili, so besede navedene v osnovni obliki, v besedilih pa nastopajo v različnih oblikah (različnice). Zato bomo izbrali podatkovni niz, ki vsebuje lematizirane besede.
+
+```{r}
+library(udpipe)
+destfile = "slovenian-ssj-ud-2.5-191206.udpipe"
+
+if(!file.exists(destfile)){
+  jezikovni_model <- udpipe_download_model(language = "slovenian")
+  udmodel_sl <- udpipe_load_model(jezikovni_model$file_model)
+} else {
+  file_model = destfile
+  udmodel_sl <- udpipe_load_model(file_model)
+}
+
+prispevki <- comments %>% 
+  mutate(text = str_replace_all(
+    text, "(\\,)([a-zA-ZčšžČŠŽ].*)", "\\1 \\2"))
+  
+jansa <- prispevki %>% filter(file == "24ur_Jansa")
+x = udpipe_annotate(udmodel_sl, x = jansa$text, 
+                    doc_id = as.character(jansa$file), trace = F)
+jansa_ud = as.data.frame(x)
+
+bozic <- prispevki %>% filter(file == "24ur_bozic")
+x = udpipe_annotate(udmodel_sl, x = bozic$text, 
+                    doc_id = as.character(bozic$file), trace = F)
+bozic_ud = as.data.frame(x)
+
+janko <- prispevki %>% filter(file == "24ur_Jankovic")
+x = udpipe_annotate(udmodel_sl, x = janko$text, 
+                    doc_id = as.character(janko$file), trace = F)
+janko_ud = as.data.frame(x)
+
+udpiped <- bind_rows(jansa_ud, bozic_ud, janko_ud)
+dim(udpiped)
+```
+
+Iz slovarskih enot (lem) bomo sestavili dodaten stolpec, ki bo vseboval povedi s slovarskimi enotami.
+
+```{r}
+df <- udpiped %>% 
+  group_by(doc_id, paragraph_id, sentence_id) %>% 
+  mutate(text = paste(lemma, collapse = " ")) %>% 
+  select(doc_id, paragraph_id, sentence_id, text) %>% 
+  distinct() %>% 
+  # obdrži le vrstice z besedami
+  filter(str_detect(text, "^[a-zA-ZčšžČŠŽ].*"))
+df %>% head(5)
+
+```
+
+### Polariteta
+
+S knjižnico `syuzhet` izberemo eno ali več besedil in jih s funkcijo `get_sentences()` pretvorimo v povedi (upoštevana so končna ločila).
+
+```{r message=FALSE, warning=FALSE}
+library(syuzhet)
+# We need to parse the text into sentences.
+v_jansa <- df %>% 
+  filter(doc_id == "24ur_Jansa") %>% 
+  pull(text) %>% 
+  get_sentences() %>% 
+  str_remove(pattern = "^[:punct:]")
+v_jansa <- v_jansa[v_jansa != ""]
+```
+
+Za angleščino bi lahko izbrali več sentimentnih slovarjev za primerjavo. Za slovenščino bomo v pomnilnik naložili slovarček, ki temelji na prevodu besednih oblik iz angleščine.
+
+```{r}
+senti_sl <- read_tsv("data/sentiment/nrc_lexicon_slovenian.txt")
+head(senti_sl)
+```
+
+Ta slovar moramo nekoliko prilagoditi za naše potrebe, saj potrebujemo poleg stolpca z besedo le še stolpec s sentimentno vrednostjo. Torej moramo vrednosti iz stolpcev *Positive* in *Negative* pretvoriti v eno vrednost, ki jo bomo shranili v novem stolpcu z imenom *value*.
+
+```{r}
+senti_sl <- senti_sl %>% 
+  mutate(Negative = -1*Negative) %>% 
+  mutate(value = Positive + Negative) %>% 
+  select(word, value, Positive:Trust) %>% 
+  mutate(Negative = abs(Negative))
+
+senti_sl %>% rmarkdown::paged_table()
+# write_tsv(senti_sl, "nrc_lexicon_slovenian.tsv")
+```
+
+V naslednjem koraku s funkcijo `get_sentiment()` dodelimo vsaki povedi vrednost razpoloženja (npr. vsoto posameznih vrednosti za besede v povedi). Podlaga je sentimentni slovar, v katerem so besedam dodeljene čustvene vrednosti (tj. pozitivne ali negativne vrednosti).
+
+```{r message=FALSE, warning=FALSE}
+# Then we calculate a sentiment value for each sentence.
+jansa_sentiment <- get_sentiment(v_jansa, method = "nrc", 
+                                 lexicon = "senti_sl")
+# vsota vseh vrednosti za povedi
+sum(jansa_sentiment)
+# povprečje vrednosti za povedi
+mean(jansa_sentiment)
+# nariši histogram
+hist(jansa_sentiment)
+```
+
+Vrednost prispevkov o oddaji z Janezom Janšo lahko primerjamo z vrednostmi drugih prispevkov o drugih oddajah. Postopek je enako zgoraj prikazanemu. Tukaj prikazujemo različico.
+
+```{r}
+janko <- df %>% filter(doc_id == "24ur_Jankovic")
+v_janko <- get_sentences(janko$text) %>% 
+  str_remove(pattern = "^[:punct:]")
+v_janko <- v_janko[v_janko != ""]
+janko_sentiment <- get_sentiment(v_janko, method = "nrc", 
+                                 lexicon = "senti_sl")
+sum(janko_sentiment)
+mean(janko_sentiment)
+hist(janko_sentiment)
+```
+
+Poskusimo še določiti sentimentne vrednosti za prispevke gledalcev o oddaji s tematiko *božič*.
+
+```{r}
+bozic <- df %>% filter(doc_id == "24ur_bozic")
+v_bozic <- get_sentences(bozic$text) %>% 
+  str_remove(pattern = "^[:punct:]")
+v_bozic <- v_bozic[v_bozic != ""]
+bozic_sentiment <- get_sentiment(v_bozic, method = "nrc", 
+                                 lexicon = "senti_sl")
+sum(bozic_sentiment)
+mean(bozic_sentiment)
+hist(bozic_sentiment)
+```
+
+Vsota vrednosti za prispevke *24ur_bozic* je pozitivna, povprečje pa je nekoliko višje kot za prispevke *24ur_Jansa* in *24ur_Jankovic*. Poglejmo podrobnosti!
+
+```{r}
+bozic_sentiment
+```
+
+Večinoma ničle, kar lahko pomeni nevtralno besedišče, bolj verjetno pa je, da besed ni bilo v sentimentnem slovarju.
+
+Katere povedi so bile negativno ali pozitivno ocenjene?
+
+```{r}
+which(bozic_sentiment < 0)
+which(bozic_sentiment > 0)
+```
+
+Povedi 42 in 77 sta bili ocenjeni negativno (-1,-1), povedi 26, 55 in 92 pa pozitivno (1,1,1). Poglejmo povedi!
+
+```{r}
+# negativno
+v_bozic[42]
+v_bozic[77]
+# pozitivno
+v_bozic[26]
+v_bozic[55]
+v_bozic[92]
+```
+
+Naredimo tabelo iz vektorjev in poglejmo še preostalo gradivo! Najprej na daljši (in razumljivejši) način:
+
+```{r}
+a <- data.frame(rep("24ur_Jansa", times = length(v_jansa)))
+b <- data.frame(v_jansa)
+c <- data.frame(jansa_sentiment)
+jansa_df <- cbind(a,b,c)
+colnames(jansa_df) <- c("doc_id", "text", "value")
+
+a <- data.frame(rep("24ur_Jankovic", times = length(v_janko)))
+b <- data.frame(v_janko)
+c <- data.frame(janko_sentiment)
+janko_df <- cbind(a,b,c)
+colnames(janko_df) <- c("doc_id", "text", "value")
+
+a <- data.frame(rep("24ur_bozic", times = length(v_bozic)))
+b <- data.frame(v_bozic)
+c <- data.frame(bozic_sentiment)
+bozic_df <- cbind(a,b,c)
+colnames(bozic_df) <- c("doc_id", "text", "value")
+
+youtube_24ur <- rbind(bozic_df, janko_df, jansa_df)
+```
+
+Alternativno naredimo tabelo na elegantnejši način, tj. z dvojno zanko in manj ponavljanja programskih korakov:
+
+```{r}
+youtube_24ur <- NULL
+
+groups <- c("24ur_Jansa", "24ur_Jankovic", "24ur_bozic")
+texts <- list(v_jansa, v_janko, v_bozic)
+sentis <- list(jansa_sentiment, janko_sentiment, bozic_sentiment)
+
+for(i in 1:length(groups)){
+  for(j in 1:length(texts[[i]])){
+    f1 <- data.frame(groups[i])
+    f2 <- data.frame(texts[[i]][j])
+    f3 <- data.frame(sentis[[i]][j])
+    x <- cbind(f1, f2, f3)
+    colnames(x) <- c("doc_id", "text", "value")
+    youtube_24ur <- rbind(youtube_24ur, x)
+  }
+}
+
+```
+
+Oba načina dajeta isti rezultat.
+
+```{r}
+youtube_24ur %>% 
+  select(doc_id, value, text) %>% 
+  mutate(text = str_sub(text,1,40)) %>% 
+  filter(value > 0 | value < 0) %>% 
+  arrange(-value) %>% 
+  rmarkdown::paged_table()
+```
+
+Zdaj si lahko ogledamo porazdelitev sentimentnih vrednosti in lažje vidimo, da je zelo veliko vrednosti
+
+```{r}
+youtube_24ur %>% 
+  group_by(doc_id) %>% 
+  count(value, sort = F) %>% 
+  pivot_wider(names_from = value, values_from = n, 
+              values_fill = 0, names_sort = T)
+
+```
+
+Slikovni prikaz (nevtralne vrednosti so izpuščene):
+
+```{r}
+youtube_24ur %>% 
+  group_by(doc_id) %>% 
+  count(value) %>% 
+  filter(value != 0) %>% 
+  ggplot(aes(value, n, fill = doc_id)) +
+  geom_col(show.legend = F) +
+  theme_light() +
+  facet_wrap(~ doc_id) +
+  labs(x = "polariteta", y = "povedi")
+```
+
+Drugi sentimentni slovarji so lahko shranjeni v obliki `json`. Odpremo jih lahko s funkcijo iz knjižnice `jsonlite`. Slovar spodaj moramo najprej preoblikovati, da bo deloval s programsko funkcijo iz knjižnice `syuzhet`.
+
+```{r}
+dict <- jsonlite::fromJSON("data/sentiment/drugi/data_dictionary_NRC_slovenian.json")
+
+pos <- as_tibble(dict$positive) %>% 
+  rename(word = value) %>% 
+  mutate(value = 1)
+neg <- as_tibble(dict$negative) %>% 
+  rename(word = value) %>% 
+  mutate(value = -1)
+
+sl_senti <- rbind(pos, neg)
+head(sl_senti)
+```
+
+Slovar tipa VAD (Valence, Arousal, Dominance) vsebuje decimalne vrednosti čustvene valence, intenzitete in dominance) za besede, ki so bile tudi v prejšnjih dveh že prikazanih slovarjih. Za delo z določeno knjižnico jih je treba prilagoditi.
+
+```{r}
+vad_sl <- read_tsv("data/sentiment/drugi/Slovenian-sl-NRC-VAD-Lexicon.txt") %>% 
+  select(-Word) %>% 
+  rename(word = `Slovenian-sl`) %>% 
+  rename(value = Valence) %>% 
+  mutate(sentiment = ifelse(value > 0.5, "positive", "negative")) %>% 
+  select(word, sentiment, value)
+  
+```
+
+Veliko možnosti za sentimentno analizo ponuja tudi knjižnica `udpipe` s funkcijo `txt_sentiment()`. Sentimentni slovar, ki ga želimo uporabiti s to funkcijo, mora vsebovati stolpca z imenoma *term* in *polarity*. Ukaz `rename` poskrbi za to.
+
+```{r}
+# preimenuj stolpca
+polar_sl <- senti_sl %>% 
+  rename(term = word) %>% 
+  rename(polarity = value)
+
+# izvedi sentimentno analizo
+jansa_polar <- txt_sentiment(
+  x = jansa_ud, 
+  term = "lemma", 
+  polarity_terms = polar_sl, 
+  polarity_negators = c("ne", "ni"), 
+  polarity_amplifiers = c("zelo", "izredno", "povsem"), 
+  polarity_deamplifiers = c("dokaj", "sorazmerno", "nekoliko"), 
+  n_before = 1, 
+  n_after = 1)
+
+# prikaz podrobnosti
+jansa_polar$data %>% 
+  select(doc_id, lemma, polarity, sentiment_polarity) %>% 
+  rmarkdown::paged_table()
+
+# pregled
+jansa_polar$overall %>% rmarkdown::paged_table()
+```
+
+V repozitoriju *clarin.si* najdemo slovenski sentimentni slovar KSS: Kadunc, Klemen and Robnik-Šikonja, Marko, 2017, Slovene sentiment lexicon KSS 1.1, Slovenian language resource repository CLARIN.SI, ISSN 2820-4042, http://hdl.handle.net/11356/1097.
+
+V zip datoteki je sentimentni slovar *KSS Slolex*, ki ga uporabljamo v naslednjem preizkusu. Za delo s funkcijo `txt_sentiment()` ga moramo preoblikovati.
+
+```{r}
+negpath <- list.files("data/sentiment/drugi/kss/",
+           pattern = "negative_words_Slolex",
+           full.names = T)
+pospath <- list.files("data/sentiment/drugi/kss/",
+           pattern = "positive_words_Slolex",
+           full.names = T)
+
+neg <- read_lines(negpath) %>% 
+  as_tibble() %>% 
+  rename(term = value) %>% 
+  mutate(polarity = -1)
+
+pos <- read_lines(pospath) %>% 
+  as_tibble() %>% 
+  rename(term = value) %>% 
+  mutate(polarity = 1)
+
+kss <- rbind(pos, neg)
+```
+
+V sledečem programskem odstavku ocenjujemo s sentimentnim slovarjem *kss Slolex* polariteto besed v prispevkih gledalcev o oddaji z Janezom Janšo. Ocena za prispevke *24ur_Jansa*: -94.2 (prevladujejo negativni prispevki nad pozitivnimi)
+
+```{r}
+jansa_polar <- txt_sentiment(x = jansa_ud, 
+                             term = "lemma", 
+                             polarity_terms = kss,
+                             polarity_negators = c("ne", "ni"),
+                             polarity_amplifiers = c("zelo", "izredno"),
+                             polarity_deamplifiers = c("dokaj", "sorazmerno"), 
+                             n_before = 1, 
+                             n_after = 1)
+
+jansa_polar$data %>% 
+  select(doc_id, lemma, polarity, sentiment_polarity) %>% 
+  rmarkdown::paged_table()
+
+jansa_polar$overall %>% rmarkdown::paged_table()
+```
+
+Ustrezen postopek za prispevke o oddaji z Zoranom Jankovićem daje oceno za *24ur_Janko*: -19.6 (prevladujejo negativne čustvene vrednosti nad pozitivnimi).
+
+```{r}
+janko_polar <- txt_sentiment(x = janko_ud, 
+                             term = "lemma", 
+                             polarity_terms = kss,
+                             polarity_negators = c("ne", "ni"),
+                             polarity_amplifiers = c("zelo", "izredno"),
+                             polarity_deamplifiers = c("dokaj", "sorazmerno"), 
+                             n_before = 1, 
+                             n_after = 1)
+
+janko_polar$data %>% 
+  select(doc_id, lemma, polarity, sentiment_polarity) %>% 
+  rmarkdown::paged_table()
+
+janko_polar$overall %>% 
+  rmarkdown::paged_table()
+```
+
+Kakšne je rezultat za prispevke o oddaji z božični tematiki? Ocene za *24ur_bozic*: 9.2 (prevladujejo pozitivne vrednosti nad negativnimi).
+
+```{r}
+bozic_polar <- txt_sentiment(x = bozic_ud, 
+                             term = "lemma", 
+                             polarity_terms = kss,
+                             polarity_negators = c("ne", "ni"),
+                             polarity_amplifiers = c("zelo", "izredno"),
+                             polarity_deamplifiers = c("dokaj", "sorazmerno"), 
+                             n_before = 1, 
+                             n_after = 1)
+
+bozic_polar$data %>% 
+  select(doc_id, lemma, polarity, sentiment_polarity) %>% 
+  rmarkdown::paged_table()
+
+bozic_polar$overall %>% rmarkdown::paged_table()
+```
+
+```{r}
+bozic_polar$overall$terms_positive
+```
+
+```{r}
+bozic_polar$overall$terms_negative
+```
+
+```{r}
+bozic_polar$overall$terms_negation
+bozic_polar$overall$terms_amplification
+bozic_polar$overall$sentiment_polarity
+```
+
+Čustveno polariteto je sentimentni slovar ocenil na osnovi majhnega števila besed (48). Rezultat torej ni zanesljiv. Tabelarni in slikovni prikaz za 48 povedi:
+
+```{r}
+bozic_polar$data %>% 
+  filter(!is.na(polarity)) %>% 
+  rmarkdown::paged_table() %>% 
+  select(sentence, polarity) %>% 
+  filter(polarity == 1)
+
+bozic_polar$data %>% 
+  filter(!is.na(polarity)) %>% 
+  rmarkdown::paged_table() %>% 
+  select(sentence, polarity) %>% 
+  filter(polarity == -1)
+
+bozic_polar$data %>% 
+  mutate(row_id = row_number()) %>% 
+  filter(!is.na(polarity)) %>% 
+  select(row_id, polarity) %>% 
+  ggplot(aes(row_id, polarity, color = as.factor(polarity))) +
+  geom_segment(aes(x = row_id, xend = row_id, 
+               y = 0, yend = polarity)) +
+  theme_light() +
+  geom_hline(yintercept = 0) +
+  theme(legend.position = "none")
+
+```
+
+S knjižnico `syuzhet` in funkcijo `get_sentiment` je bil rezultat skoraj enak prejšnemu, ko smo polariteto besed ocenjevali s sentimentnim slovarjem *senti_sl* (gl. zgoraj). Namesto slovarskih enot uporabljamo besedne oblike.
+
+```{r}
+kss_nrc <- kss %>% 
+  rename(word = term) %>% 
+  rename(value = polarity)
+
+bozic <- prispevki %>% filter(file == "24ur_bozic")
+v_bozic2 <- get_sentences(bozic$text) %>% 
+  str_remove(pattern = "^[:punct:]")
+v_bozic2 <- v_bozic2[v_bozic2 != ""]
+bozic2_sentiment <- get_sentiment(v_bozic2, method = "nrc", 
+                                 lexicon = "kss_nrc")
+sum(bozic2_sentiment)
+mean(bozic2_sentiment)
+hist(bozic2_sentiment)
+
+```
+
+### Čustvene lestvice
+
+S funkcijo `get_nrc_sentiment()` je poleg polarnih vrednosti (pozitivno vs. negativno) mogoče pridobiti oceniti čustveni naboj besed, npr. veselje (joy), žalost (sadness) in nekatera druga, spet na podlagi besednih seznamov, ki so jih ocenile preizkusne osebe.
+
+To razmeroma dobro deluje v angleščini, španščini, nemščini in nekaterih drugih jezikih, žal rezultati v slovenščini po navadi niso uporabni. Vzemimo angleške podnapise iz filma *Avatar* za zgled in jih pripravimo za sentimentno analizo:
+
+```{r}
+avatar_eng <- read_lines("data/sub/Avatar_eng.txt")
+c1 = avatar_eng %>% 
+  as_tibble() %>% 
+  mutate(row_tc = row_number()) %>% 
+  filter(str_detect(value, "-->")) %>% 
+  rename(timecode = value)
+
+c2 = avatar_eng %>% 
+  as_tibble() %>% 
+  mutate(row_id = row_number()) %>% 
+  filter(str_detect(value, "[a-zA-Z]")) %>% 
+  rename(text = value) %>% 
+  mutate(text = str_replace(text, "\\<i\\>", "")) %>% 
+  mutate(text = str_replace(text, "\\</i\\>", "")) %>% 
+  mutate(language = "eng")
+
+avatxt_eng = c2 %>% 
+  # opcija: dodaj stolpec s prvotnimi številkami vrstic v podnapisih
+  mutate(sentence_id = row_number()) %>% 
+  # regex: odstrani pomišljaj pred besedo
+  mutate(text = str_replace(text, "(–)([a-zA-ZčšžČŠŽ]+)", "\\2"))
+
+head(avatxt_eng)
+```
+
+```{r message=FALSE, warning=FALSE}
+v_avatar_eng <- get_sentences(avatxt_eng$text)
+rs_nrc_sentiment <- get_nrc_sentiment(v_avatar_eng, 
+                                      language = "english")
+joy_items <- which(rs_nrc_sentiment$joy > 0)
+head(v_avatar_eng[joy_items], 4)
+
+```
+
+Tukaj je odlomek iz tabele, ki jo dobimo po oceni čustvenih vrednosti besed:
+
+```{r message=FALSE, warning=FALSE}
+rs_nrc_sentiment[1:10, 1:10] %>% rmarkdown::paged_table()
+```
+
+*čustvena valenca* (tj. polariteta, kako pozitivno ali negativno je ocenjen pomen besede):
+
+```{r message=FALSE, warning=FALSE}
+valence_rs <- (rs_nrc_sentiment[, 9]*-1) + rs_nrc_sentiment[, 10]
+head(valence_rs)
+
+```
+
+Ocene čustvenega naboja besed v obliki stolpčnega diagrama:
+
+```{r message=FALSE, warning=FALSE}
+barplot(
+  sort(colSums(prop.table(rs_nrc_sentiment[, 1:8]))), 
+  horiz = TRUE, cex.names = 0.7, las = 1, col = 9:2,
+  main = "Emotions in English Avatar subtitles", xlab="Percentage"
+  )
+
+```
+
+Slikoni prikaz z `ggplot()`:
+
+```{r message=FALSE, warning=FALSE}
+library(scales)
+rs_nrc_sentiment[,1:8] %>% 
+  summarise(across(everything(), ~ mean(.))) %>% 
+  pivot_longer(anger:trust, 
+               names_to = "emotion", 
+               values_to = "pct") %>% 
+  mutate(emotion = fct_reorder(emotion, pct)) %>% 
+  ggplot(aes(pct, emotion, fill = emotion)) +
+  geom_col() +
+  theme(legend.position = "none") +
+  scale_x_continuous(labels = percent) +
+  labs(x = "", y = "", 
+       title = "Emotion in English Avatar Subtitles")
+
+ggsave("pictures/rs_emotions_avatar_eng.png")  
+```
+
+Primerjava z nemškimi podnapisi iz filma *Avatar*, ki jih najprej pripravimo za uporabo:
+
+```{r}
+avatar_deu <- read_lines("data/sub/Avatar_deu.txt")
+c1 = avatar_deu %>% 
+  as_tibble() %>% 
+  mutate(row_tc = row_number()) %>% 
+  filter(str_detect(value, "-->")) %>% 
+  rename(timecode = value)
+
+c2 = avatar_deu %>% 
+  as_tibble() %>% 
+  mutate(row_id = row_number()) %>% 
+  filter(str_detect(value, "[a-zA-Z]")) %>% 
+  rename(text = value) %>% 
+  mutate(text = str_replace(text, "\\<i\\>", "")) %>% 
+  mutate(text = str_replace(text, "\\</i\\>", "")) %>% 
+  mutate(language = "deu")
+
+avatxt_deu = c2 %>% 
+  # opcija: dodaj stolpec s prvotnimi številkami vrstic v podnapisih
+  mutate(sentence_id = row_number()) %>% 
+  # regex: odstrani pomišljaj pred besedo
+  mutate(text = str_replace(text, "(–)([a-zA-ZčšžČŠŽ]+)", "\\2"))
+
+head(avatxt_deu)
+```
+
+Ocene čustvenih vrednosti besed v nemških podnapisih:
+
+```{r message=FALSE, warning=FALSE}
+v_avatar_deu <- get_sentences(avatxt_deu$text)
+rs_nrc_sentiment_de <- get_nrc_sentiment(v_avatar_deu, 
+                                         language = "german")
+joy_items_de <- which(rs_nrc_sentiment_de$joy > 0)
+head(v_avatar_deu[joy_items_de], 4)
+```
+
+Slikovni prikaz čustvenih vrednosti besed v nemških podnapisih:
+
+```{r message=FALSE, warning=FALSE}
+rs_nrc_sentiment_de[,1:8] %>% 
+  summarise(across(everything(), ~ mean(.))) %>% 
+  pivot_longer(anger:trust, 
+               names_to = "emotion", 
+               values_to = "pct") %>% 
+  mutate(emotion = fct_reorder(emotion, pct)) %>% 
+  ggplot(aes(pct, emotion, fill = emotion)) +
+  geom_col() +
+  theme(legend.position = "none") +
+  scale_x_continuous(labels = percent) +
+  labs(x = "", y = "", 
+       title = "Emotion in German Avatar Subtitles")
+
+ggsave("pictures/rs_emotions_avatar_deu.png")  
+```
+
+Ocene čustvenih vrednosti besed v nemških podnapisih so podobne tistim v angleških podnapisih, kar sicer pričakujemo, saj naj bi bil prevod pomensko skladen z izvirnikom.
+
+### Sentiment (animacija)
+
+Poskusimo animirati ocene čustvenih vrednosti besed v angleških podnapisih. Izračun je lahko zamuden, zato za prikaz razpoloženja v podnapisih izberemo samo približno 100 podnapisov.
+
+```{r message=FALSE, warning=FALSE}
+library(ggpage)
+library(purrr)
+library(gganimate)
+library(tidytext)
+library(zoo)
+
+# omejujemo se na podnapise 1 do 100
+prebuild <- avatxt_eng$text[1:100] %>%
+  ggpage_build() %>%
+  left_join(get_sentiments("afinn"), by = "word") 
+
+midbuild <- map_df(.x = 0:50 * 10 + 1, ~ prebuild %>% 
+                     mutate(score = 
+                              ifelse(is.na(value), 0, value), 
+                            score_smooth = zoo::rollmean(score, .x, 0),
+                            score_smooth = score_smooth / 
+                              max(score_smooth), 
+                            rolls = .x))
+
+anim_pages <- midbuild %>%
+  ggpage_plot(aes(fill = score_smooth)) +
+  scale_fill_gradient2(low = "red", high = "blue", mid = "grey", 
+                       midpoint = 0) +
+  guides(fill = "none") +
+  labs(
+    title = "Smoothed sentiment of English Avatar subtitles, <br>rolling average of {round(frame_time)}") +
+  transition_time(rolls)
+
+anim_save("pictures/sentiment_animation.gif")
+```
+
+Animacijo sprožimo takole (rdeča barva = nizke vrednosti čustvenosti po slovarju `afinn`, modra barva = visoke vrednosti čustvenosti) :
+
+```{r, dev='png', message=FALSE, warning=FALSE}
+anim_pages
+```
+
+### Barvno označevanje
+
+Knjižnica `corpsutools` omogoča barvno označevanje besed glede na razpoloženjske vrednosti na osnovi sentimentnega slovarja.
+
+Najprej ustvarimo `tcorpus()`.
+
+```{r}
+library(corpustools)
+bozic <- prispevki %>% filter(file == "24ur_bozic")
+t = create_tcorpus(bozic$text, doc_column="doc_id")
+```
+
+Iz sentimentnega slovarja *Kss Slolex* bomo naredili `dictionary()` knjižnice `quanteda`.
+
+```{r}
+negpath <- list.files("data/sentiment/drugi/kss/",
+           pattern = "negative_words_Slolex",
+           full.names = T)
+pospath <- list.files("data/sentiment/drugi/kss/",
+           pattern = "positive_words_Slolex",
+           full.names = T)
+
+negative_words <- read_lines(negpath)
+positive_words <- read_lines(pospath)
+
+slolex_dict = dictionary(list(positive = list(positive_words), negative = list(negative_words)))
+
+# exportJson <- jsonlite::toJSON(slolex_dict)
+# write(exportJson, "data/slolex_dict.json")
+```
+
+Potem sledi sentimentna ocena korpusa.
+
+```{r}
+t$code_dictionary(slolex_dict, column = 'slolex')
+t$set('sentiment', 1, subset = slolex %in% c('positive','neg_negative'))
+t$set('sentiment', -1, subset = slolex %in% c('negative','neg_positive'))
+```
+
+To omogoča prikaz barvno označenega besedila v panelu `Viewer`.
+
+```{r}
+#| eval: false
+browse_texts(t, scale='sentiment')
+```
+
+Barvno označeno besedilo je mogoče prikazovati tudi v spletnem brskalniku in shraniti kot `html` datoteko na disku.
+
+```{r}
+#| eval: false
+browse_texts(t, scale='sentiment', 
+             filename = "data/sentiment_24ur_bozic.html", 
+             header = "Sentiment v prispevkih gledalcev o oddaji z božično tematiko")
+```
 

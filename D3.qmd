@@ -39,6 +39,7 @@ library(plotly)
 library(lubridate)
 library(igraph)
 library(textfeatures)
+library(ggwordcloud)
 ```
 
 ## Poizvedbe v omrežju *Twitter*
@@ -487,13 +488,10 @@ saveRDS(mat, "data/mat_igraph.rds")
 mat <- read_rds("data/mat_igraph.rds")
 ```
 
-```{r}
-head(mat)
-```
 
 ```{r}
 mat
-
+# head(mat)
 # mat[]
 ```
 
@@ -513,18 +511,23 @@ plot(mat, layout = layout_nicely(mat),
      vertex.label.cex=0.3, vertex.label.dist=5)
 ```
 
+
 ```{r}
 mats <- simplify_and_colorize(mat)
-mats <- delete.edges(mats, which(E(mats)$weight <= 0.1)) # condition
-mats <- delete.vertices(mats, which(degree(mats) <= 1)) # condition
+mats <- delete_edges(mats, which(E(mats)$weight <= 0.1)) # condition
+mats <- delete_vertices(mats, which(degree(mats) <= 1)) # condition
 plot(mats, layout = layout_nicely(mats), vertex.size=5)
 
+```
+
+
+```{r}
 mats <- simplify(mat, remove.multiple = T, 
                               remove.loops = F, 
                               edge.attr.comb=c(weight="sum", 
                                                type="ignore"))
-mats <- delete.edges(mats, which(E(mats)$weight <= 0.1)) # condition
-mats <- delete.vertices(mats, which(degree(mats) <= 1)) # condition
+mats <- delete_edges(mats, which(E(mats)$weight <= 0.1)) # condition
+mats <- delete_vertices(mats, which(degree(mats) <= 1)) # condition
 plot(mats, vertex.label.dist=1.5, vertex.label = NA)
 ```
 
@@ -540,6 +543,7 @@ as_data_frame(mat, what="vertices") %>% rmarkdown::paged_table()
 #### Sentimentna analiza
 
 ```{r}
+#| include: false
 #| eval: false
 
 ## function to round time (created_at)
@@ -567,6 +571,7 @@ tt_sent  %>%
 
 ```{r}
 #| eval: false
+#| include: false
 
 ## aggregate text features by the hour
 tt_tft <- tt %>% 
@@ -579,6 +584,7 @@ tt_tft <- tt %>%
 
 ```{r}
 #| eval: false
+#| include: false
 
 ## plot [smoothing] text features over time
 tt_tft %>%
@@ -1111,6 +1117,7 @@ udpiped %>%
 Tipološke za označevanje besedilnih enot: *Universal Stanford Dependencies: A cross-linguistic typology* (de Marneffe et al. 2014).
 
 ```{r}
+#| out-width: "100%"
 knitr::include_graphics("pictures/Screenshot 2021-08-27 at 12-14-22 Universal Dependency Relations.png")
 ```
 
@@ -1589,7 +1596,7 @@ Pripombe gledalcev k trem oddajam v obliki besednih oblakov:
 #| out-width: "100%"
 #| fig-width: 15
 #| fig-height: 5
-
+library(ggwordcloud)
 p0 <- g_udpiped %>%
   filter(upos == "VERB") %>% 
   filter(!str_detect(lemma, "^http")) %>% 
@@ -1628,7 +1635,7 @@ N <- nrow(word_count)
 ```
 
 ```{r}
-words_video <- words %>% 
+words_video <- g_udpiped %>% 
   group_by(file) %>% 
   # anti_join(stop_sl_tidy, by = "word") %>% # 6435 words
   # filter(!str_detect(word, stop_sl_collapsed)) %>% # 6294 words

@@ -28,7 +28,8 @@ packages = c("tidyverse", "tidytext", "janitor", "scales",
              "stopwords", "xmlconvert", "lubridate", "emo", 
              "rtweet", "plotly", "Twitmo", "tictoc", "meme",
              "jsonlite", "ndjson", "igraph", "rmarkdown", 
-             "textfeatures", "knitr", "magick") # xlsx
+             "textfeatures", "knitr", "magick", "ggpage", 
+             "gganimate", "zoo", "network") # xlsx
 
 # Install packages not yet installed
 installed_packages <- packages %in% rownames(installed.packages())
