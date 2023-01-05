@@ -39,7 +39,8 @@ packages = c("tidyverse", "tidytext", "janitor", "scales",
 # Install packages not yet installed
 installed_packages <- packages %in% rownames(installed.packages())
 if (any(installed_packages == FALSE)) {
-  install.packages(packages[!installed_packages])
+  install.packages(packages[!installed_packages], 
+                   repos = "https://cloud.r-project.org/")
 }
 
 ```
@@ -47,6 +48,8 @@ if (any(installed_packages == FALSE)) {
 Če bi želeli naložiti vse zgoraj navedene knjižnice v pomnilnik (RAM), bi to lahko naredili z naslednjim ukazom.  
 
 ```{r}
+#| eval: false
+
 # Packages loading
 invisible(lapply(packages, library, character.only = TRUE))
 ```
@@ -105,12 +108,20 @@ Naslednji programski odstavek (program chunk) poskrbi za samodejno dodajanje nas
 ```{r include=FALSE}
 # automatically create a bib database for R packages
 knitr::write_bib(c(
-  .packages(), "tidyverse", "tidytext", "janitor", "scales", "widyr", 
-             "quanteda", "quanteda.textplots", "quanteda.textstats",
-             "wordcloud2", "ggwordcloud", "udpipe", "syuzhet",
-             "ggtext", "corpustools", "xml2", "XML", "rvest", 
-             "readtext", "readxl", "writexl", "stopwords", 
-             "xmlconvert", "lubridate", "rtweet"), 
+  .packages(), "tidyverse", "tidytext", "janitor", "scales",
+             "widyr", "quanteda", "quanteda.textplots",
+             "quanteda.textstats", "wordcloud2", "GGally",
+             "ggwordcloud", "udpipe", "syuzhet", "ggtext",
+             "corpustools", "xml2", "XML", "rvest", "network",
+             "readtext", "readxl", "writexl","flextable",
+             "stopwords", "xmlconvert", "lubridate", "emo",
+             "rtweet", "httpuv", "plotly", "Twitmo", "meme",
+             "jsonlite", "ndjson", "igraph", "rmarkdown", 
+             "textfeatures", "knitr", "magick", "ggpage",
+             "gganimate", "zoo", "pdftools", "officer",
+             "docxtractr", "factoMineR", "factoextra", 
+             "tictoc", "ggraph", "ggdendro", "giski", 
+             "tm"), 
   'packages.bib') # "xlsx"
 ```
 
