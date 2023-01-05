@@ -6,7 +6,7 @@
 knitr::include_graphics("pictures/R_delavnica_shema.png")
 ```
 
-`R` je odprtokoden računalniški jezik, znan po številnih statističnih funkcijah in grafičnih zmožnostih, omogoča avtomatizirano obdelavo raznovstnih podatkov (npr. besedil in njihovih sestavnih delov), uporabljamo pa ga lahko tudi za sestavljanje in objavljanje člankov, blogov, prezentacij, spletnih strani in knjig .[^intro-1]
+`R` je odprtokoden računalniški jezik, znan po številnih statističnih funkcijah in grafičnih zmožnostih, omogoča avtomatizirano obdelavo raznovstnih podatkov (npr. besedil in njihovih sestavnih delov), uporabljamo pa ga lahko tudi za sestavljanje in objavljanje člankov, blogov, predstavitev, spletnih strani in knjig .[^intro-1]
 
 `RStudio` je brezplačen grafični vmesnik za programiranje v računalniškem jeziku `R`. 
 
