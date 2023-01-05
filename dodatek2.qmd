@@ -1,0 +1,225 @@
+# Dodatek: Pretvorbe datotek
+
+## Potegni besedila iz tabele
+
+Imamo podatkovni niz, ki vsebuje stolpec z pripombami ali komentarji k video posnetku. 
+
+Besedila želimo shraniti kot samostojne datoteke v obliki preprostega besedila (plain text) po kodirni shemi utf8. 
+
+Ena izmed možnosti je uporaba zanke (for-loop). Trajanje: 7 sekund. 
+
+```{r}
+#| eval: true
+library(tidyverse)
+
+txt <- read_csv("data/youtube/videoinfo_4N19wxoie_w_2022_12_30-14_03_51_comments.csv")
+dim(txt)
+
+tictoc::tic()
+
+for(i in 1:length(txt$text)){
+  # potegni besedilo iz tekoče vrstice tabele
+  # [i, ] pomeni: vzemi le vrstico i in vse pripadajoče stolpce tabele
+  comment <- txt[i, ] %>% pull(text)
+  # zapiši besedilo na disk in poimenuj datoteko po piscu besedila
+  write_lines(comment, paste0("data/output/", txt$authorName[i],".txt"))
+}
+
+tictoc::toc()
+```
+
+## Eno ali več besedil v tabelo
+
+Odpri več datotek in shrani jih v obliki tabele smo večkrat videli v prejšnjijh poglavjih. Potrebujemo: 
+(a) `readtext()` ali 
+(b) `list.files()`, `read_lines()` in `map_dfr()` ali `lapply()`.
+
+
+## Pretvori pdf v text
+
+Imamo tri pdf datoteke, v katerih je pretežno besedilo, sicer pa tudi kakšna slika. Želimo jih pretvoriti v Wordove datoteke. Ena izmed možnosti je uporaba zanke. 
+
+```{r}
+#| eval: true
+
+# install.packages("pdftools")
+library(tidyverse)
+library(readtext) # alternativa: pdftools
+
+file_path <- list.files(path = "data/pdf/", 
+                        pattern = ".pdf", 
+                        full.names = TRUE, 
+                        recursive = FALSE)
+
+for(i in 1:length(file_path)){
+  # Convert the PDF file to a Word file
+  pdf_text <- readtext(file_path[i], text_field = "text") %>% 
+    pull(text)
+  
+  filename <- file_path[i] %>% str_remove_all("data/pdf/|.pdf")
+  
+  # Write the text to a Word file
+  write_lines(pdf_text, paste0("data/txt/", filename, ".txt"))
+}
+
+```
+
+Namesto `pdftools` je mogoče uporabiti `readtext()`.
+
+## Pretvori docx v text
+
+Preberi docx s funkcijo `readtext()` in zapiši datotek z `read_lines()`.
+
+```{r}
+# # Install and load the docxtractr package
+# install.packages("docxtractr")
+library(tidyverse)
+library(readtext)
+
+file_path <- list.files(path = "data/docx/", 
+                        pattern = ".docx", 
+                        full.names = TRUE, 
+                        recursive = FALSE)
+
+for(i in 1:length(file_path)){
+  # Read in the docx file
+  plaintext <- readtext(file_path[i]) %>% pull(text)
+  
+  filename <- file_path[i] %>% str_remove_all("data/docx/|.docx")
+  
+  # Write the text to a Word file
+  write_lines(plaintext, paste0("data/docx/", filename, ".txt"))
+}
+
+```
+
+
+## Pretvori pdf v docx
+
+### pdftools
+
+Imamo tri pdf datoteke, v katerih je pretežno besedilo, sicer pa tudi kakšna slika. Želimo jih pretvoriti v Wordove datoteke. Ena izmed možnosti je uporaba zanke. 
+
+```{r}
+#| eval: true
+
+library(tidyverse)
+library(pdftools)
+
+file_path <- list.files(path = "data/pdf/", 
+                        pattern = ".pdf", 
+                        full.names = TRUE, 
+                        recursive = FALSE)
+
+for(i in 1:length(file_path)){
+  # Convert the PDF file to a Word file
+  pdf_text <- pdf_text(file_path[i])
+  
+  filename <- file_path[i] %>% str_remove_all("data/pdf/|.pdf")
+  
+  # Write the text to a Word file
+  write_lines(pdf_text, paste0("data/docx/", filename, ".docx"))
+}
+
+```
+
+Gornja preprosta rešitev sicer deluje, ima pa lepotno napako: datoteko je možno odpreti z `WPS Office` in drugimi pisarnami, vendar ne z `Microsoft Office`. 
+
+### pdftools + officer
+
+Druga rešitev deluje, je pa bolj zapletena: kombinacija knjižnic `pdftools` + `officer`. 
+
+```{r}
+#| eval: true
+
+library(tidyverse)
+library(pdftools)
+library(officer)
+
+file_path <- list.files(path = "data/pdf/", pattern = ".pdf", 
+                        full.names = TRUE, recursive = FALSE)
+
+for(i in 1:length(file_path)){
+  # Read the PDF file
+  pdf <- pdf_text(file_path[i])
+  
+  # Create a new Word document
+  doc <- read_docx()
+  
+  # Loop through the elements of pdf and add them to the Word document
+for (j in 1:length(pdf)) {
+  doc <- doc %>% body_add_par(pdf[j], style = "Normal")
+}
+  
+  filename <- file_path[i] %>% str_remove_all("data/pdf/|.pdf")
+  
+  # Write the text to a Word file
+  print(doc, target = paste0("data/docx/", filename, ".docx"))
+}
+
+```
+
+### Python namesto R
+
+Tretja rešitev: Python
+
+```python
+# from pdf2docx import parse
+# 
+# # path of pdf file
+# pdf_file = 'tests/demo_custom.pdf'
+# 
+# # will create .docx in same path
+# docx_file = 'tests/demo_custom.docx'
+# 
+# # Here is where we convert pdf to docx
+# parse(pdf_file, docx_file, start=0, end=None)
+```
+
+
+```{r}
+#| eval: false
+
+# library(reticulate)
+# 
+# py_run_string("from pdf2docx import parse")
+# 
+# # path of pdf file
+# py_run_string("pdf_file = 'tests/demo_custom.pdf'")
+# 
+# # will create .docx in same path
+# py_run_string("docx_file = 'tests/demo_custom.docx'")
+# 
+# # Here is where we convert pdf to docx
+# py_run_string("parse(pdf_file, docx_file, start=0, end=None)")
+```
+
+
+## Potegni tabelo iz docx
+
+Potegni besedilo v tabelah iz docx, npr. povezave z Wikipedije. 
+
+```{r}
+#| eval: false
+
+# # Install and load the docxtractr package
+# install.packages("docxtractr")
+library(tidyverse)
+library(docxtractr)
+
+file_path <- list.files(path = "data/docx/", 
+                        pattern = ".docx", 
+                        full.names = TRUE, 
+                        recursive = FALSE)
+
+for(i in 1:length(file_path)){
+  # Read in the docx file
+  plaintext <- docxtractr::read_docx(file_path[i])
+  
+  filename <- file_path[i] %>% str_remove_all("data/docx/|.docx")
+  
+  # Write the text to a text file
+  write_lines(plaintext, paste0("data/docx/", filename, ".txt"))
+}
+```
+

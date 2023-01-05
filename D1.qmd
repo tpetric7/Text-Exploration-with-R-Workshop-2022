@@ -188,6 +188,7 @@ write_xlsx(df, "data/slovenska_literatura_1968.xlsx")
 write.xlsx2(df, "data/slovenska_literatura_1968.xlsx")
 ```
 
+
 ## Izbor literarnih del
 
 Katere besedilne zvrsti najdemo v stolpcu *text_type*?
@@ -209,6 +210,7 @@ dim(proza)
 ```
 
 V tabeli z imenom *proza* je 342 vrstic (tj. proznih del) in po združitvi tabel 27 stolpcev.
+
 
 ## Dodajanje stolpcev
 
@@ -273,6 +275,24 @@ proza %>%
   labs(x = "", y = "")
 
 ```
+
+Kateri avtorji so zajeti v tem podatkovnem nizu proznih del?
+
+```{r}
+proza %>% 
+  count(author_disp, sort = TRUE) %>% 
+  rmarkdown::paged_table()
+```
+
+Kateri avtorji so sodelovali z Brankom Gradišnikom?
+
+```{r}
+proza %>% 
+  filter(str_detect(author_disp, "Gradišnik")) %>% 
+  select(doc_id, author_disp, title_disp) %>% 
+   rmarkdown::paged_table()
+```
+
 
 ## Iskanje besednih oblik
 
@@ -495,7 +515,7 @@ font_pokemon()
 
 # u2 <- system.file("success.jpg", package="meme")
 u2 <- "pictures/boy_with_fist.png"
-x <- meme(u2, "Mami, mami!", "Dajva midva poskusiti!", 
+x <- meme(u2, "Mami, Ati!", "Dajva midva poskusiti!", 
           size = 3, color = "#FFD700", font='Pokemon_Hollow')
 meme_save(x, file="pictures/success1.png")
 x
@@ -550,7 +570,7 @@ Naloge so rešljive na osnovi programskh funkcij, prikazanih v prejšnjih odstav
 dir <- system.file('fonts/bubble', package='meme')
 font_import(dir)
 
-x <- meme(u2, "Mami, Mami!", "Sploh ni bilo hudo.", 
+x <- meme(u2, "Mami, Ati!", "Sploh ni bilo hudo.", 
           size = 3, color = "#D874E1", font='bubble1')
 meme_save(x, file="pictures/success2.png")
 x

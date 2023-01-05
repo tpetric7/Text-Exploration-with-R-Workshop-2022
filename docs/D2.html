@@ -266,12 +266,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./dodatek.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Dodatek: Pretvorba XML datotek</span></a>
+  <a href="./dodatek1.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Dodatek: Pretvorba XML datotek</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./summary.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Summary</span></a>
+  <a href="./dodatek2.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Dodatek: Pretvorbe datotek</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./summary.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Summary</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -303,6 +308,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <li><a href="#ključne-besede" id="toc-ključne-besede" class="nav-link" data-scroll-target="#ključne-besede"><span class="toc-section-number">3.13</span>  Ključne besede</a></li>
   <li><a href="#razumljivost-besedila" id="toc-razumljivost-besedila" class="nav-link" data-scroll-target="#razumljivost-besedila"><span class="toc-section-number">3.14</span>  Razumljivost besedila</a></li>
   <li><a href="#kookurenčna-mreža-fcm" id="toc-kookurenčna-mreža-fcm" class="nav-link" data-scroll-target="#kookurenčna-mreža-fcm"><span class="toc-section-number">3.15</span>  Kookurenčna mreža (FCM)</a></li>
+  <li><a href="#naloge" id="toc-naloge" class="nav-link" data-scroll-target="#naloge"><span class="toc-section-number">3.16</span>  Naloge</a>
+  <ul>
+  <li><a href="#n1" id="toc-n1" class="nav-link" data-scroll-target="#n1"><span class="toc-section-number">3.16.1</span>  N1</a></li>
+  <li><a href="#n2" id="toc-n2" class="nav-link" data-scroll-target="#n2"><span class="toc-section-number">3.16.2</span>  N2</a></li>
+  <li><a href="#n3" id="toc-n3" class="nav-link" data-scroll-target="#n3"><span class="toc-section-number">3.16.3</span>  N3</a></li>
+  </ul></li>
   </ul>
 <div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/tpetric7/Text-Exploration-with-R-Workshop-2022/edit/main/D2.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/tpetric7/Text-Exploration-with-R-Workshop-2022/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
     </div>
@@ -930,6 +941,7 @@ maj68-0147 Tone Partljič (1940): Ribe na plitvini</p>
 </section>
 <section id="kolokacije" class="level2" data-number="3.9">
 <h2 data-number="3.9" class="anchored" data-anchor-id="kolokacije"><span class="header-section-number">3.9</span> Kolokacije</h2>
+<p>Knjižnica <code>quanteda</code> ima preprosto funkcijo za iskanje <em>ngramov</em> v besedilih, tj. dveh ali več besed, ki se nadpovprečno pogosto sopojavljajo.</p>
 <div class="cell">
 <details>
 <summary>Show the code</summary>
@@ -1298,10 +1310,88 @@ features   večernih ur niti vedel koliko dimitrij prebil glavnem trgu danuško
 </div>
 </div>
 <p>Kookurenčne tabele po navadi dopolnjujemo z merami asociacije, ki nam povedo, kako močno sta izraza povezana in / ali je povezanost nenaključna (tj. statistično značilna).</p>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(meme)</span>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (.Platform<span class="sc">$</span>OS.type <span class="sc">==</span> <span class="st">"windows"</span>) {</span>
+<span id="cb70-4"><a href="#cb70-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">windowsFonts</span>(</span>
+<span id="cb70-5"><a href="#cb70-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">Script =</span> <span class="fu">windowsFont</span>(<span class="st">"Segoe Script"</span>),</span>
+<span id="cb70-6"><a href="#cb70-6" aria-hidden="true" tabindex="-1"></a>        <span class="at">ScriptBold =</span> <span class="fu">windowsFont</span>(<span class="st">"Script MT Bold"</span>),</span>
+<span id="cb70-7"><a href="#cb70-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">Impact =</span> <span class="fu">windowsFont</span>(<span class="st">"Impact"</span>),</span>
+<span id="cb70-8"><a href="#cb70-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">Courier =</span> <span class="fu">windowsFont</span>(<span class="st">"Courier"</span>)</span>
+<span id="cb70-9"><a href="#cb70-9" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb70-10"><a href="#cb70-10" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb70-11"><a href="#cb70-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-12"><a href="#cb70-12" aria-hidden="true" tabindex="-1"></a>dir <span class="ot">&lt;-</span> <span class="fu">system.file</span>(<span class="st">'fonts/bubble'</span>, <span class="at">package=</span><span class="st">'meme'</span>)</span>
+<span id="cb70-13"><a href="#cb70-13" aria-hidden="true" tabindex="-1"></a><span class="fu">font_import</span>(dir)</span>
+<span id="cb70-14"><a href="#cb70-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-15"><a href="#cb70-15" aria-hidden="true" tabindex="-1"></a><span class="co"># u2 &lt;- system.file("success.jpg", package="meme")</span></span>
+<span id="cb70-16"><a href="#cb70-16" aria-hidden="true" tabindex="-1"></a>u2 <span class="ot">&lt;-</span> <span class="st">"pictures/boy_with_fist.png"</span></span>
+<span id="cb70-17"><a href="#cb70-17" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">meme</span>(u2, <span class="st">"Mami, ati!"</span>, <span class="st">"Igral bi se s podatkovnim peskom."</span>, </span>
+<span id="cb70-18"><a href="#cb70-18" aria-hidden="true" tabindex="-1"></a>          <span class="at">size =</span> <span class="fl">1.8</span>, <span class="at">color =</span> <span class="st">"#D874E1"</span>, <span class="at">font=</span><span class="st">'bubble1'</span>)</span>
+<span id="cb70-19"><a href="#cb70-19" aria-hidden="true" tabindex="-1"></a><span class="fu">meme_save</span>(x, <span class="at">file=</span><span class="st">"pictures/success3.png"</span>)</span>
+<span id="cb70-20"><a href="#cb70-20" aria-hidden="true" tabindex="-1"></a>x</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="D2_files/figure-html/unnamed-chunk-49-1.png" class="img-fluid" width="768"></p>
+</div>
+</div>
+</section>
+<section id="naloge" class="level2" data-number="3.16">
+<h2 data-number="3.16" class="anchored" data-anchor-id="naloge"><span class="header-section-number">3.16</span> Naloge</h2>
+<p>Naloge so rešljive na osnovi programskh funkcij, prikazanih v prejšnjih odstavkih.</p>
+<section id="n1" class="level3" data-number="3.16.1">
+<h3 data-number="3.16.1" class="anchored" data-anchor-id="n1"><span class="header-section-number">3.16.1</span> N1</h3>
+<div class="rmdrobot">
+<ul>
+<li><p>V RStudiu ustvarite nov dokument s pripono .qmd (Quarto document)!</p></li>
+<li><p>V RStudiu odprite dve besedili približno enake dolžine z računalnikovega diska (npr. dve noveli ali dva romana po lastni izbiri ali iz gornjega jezikovnega gradiva slovenske literature iz leta 1968)!</p></li>
+<li><p>Sestavite konkordanco, in sicer z iskano besedo ali besedno zvezo po lastni izbiri!</p></li>
+<li><p>Izpišite konkordanco v obliki tabele in jo shranite v obliki datoteke csv (semicolon / comma-separated) ali xlsx (Excel)!</p></li>
+<li><p>Pokažite še grafično, kje v besedilih najdemo iskano besedo oz. besedno zvezo!</p></li>
+</ul>
+</div>
+</section>
+<section id="n2" class="level3" data-number="3.16.2">
+<h3 data-number="3.16.2" class="anchored" data-anchor-id="n2"><span class="header-section-number">3.16.2</span> N2</h3>
+<div class="rmdrobot">
+<ul>
+<li><p>Zaradi vsebinske analize odstranite <em>funkcijske</em> besede (stopwords) iz obeh že odprtih besedil v vaši zbirki!</p></li>
+<li><p>Sestavite <em>poizvedbo</em>, ki v obeh besedilih poišče <em>bigrame</em> (2-grame)!</p></li>
+<li><p>Narišite <em>diagram</em> 15 bigramov v vsakem besedilu, ki se odlikujejo po visokih <em>lambda</em> ali <em>z</em>-vrednosti.</p></li>
+</ul>
+</div>
+</section>
+<section id="n3" class="level3" data-number="3.16.3">
+<h3 data-number="3.16.3" class="anchored" data-anchor-id="n3"><span class="header-section-number">3.16.3</span> N3</h3>
+<div class="rmdrobot">
+<ul>
+<li><p>Sestavite <em>poizvedbo</em>, ki v obeh besedilih poišče <em>ključne izraze</em>, tj. takih besed, po katerih se eno besedilo razlikuje od drugega!</p></li>
+<li><p>Narišite za primerjavo tudi <em>diagram</em> ključnih besed obeh besedil!</p></li>
+</ul>
+</div>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a>dir <span class="ot">&lt;-</span> <span class="fu">system.file</span>(<span class="st">'fonts/bubble'</span>, <span class="at">package=</span><span class="st">'meme'</span>)</span>
+<span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a><span class="fu">font_import</span>(dir)</span>
+<span id="cb71-3"><a href="#cb71-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb71-4"><a href="#cb71-4" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">meme</span>(u2, <span class="st">"Mami, Ati!"</span>, <span class="st">"Jaz bi še pesek!"</span>, </span>
+<span id="cb71-5"><a href="#cb71-5" aria-hidden="true" tabindex="-1"></a>          <span class="at">size =</span> <span class="dv">3</span>, <span class="at">color =</span> <span class="st">"#D874E1"</span>, <span class="at">font=</span><span class="st">'sans'</span>)</span>
+<span id="cb71-6"><a href="#cb71-6" aria-hidden="true" tabindex="-1"></a><span class="fu">meme_save</span>(x, <span class="at">file=</span><span class="st">"pictures/success2.png"</span>)</span>
+<span id="cb71-7"><a href="#cb71-7" aria-hidden="true" tabindex="-1"></a>x</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="D2_files/figure-html/unnamed-chunk-50-1.png" class="img-fluid" width="768"></p>
+</div>
+</div>
 
 
 <!-- -->
 
+</section>
 </section>
 
 </main> <!-- /main -->
@@ -1616,513 +1706,594 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       </a>
   </div>
 </nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="sourceCode" id="cb70" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># Quanteda korpusne funkcije {#sec-delavnica2}</span></span>
-<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-5"><a href="#cb70-5" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb70-6"><a href="#cb70-6" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
-<span id="cb70-7"><a href="#cb70-7" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-keep: 'all'</span></span>
-<span id="cb70-8"><a href="#cb70-8" aria-hidden="true" tabindex="-1"></a><span class="co">#| out-width: "100%"</span></span>
-<span id="cb70-9"><a href="#cb70-9" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-link: "https://quanteda.io/reference/textplot_network.html"</span></span>
-<span id="cb70-10"><a href="#cb70-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-11"><a href="#cb70-11" aria-hidden="true" tabindex="-1"></a>im <span class="ot">&lt;-</span> magick<span class="sc">::</span><span class="fu">image_read</span>(<span class="st">"https://quanteda.io/reference/textplot_network-1.png"</span>)</span>
-<span id="cb70-12"><a href="#cb70-12" aria-hidden="true" tabindex="-1"></a>im <span class="ot">&lt;-</span> magick<span class="sc">::</span><span class="fu">image_background</span>(im, <span class="at">color =</span> <span class="st">"white"</span>)</span>
-<span id="cb70-13"><a href="#cb70-13" aria-hidden="true" tabindex="-1"></a>magick<span class="sc">::</span><span class="fu">image_write</span>(im, <span class="st">"pictures/quanteda_fcm_example.png"</span>)</span>
-<span id="cb70-14"><a href="#cb70-14" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb70-15"><a href="#cb70-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-18"><a href="#cb70-18" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb70-19"><a href="#cb70-19" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="st">"pictures/quanteda_fcm_example.png"</span>)</span>
-<span id="cb70-20"><a href="#cb70-20" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb70-21"><a href="#cb70-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-22"><a href="#cb70-22" aria-hidden="true" tabindex="-1"></a><span class="fu">## Nalaganje knjižnic</span></span>
-<span id="cb70-23"><a href="#cb70-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-26"><a href="#cb70-26" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb70-27"><a href="#cb70-27" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
-<span id="cb70-28"><a href="#cb70-28" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: false</span></span>
-<span id="cb70-29"><a href="#cb70-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-30"><a href="#cb70-30" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readtext)</span>
-<span id="cb70-31"><a href="#cb70-31" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(quanteda)</span>
-<span id="cb70-32"><a href="#cb70-32" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(quanteda.textstats)</span>
-<span id="cb70-33"><a href="#cb70-33" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(quanteda.textplots)</span>
-<span id="cb70-34"><a href="#cb70-34" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb70-35"><a href="#cb70-35" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidytext)</span>
-<span id="cb70-36"><a href="#cb70-36" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(wordcloud2)</span>
-<span id="cb70-37"><a href="#cb70-37" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor)</span>
-<span id="cb70-38"><a href="#cb70-38" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scales)</span>
-<span id="cb70-39"><a href="#cb70-39" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate)</span>
-<span id="cb70-40"><a href="#cb70-40" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
-<span id="cb70-41"><a href="#cb70-41" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(writexl)</span>
-<span id="cb70-42"><a href="#cb70-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-43"><a href="#cb70-43" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb70-44"><a href="#cb70-44" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-45"><a href="#cb70-45" aria-hidden="true" tabindex="-1"></a><span class="fu">## Odpiranje tabele</span></span>
-<span id="cb70-46"><a href="#cb70-46" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-49"><a href="#cb70-49" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb70-50"><a href="#cb70-50" aria-hidden="true" tabindex="-1"></a><span class="co"># iz prejšnje seje: csv datoteka z besedili in metapodatki</span></span>
-<span id="cb70-51"><a href="#cb70-51" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">read_csv2</span>(<span class="st">"data/slovenska_literatura_1968.csv"</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb70-52"><a href="#cb70-52" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="st">`</span><span class="at">...1</span><span class="st">`</span>, <span class="sc">-</span>n)</span>
-<span id="cb70-53"><a href="#cb70-53" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb70-54"><a href="#cb70-54" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-55"><a href="#cb70-55" aria-hidden="true" tabindex="-1"></a>Čiščenje besedil v stolpcu *text*: precej je odvečnih presledkov, kar moti poizvedbe. </span>
-<span id="cb70-56"><a href="#cb70-56" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-59"><a href="#cb70-59" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb70-60"><a href="#cb70-60" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">text =</span> <span class="fu">str_squish</span>(text))</span>
-<span id="cb70-61"><a href="#cb70-61" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb70-62"><a href="#cb70-62" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-63"><a href="#cb70-63" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-64"><a href="#cb70-64" aria-hidden="true" tabindex="-1"></a><span class="fu">## Izbor proznih del</span></span>
-<span id="cb70-65"><a href="#cb70-65" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-68"><a href="#cb70-68" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb70-69"><a href="#cb70-69" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(df)</span>
-<span id="cb70-70"><a href="#cb70-70" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb70-71"><a href="#cb70-71" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-74"><a href="#cb70-74" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb70-75"><a href="#cb70-75" aria-hidden="true" tabindex="-1"></a>df_dolzina <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> </span>
-<span id="cb70-76"><a href="#cb70-76" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(author_disp <span class="sc">!=</span> <span class="st">"[Neznani avtor]"</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb70-77"><a href="#cb70-77" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(text_type <span class="sc">==</span> <span class="st">"proza"</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb70-78"><a href="#cb70-78" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(title_disp, author_disp) <span class="sc">%&gt;%</span> </span>
-<span id="cb70-79"><a href="#cb70-79" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">dolzina =</span> <span class="fu">ntoken</span>(text)) <span class="sc">%&gt;%</span> </span>
-<span id="cb70-80"><a href="#cb70-80" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="sc">-</span>dolzina)</span>
-<span id="cb70-81"><a href="#cb70-81" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb70-84"><a href="#cb70-84" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb70-85"><a href="#cb70-85" aria-hidden="true" tabindex="-1"></a>df_dolzina <span class="sc">%&gt;%</span> </span>
-<span id="cb70-86"><a href="#cb70-86" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">10</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb70-87"><a href="#cb70-87" aria-hidden="true" tabindex="-1"></a>  rmarkdown<span class="sc">::</span><span class="fu">paged_table</span>()</span>
-<span id="cb70-88"><a href="#cb70-88" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb70-89"><a href="#cb70-89" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-92"><a href="#cb70-92" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb70-93"><a href="#cb70-93" aria-hidden="true" tabindex="-1"></a>df_naslova <span class="ot">&lt;-</span> df_dolzina[<span class="fu">c</span>(<span class="dv">8</span>, <span class="dv">9</span>), ] <span class="sc">%&gt;%</span> </span>
-<span id="cb70-94"><a href="#cb70-94" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(title_disp)</span>
-<span id="cb70-95"><a href="#cb70-95" aria-hidden="true" tabindex="-1"></a>df_naslova</span>
-<span id="cb70-96"><a href="#cb70-96" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb70-97"><a href="#cb70-97" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-100"><a href="#cb70-100" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb70-101"><a href="#cb70-101" aria-hidden="true" tabindex="-1"></a>df_izbor <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> </span>
-<span id="cb70-102"><a href="#cb70-102" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(title_disp <span class="sc">%in%</span> df_naslova)</span>
-<span id="cb70-103"><a href="#cb70-103" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-104"><a href="#cb70-104" aria-hidden="true" tabindex="-1"></a>df_izbor <span class="sc">%&gt;%</span> rmarkdown<span class="sc">::</span><span class="fu">paged_table</span>()</span>
-<span id="cb70-105"><a href="#cb70-105" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb70-106"><a href="#cb70-106" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-107"><a href="#cb70-107" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-108"><a href="#cb70-108" aria-hidden="true" tabindex="-1"></a><span class="fu">## Quanteda korpus</span></span>
-<span id="cb70-109"><a href="#cb70-109" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-110"><a href="#cb70-110" aria-hidden="true" tabindex="-1"></a>Knjižnica <span class="in">`quanteda`</span> ima nekaj zelo priročnih in hitrih funkcij za prikaz konkordanc in diagramov. </span>
-<span id="cb70-111"><a href="#cb70-111" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-112"><a href="#cb70-112" aria-hidden="true" tabindex="-1"></a>S knjižnico <span class="in">`quanteda`</span> bomo ustvarili korpus (<span class="in">`corpus`</span>), ga razdrobili na manjše jezikovne enote (<span class="in">`tokens`</span>) in pripravili matriko (<span class="in">`dfm`</span>), ki vključuje besedila v vrsticah in besede (oz. tokens) v stolpcih.  </span>
-<span id="cb70-113"><a href="#cb70-113" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-114"><a href="#cb70-114" aria-hidden="true" tabindex="-1"></a>V sledečem programskem odstavku so gradniki, ki jih potrebujemo za statistične in grafične funkcije knjižnice <span class="in">`quanteda`</span>.</span>
-<span id="cb70-115"><a href="#cb70-115" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-118"><a href="#cb70-118" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb70-119"><a href="#cb70-119" aria-hidden="true" tabindex="-1"></a>corp <span class="ot">&lt;-</span> <span class="fu">corpus</span>(df_izbor <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">ids =</span> title), </span>
-<span id="cb70-120"><a href="#cb70-120" aria-hidden="true" tabindex="-1"></a>               <span class="at">text_field =</span> <span class="st">"text"</span>, <span class="at">docid_field =</span> <span class="st">"ids"</span>, </span>
-<span id="cb70-121"><a href="#cb70-121" aria-hidden="true" tabindex="-1"></a>               <span class="at">unique_docnames =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb70-122"><a href="#cb70-122" aria-hidden="true" tabindex="-1"></a>toks <span class="ot">&lt;-</span> <span class="fu">tokens</span>(corp, <span class="at">remove_numbers =</span> <span class="cn">TRUE</span>, <span class="at">remove_punct =</span> T,</span>
-<span id="cb70-123"><a href="#cb70-123" aria-hidden="true" tabindex="-1"></a>               <span class="at">remove_symbols =</span> T, <span class="at">remove_url =</span> T, </span>
-<span id="cb70-124"><a href="#cb70-124" aria-hidden="true" tabindex="-1"></a>               <span class="at">remove_separators =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb70-125"><a href="#cb70-125" aria-hidden="true" tabindex="-1"></a>mat <span class="ot">&lt;-</span> <span class="fu">dfm</span>(toks, <span class="at">padding =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb70-126"><a href="#cb70-126" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-127"><a href="#cb70-127" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb70-128"><a href="#cb70-128" aria-hidden="true" tabindex="-1"></a><span class="fu">## Besedilna evidenca</span></span>
-<span id="cb70-129"><a href="#cb70-129" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-130"><a href="#cb70-130" aria-hidden="true" tabindex="-1"></a><span class="in">```{r message=FALSE, warning=FALSE}</span></span>
-<span id="cb70-131"><a href="#cb70-131" aria-hidden="true" tabindex="-1"></a>evidenca <span class="ot">&lt;-</span> <span class="fu">textstat_summary</span>(corp)</span>
-<span id="cb70-132"><a href="#cb70-132" aria-hidden="true" tabindex="-1"></a>evidenca <span class="sc">%&gt;%</span> rmarkdown<span class="sc">::</span><span class="fu">paged_table</span>()</span>
-<span id="cb70-133"><a href="#cb70-133" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb70-134"><a href="#cb70-134" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-135"><a href="#cb70-135" aria-hidden="true" tabindex="-1"></a><span class="in">```{r message=FALSE, warning=FALSE}</span></span>
-<span id="cb70-136"><a href="#cb70-136" aria-hidden="true" tabindex="-1"></a>povzetek <span class="ot">&lt;-</span> <span class="fu">summary</span>(corp)</span>
-<span id="cb70-137"><a href="#cb70-137" aria-hidden="true" tabindex="-1"></a>povzetek</span>
-<span id="cb70-138"><a href="#cb70-138" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb70-139"><a href="#cb70-139" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-140"><a href="#cb70-140" aria-hidden="true" tabindex="-1"></a><span class="fu">## Seznam nezaželenih besed</span></span>
-<span id="cb70-141"><a href="#cb70-141" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-144"><a href="#cb70-144" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb70-145"><a href="#cb70-145" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stopwords)</span>
-<span id="cb70-146"><a href="#cb70-146" aria-hidden="true" tabindex="-1"></a>stop_sl <span class="ot">&lt;-</span> <span class="fu">stopwords</span>(<span class="at">language =</span> <span class="st">"sl"</span>, <span class="at">source =</span> <span class="st">"stopwords-iso"</span>)</span>
-<span id="cb70-147"><a href="#cb70-147" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-148"><a href="#cb70-148" aria-hidden="true" tabindex="-1"></a>stop_sl <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">stopwords</span>(<span class="at">language =</span> <span class="st">"sl"</span>, </span>
-<span id="cb70-149"><a href="#cb70-149" aria-hidden="true" tabindex="-1"></a>                       <span class="at">source =</span> <span class="st">"stopwords-iso"</span>), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>, <span class="st">" "</span>, <span class="st">"  "</span>)</span>
-<span id="cb70-150"><a href="#cb70-150" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-151"><a href="#cb70-151" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb70-152"><a href="#cb70-152" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-153"><a href="#cb70-153" aria-hidden="true" tabindex="-1"></a>Odstranjujemo. </span>
-<span id="cb70-154"><a href="#cb70-154" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-157"><a href="#cb70-157" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb70-158"><a href="#cb70-158" aria-hidden="true" tabindex="-1"></a>besede <span class="ot">&lt;-</span> <span class="fu">tokens_select</span>(toks, <span class="at">pattern =</span> stop_sl, </span>
-<span id="cb70-159"><a href="#cb70-159" aria-hidden="true" tabindex="-1"></a>                       <span class="at">selection =</span> <span class="st">"remove"</span>, <span class="at">padding =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb70-160"><a href="#cb70-160" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb70-161"><a href="#cb70-161" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-162"><a href="#cb70-162" aria-hidden="true" tabindex="-1"></a>Alternativna oblika odstranjevanja: uveljavljamo <span class="in">`padding`</span>.</span>
-<span id="cb70-163"><a href="#cb70-163" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-166"><a href="#cb70-166" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb70-167"><a href="#cb70-167" aria-hidden="true" tabindex="-1"></a><span class="co"># odstrani nezaželene besedne oblike</span></span>
-<span id="cb70-168"><a href="#cb70-168" aria-hidden="true" tabindex="-1"></a>toks1 <span class="ot">&lt;-</span> <span class="fu">tokens_remove</span>(toks, <span class="at">pattern =</span> stop_sl, <span class="at">padding =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb70-169"><a href="#cb70-169" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb70-170"><a href="#cb70-170" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-171"><a href="#cb70-171" aria-hidden="true" tabindex="-1"></a>Namesto besednih oblik so lahko tudi povedi (sentences) osnovna enota, kar dosežemo s funkcjo <span class="in">`corpus_reshape()`</span>. </span>
-<span id="cb70-172"><a href="#cb70-172" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-175"><a href="#cb70-175" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb70-176"><a href="#cb70-176" aria-hidden="true" tabindex="-1"></a><span class="co"># ustvari korpus, ki vsebuje povedi kot osnovno enoto</span></span>
-<span id="cb70-177"><a href="#cb70-177" aria-hidden="true" tabindex="-1"></a>corps <span class="ot">&lt;-</span> <span class="fu">corpus_reshape</span>(corp, <span class="at">to =</span> <span class="st">"sentences"</span>)</span>
-<span id="cb70-178"><a href="#cb70-178" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb70-179"><a href="#cb70-179" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-180"><a href="#cb70-180" aria-hidden="true" tabindex="-1"></a>Zgoraj smo že videli, da lahko tabelo z besedili pretvorimo v korpus knjižnice <span class="in">`quanteda`</span>. Mogoča je tudi obratna pot, tj. da korpus knjižnice <span class="in">`quanteda`</span> pretvorimo v obliko tabele, ki omogoča uporabo programskih funkcij knjižnic <span class="in">`tidyverse`</span> in <span class="in">`tidytext`</span> - <span class="in">`tidy()`</span>: </span>
-<span id="cb70-181"><a href="#cb70-181" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-184"><a href="#cb70-184" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb70-185"><a href="#cb70-185" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidytext)</span>
-<span id="cb70-186"><a href="#cb70-186" aria-hidden="true" tabindex="-1"></a>corp_tidy <span class="ot">&lt;-</span> corp <span class="sc">%&gt;%</span> <span class="fu">tidy</span>()</span>
-<span id="cb70-187"><a href="#cb70-187" aria-hidden="true" tabindex="-1"></a>corps_tidy <span class="ot">&lt;-</span> <span class="fu">tidy</span>(corps)</span>
-<span id="cb70-188"><a href="#cb70-188" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb70-189"><a href="#cb70-189" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-190"><a href="#cb70-190" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-191"><a href="#cb70-191" aria-hidden="true" tabindex="-1"></a><span class="fu">## Kwic konkordance</span></span>
-<span id="cb70-192"><a href="#cb70-192" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-193"><a href="#cb70-193" aria-hidden="true" tabindex="-1"></a>V poizvedbenem nizu je mogoče navesti en izraz ali tudi več. Če je navedenih več izrazov (tj. 2 ali več), potem potrebujete povezovalno funkcijo <span class="in">`c()`</span>, ki povezuje več nizov v en funkcijski argument. </span>
-<span id="cb70-194"><a href="#cb70-194" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-195"><a href="#cb70-195" aria-hidden="true" tabindex="-1"></a>Konkordanco lahko uporabljamo tudi z nekaterimi grafičnimi funkcijami knjižnice <span class="in">`quanteda`</span> (npr. <span class="in">`textplot_xray()`</span>). </span>
-<span id="cb70-196"><a href="#cb70-196" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-199"><a href="#cb70-199" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb70-200"><a href="#cb70-200" aria-hidden="true" tabindex="-1"></a>conc <span class="ot">&lt;-</span> <span class="fu">kwic</span>(toks, <span class="at">pattern =</span> <span class="fu">c</span>(<span class="st">"ura"</span>, <span class="st">"tišina"</span>))</span>
-<span id="cb70-201"><a href="#cb70-201" aria-hidden="true" tabindex="-1"></a>conc</span>
-<span id="cb70-202"><a href="#cb70-202" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-203"><a href="#cb70-203" aria-hidden="true" tabindex="-1"></a><span class="fu">textplot_xray</span>(conc)</span>
-<span id="cb70-204"><a href="#cb70-204" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb70-205"><a href="#cb70-205" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-206"><a href="#cb70-206" aria-hidden="true" tabindex="-1"></a>Izboljšan izpis tabele omogoča funkcija <span class="in">`as_tibble()`</span> iz knjižnične zbirke <span class="in">`tidyverse`</span>. Tabelo lahko preoblikujemo s funkcijami <span class="in">`tidyverse`</span>, ni pa uporabna za funkcije knjižnice <span class="in">`quanteda`</span>. </span>
-<span id="cb70-207"><a href="#cb70-207" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-210"><a href="#cb70-210" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb70-211"><a href="#cb70-211" aria-hidden="true" tabindex="-1"></a><span class="fu">kwic</span>(toks, <span class="at">pattern =</span> <span class="fu">c</span>(<span class="st">"ur*"</span>, <span class="st">"tišin*"</span>), </span>
-<span id="cb70-212"><a href="#cb70-212" aria-hidden="true" tabindex="-1"></a>     <span class="at">case_insensitive =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb70-213"><a href="#cb70-213" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb70-214"><a href="#cb70-214" aria-hidden="true" tabindex="-1"></a>  rmarkdown<span class="sc">::</span><span class="fu">paged_table</span>()</span>
-<span id="cb70-215"><a href="#cb70-215" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-216"><a href="#cb70-216" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb70-217"><a href="#cb70-217" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-218"><a href="#cb70-218" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-221"><a href="#cb70-221" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb70-222"><a href="#cb70-222" aria-hidden="true" tabindex="-1"></a><span class="fu">kwic</span>(corp, <span class="at">pattern =</span> <span class="fu">phrase</span>(<span class="st">"dobr* d*"</span>), <span class="at">window =</span> <span class="dv">2</span>)</span>
-<span id="cb70-223"><a href="#cb70-223" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-224"><a href="#cb70-224" aria-hidden="true" tabindex="-1"></a><span class="fu">kwic</span>(corp, <span class="at">pattern =</span> <span class="fu">phrase</span>(<span class="st">"dobr* d*"</span>), <span class="at">window =</span> <span class="dv">5</span>, </span>
-<span id="cb70-225"><a href="#cb70-225" aria-hidden="true" tabindex="-1"></a>     <span class="at">case_insensitive =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb70-226"><a href="#cb70-226" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb70-227"><a href="#cb70-227" aria-hidden="true" tabindex="-1"></a>  rmarkdown<span class="sc">::</span><span class="fu">paged_table</span>()</span>
-<span id="cb70-228"><a href="#cb70-228" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-229"><a href="#cb70-229" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb70-230"><a href="#cb70-230" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-231"><a href="#cb70-231" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-234"><a href="#cb70-234" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb70-235"><a href="#cb70-235" aria-hidden="true" tabindex="-1"></a><span class="fu">kwic</span>(toks, <span class="st">"*ica"</span>, <span class="at">valuetype =</span> <span class="st">"glob"</span>, </span>
-<span id="cb70-236"><a href="#cb70-236" aria-hidden="true" tabindex="-1"></a>     <span class="at">case_insensitive =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb70-237"><a href="#cb70-237" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb70-238"><a href="#cb70-238" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(docname) <span class="sc">%&gt;%</span> </span>
-<span id="cb70-239"><a href="#cb70-239" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(keyword, <span class="at">sort =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb70-240"><a href="#cb70-240" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb70-241"><a href="#cb70-241" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-244"><a href="#cb70-244" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb70-245"><a href="#cb70-245" aria-hidden="true" tabindex="-1"></a><span class="fu">kwic</span>(toks, <span class="at">pattern =</span> <span class="fu">c</span>(<span class="st">"</span><span class="sc">\\</span><span class="st">b.*[nl]ica</span><span class="sc">\\</span><span class="st">b"</span>),</span>
-<span id="cb70-246"><a href="#cb70-246" aria-hidden="true" tabindex="-1"></a>     <span class="at">valuetype =</span> <span class="st">"regex"</span>, </span>
-<span id="cb70-247"><a href="#cb70-247" aria-hidden="true" tabindex="-1"></a>     <span class="at">case_insensitive =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb70-248"><a href="#cb70-248" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb70-249"><a href="#cb70-249" aria-hidden="true" tabindex="-1"></a>  rmarkdown<span class="sc">::</span><span class="fu">paged_table</span>()</span>
-<span id="cb70-250"><a href="#cb70-250" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb70-251"><a href="#cb70-251" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-254"><a href="#cb70-254" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb70-255"><a href="#cb70-255" aria-hidden="true" tabindex="-1"></a><span class="fu">kwic</span>(corp, <span class="at">pattern =</span> <span class="fu">phrase</span>(<span class="st">"dob[r]?.* d.*"</span>),</span>
-<span id="cb70-256"><a href="#cb70-256" aria-hidden="true" tabindex="-1"></a>     <span class="at">valuetype =</span> <span class="st">"regex"</span>, </span>
-<span id="cb70-257"><a href="#cb70-257" aria-hidden="true" tabindex="-1"></a>     <span class="at">case_insensitive =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb70-258"><a href="#cb70-258" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb70-259"><a href="#cb70-259" aria-hidden="true" tabindex="-1"></a>  rmarkdown<span class="sc">::</span><span class="fu">paged_table</span>()</span>
-<span id="cb70-260"><a href="#cb70-260" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb70-261"><a href="#cb70-261" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-262"><a href="#cb70-262" aria-hidden="true" tabindex="-1"></a>Opcija <span class="in">`window`</span> nam izpisuje navedeno število besed (pojavnic, tokens) na levi in desni strani ključne besede, privzeto po pet besed. </span>
-<span id="cb70-263"><a href="#cb70-263" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-264"><a href="#cb70-264" aria-hidden="true" tabindex="-1"></a>Če želimo v konkordanci na levi in desni strani ključne besede izpisati cele povedi, potem lahko s knjižnico <span class="in">`quanteda`</span> ustvarimo korpus povedi z ukazom <span class="in">`corpus_reshape()`</span> (namesto besednih pojavnic). Druga možnost je, da uporabljamo kar funkcijo <span class="in">`tokens()`</span> namesto <span class="in">`corpus_reshape()`</span>. Poizvedbo opravimo na osnovi korpusa povedi in s pomočjo regularnih izrazov. Razmik (<span class="in">`window`</span>) nastavimo na 1. </span>
-<span id="cb70-265"><a href="#cb70-265" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-268"><a href="#cb70-268" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb70-269"><a href="#cb70-269" aria-hidden="true" tabindex="-1"></a><span class="co"># ustvari jezikovno gradivo povedi</span></span>
-<span id="cb70-270"><a href="#cb70-270" aria-hidden="true" tabindex="-1"></a>corps <span class="ot">&lt;-</span> <span class="fu">corpus_reshape</span>(corp)</span>
-<span id="cb70-271"><a href="#cb70-271" aria-hidden="true" tabindex="-1"></a><span class="co"># ali seznam povedi</span></span>
-<span id="cb70-272"><a href="#cb70-272" aria-hidden="true" tabindex="-1"></a>tokss <span class="ot">&lt;-</span> <span class="fu">tokens</span>(corp, <span class="at">what =</span> <span class="st">"sentence"</span>)</span>
-<span id="cb70-273"><a href="#cb70-273" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-274"><a href="#cb70-274" aria-hidden="true" tabindex="-1"></a><span class="co"># regex \\b pomeni rob besede (border)</span></span>
-<span id="cb70-275"><a href="#cb70-275" aria-hidden="true" tabindex="-1"></a><span class="fu">kwic</span>(tokss, <span class="at">pattern =</span> <span class="st">"</span><span class="sc">\\</span><span class="st">bdobro</span><span class="sc">\\</span><span class="st">b"</span>, </span>
-<span id="cb70-276"><a href="#cb70-276" aria-hidden="true" tabindex="-1"></a>     <span class="at">window =</span> <span class="dv">1</span>,</span>
-<span id="cb70-277"><a href="#cb70-277" aria-hidden="true" tabindex="-1"></a>     <span class="at">valuetype =</span> <span class="st">"regex"</span>, </span>
-<span id="cb70-278"><a href="#cb70-278" aria-hidden="true" tabindex="-1"></a>     <span class="at">case_insensitive =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb70-279"><a href="#cb70-279" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-280"><a href="#cb70-280" aria-hidden="true" tabindex="-1"></a><span class="fu">kwic</span>(tokss, <span class="at">pattern =</span> <span class="st">"</span><span class="sc">\\</span><span class="st">bdobro</span><span class="sc">\\</span><span class="st">b"</span>, </span>
-<span id="cb70-281"><a href="#cb70-281" aria-hidden="true" tabindex="-1"></a>     <span class="at">window =</span> <span class="dv">1</span>,</span>
-<span id="cb70-282"><a href="#cb70-282" aria-hidden="true" tabindex="-1"></a>     <span class="at">valuetype =</span> <span class="st">"regex"</span>, </span>
-<span id="cb70-283"><a href="#cb70-283" aria-hidden="true" tabindex="-1"></a>     <span class="at">case_insensitive =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb70-284"><a href="#cb70-284" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb70-285"><a href="#cb70-285" aria-hidden="true" tabindex="-1"></a>  rmarkdown<span class="sc">::</span><span class="fu">paged_table</span>()</span>
-<span id="cb70-286"><a href="#cb70-286" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb70-287"><a href="#cb70-287" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-288"><a href="#cb70-288" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-289"><a href="#cb70-289" aria-hidden="true" tabindex="-1"></a><span class="fu">## Pogostnost</span></span>
-<span id="cb70-290"><a href="#cb70-290" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-293"><a href="#cb70-293" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb70-294"><a href="#cb70-294" aria-hidden="true" tabindex="-1"></a>matrika <span class="ot">=</span> <span class="fu">dfm_select</span>(mat, <span class="at">selection =</span> <span class="st">"remove"</span>, </span>
-<span id="cb70-295"><a href="#cb70-295" aria-hidden="true" tabindex="-1"></a>                     <span class="at">pattern =</span> stop_sl, <span class="at">padding =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb70-296"><a href="#cb70-296" aria-hidden="true" tabindex="-1"></a>matrika</span>
-<span id="cb70-297"><a href="#cb70-297" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb70-298"><a href="#cb70-298" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-299"><a href="#cb70-299" aria-hidden="true" tabindex="-1"></a>maj68-0073  Vladimir Kavčič (1932): Tišina  </span>
-<span id="cb70-300"><a href="#cb70-300" aria-hidden="true" tabindex="-1"></a>maj68-0147  Tone Partljič (1940): Ribe na plitvini</span>
-<span id="cb70-301"><a href="#cb70-301" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-304"><a href="#cb70-304" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb70-305"><a href="#cb70-305" aria-hidden="true" tabindex="-1"></a>pogostnost <span class="ot">&lt;-</span> <span class="fu">textstat_frequency</span>(matrika, <span class="at">groups =</span> <span class="fu">c</span>(<span class="st">"maj68-0073"</span>, <span class="st">"maj68-0147"</span>))</span>
-<span id="cb70-306"><a href="#cb70-306" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-307"><a href="#cb70-307" aria-hidden="true" tabindex="-1"></a>pogostnost <span class="ot">&lt;-</span> <span class="fu">textstat_frequency</span>(matrika, <span class="at">groups =</span> <span class="fu">c</span>(<span class="st">"Kavčič"</span>, <span class="st">"Partljič"</span>))</span>
-<span id="cb70-308"><a href="#cb70-308" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-309"><a href="#cb70-309" aria-hidden="true" tabindex="-1"></a>pogostnost <span class="sc">%&gt;%</span> </span>
-<span id="cb70-310"><a href="#cb70-310" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(group) <span class="sc">%&gt;%</span> </span>
-<span id="cb70-311"><a href="#cb70-311" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">str_detect</span>(feature, <span class="st">"^[:alpha:]"</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb70-312"><a href="#cb70-312" aria-hidden="true" tabindex="-1"></a>  <span class="co"># filter(group == "Partljič") %&gt;% </span></span>
-<span id="cb70-313"><a href="#cb70-313" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">n =</span> <span class="dv">5</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb70-314"><a href="#cb70-314" aria-hidden="true" tabindex="-1"></a>  rmarkdown<span class="sc">::</span><span class="fu">paged_table</span>()</span>
-<span id="cb70-315"><a href="#cb70-315" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-316"><a href="#cb70-316" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb70-317"><a href="#cb70-317" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-320"><a href="#cb70-320" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb70-321"><a href="#cb70-321" aria-hidden="true" tabindex="-1"></a>pogostnost <span class="sc">%&gt;%</span> </span>
-<span id="cb70-322"><a href="#cb70-322" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(group) <span class="sc">%&gt;%</span> </span>
-<span id="cb70-323"><a href="#cb70-323" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">str_detect</span>(feature, <span class="st">"^[:alpha:]"</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb70-324"><a href="#cb70-324" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">n =</span> <span class="dv">5</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb70-325"><a href="#cb70-325" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> feature, <span class="at">values_from =</span> frequency,</span>
-<span id="cb70-326"><a href="#cb70-326" aria-hidden="true" tabindex="-1"></a>              <span class="at">values_fill =</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb70-327"><a href="#cb70-327" aria-hidden="true" tabindex="-1"></a>  rmarkdown<span class="sc">::</span><span class="fu">paged_table</span>()</span>
-<span id="cb70-328"><a href="#cb70-328" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-329"><a href="#cb70-329" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb70-330"><a href="#cb70-330" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-333"><a href="#cb70-333" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb70-334"><a href="#cb70-334" aria-hidden="true" tabindex="-1"></a>pogostnost <span class="sc">%&gt;%</span> </span>
-<span id="cb70-335"><a href="#cb70-335" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">str_detect</span>(feature, <span class="st">"^[:alpha:]"</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb70-336"><a href="#cb70-336" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_max</span>(<span class="at">order_by =</span> frequency, <span class="at">n =</span> <span class="dv">20</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb70-337"><a href="#cb70-337" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">feature =</span> <span class="fu">reorder_within</span>(feature, frequency, frequency, <span class="at">sep =</span> <span class="st">": "</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb70-338"><a href="#cb70-338" aria-hidden="true" tabindex="-1"></a>  <span class="co"># ggplot(aes(frequency, reorder(feature, frequency))) +</span></span>
-<span id="cb70-339"><a href="#cb70-339" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(frequency, feature)) <span class="sc">+</span></span>
-<span id="cb70-340"><a href="#cb70-340" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">fill=</span><span class="st">"steelblue"</span>) <span class="sc">+</span></span>
-<span id="cb70-341"><a href="#cb70-341" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Frequency"</span>, <span class="at">y =</span> <span class="st">""</span>) <span class="sc">+</span></span>
-<span id="cb70-342"><a href="#cb70-342" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> group, <span class="at">scales =</span> <span class="st">"free"</span>)</span>
-<span id="cb70-343"><a href="#cb70-343" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-344"><a href="#cb70-344" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb70-345"><a href="#cb70-345" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-346"><a href="#cb70-346" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-347"><a href="#cb70-347" aria-hidden="true" tabindex="-1"></a><span class="fu">## Kolokacije</span></span>
-<span id="cb70-348"><a href="#cb70-348" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-351"><a href="#cb70-351" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb70-352"><a href="#cb70-352" aria-hidden="true" tabindex="-1"></a>coll_2 <span class="ot">=</span> <span class="fu">textstat_collocations</span>(besede, <span class="at">size =</span> <span class="dv">2</span><span class="sc">:</span><span class="dv">5</span>, <span class="at">tolower =</span> <span class="cn">TRUE</span>) <span class="co"># naredi male črke !</span></span>
-<span id="cb70-353"><a href="#cb70-353" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-354"><a href="#cb70-354" aria-hidden="true" tabindex="-1"></a>coll_2 <span class="sc">%&gt;%</span> </span>
-<span id="cb70-355"><a href="#cb70-355" aria-hidden="true" tabindex="-1"></a>  rmarkdown<span class="sc">::</span><span class="fu">paged_table</span>()</span>
-<span id="cb70-356"><a href="#cb70-356" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-357"><a href="#cb70-357" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb70-358"><a href="#cb70-358" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-359"><a href="#cb70-359" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-362"><a href="#cb70-362" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb70-363"><a href="#cb70-363" aria-hidden="true" tabindex="-1"></a>rad <span class="ot">&lt;-</span> coll_2 <span class="sc">%&gt;%</span> </span>
-<span id="cb70-364"><a href="#cb70-364" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">str_detect</span>(collocation, <span class="st">"rad$"</span>))</span>
-<span id="cb70-365"><a href="#cb70-365" aria-hidden="true" tabindex="-1"></a>rad <span class="sc">%&gt;%</span> rmarkdown<span class="sc">::</span><span class="fu">paged_table</span>()</span>
-<span id="cb70-366"><a href="#cb70-366" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-367"><a href="#cb70-367" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb70-368"><a href="#cb70-368" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-371"><a href="#cb70-371" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb70-372"><a href="#cb70-372" aria-hidden="true" tabindex="-1"></a>besede_caps <span class="ot">=</span> <span class="fu">tokens_select</span>(besede, <span class="at">pattern =</span> <span class="st">"^[A-Z]"</span>, </span>
-<span id="cb70-373"><a href="#cb70-373" aria-hidden="true" tabindex="-1"></a>                                <span class="at">valuetype =</span> <span class="st">"regex"</span>, </span>
-<span id="cb70-374"><a href="#cb70-374" aria-hidden="true" tabindex="-1"></a>                                <span class="at">case_insensitive =</span> <span class="cn">FALSE</span>, </span>
-<span id="cb70-375"><a href="#cb70-375" aria-hidden="true" tabindex="-1"></a>                                <span class="at">padding =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb70-376"><a href="#cb70-376" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-377"><a href="#cb70-377" aria-hidden="true" tabindex="-1"></a>coll_caps2 <span class="ot">=</span> <span class="fu">textstat_collocations</span>(besede_caps, <span class="at">size =</span> <span class="dv">2</span>, </span>
-<span id="cb70-378"><a href="#cb70-378" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">tolower =</span> <span class="cn">FALSE</span>, </span>
-<span id="cb70-379"><a href="#cb70-379" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">min_count =</span> <span class="dv">2</span>)</span>
-<span id="cb70-380"><a href="#cb70-380" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-381"><a href="#cb70-381" aria-hidden="true" tabindex="-1"></a>coll_caps2 <span class="sc">%&gt;%</span> rmarkdown<span class="sc">::</span><span class="fu">paged_table</span>()</span>
-<span id="cb70-382"><a href="#cb70-382" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-383"><a href="#cb70-383" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb70-384"><a href="#cb70-384" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-385"><a href="#cb70-385" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-386"><a href="#cb70-386" aria-hidden="true" tabindex="-1"></a><span class="fu">## Položaj v besedilu</span></span>
-<span id="cb70-387"><a href="#cb70-387" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-390"><a href="#cb70-390" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb70-391"><a href="#cb70-391" aria-hidden="true" tabindex="-1"></a>kwic_majda <span class="ot">=</span> <span class="fu">kwic</span>(besede, <span class="at">pattern =</span> <span class="st">"Majda"</span>)</span>
-<span id="cb70-392"><a href="#cb70-392" aria-hidden="true" tabindex="-1"></a><span class="fu">textplot_xray</span>(kwic_majda)</span>
-<span id="cb70-393"><a href="#cb70-393" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-394"><a href="#cb70-394" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb70-395"><a href="#cb70-395" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-398"><a href="#cb70-398" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb70-399"><a href="#cb70-399" aria-hidden="true" tabindex="-1"></a>kwic_mesto <span class="ot">&lt;-</span> <span class="fu">kwic</span>(besede, <span class="at">pattern =</span> <span class="st">"mest*"</span>)</span>
-<span id="cb70-400"><a href="#cb70-400" aria-hidden="true" tabindex="-1"></a><span class="fu">textplot_xray</span>(kwic_mesto)</span>
-<span id="cb70-401"><a href="#cb70-401" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-402"><a href="#cb70-402" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb70-403"><a href="#cb70-403" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-404"><a href="#cb70-404" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-405"><a href="#cb70-405" aria-hidden="true" tabindex="-1"></a><span class="fu">## Slovarska raznolikost besedil</span></span>
-<span id="cb70-406"><a href="#cb70-406" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-409"><a href="#cb70-409" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb70-410"><a href="#cb70-410" aria-hidden="true" tabindex="-1"></a><span class="fu">textstat_lexdiv</span>(matrika, <span class="at">measure =</span> <span class="st">"all"</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb70-411"><a href="#cb70-411" aria-hidden="true" tabindex="-1"></a>  rmarkdown<span class="sc">::</span><span class="fu">paged_table</span>()</span>
-<span id="cb70-412"><a href="#cb70-412" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb70-413"><a href="#cb70-413" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-414"><a href="#cb70-414" aria-hidden="true" tabindex="-1"></a><span class="fu">## Podobnost besedil</span></span>
-<span id="cb70-415"><a href="#cb70-415" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-416"><a href="#cb70-416" aria-hidden="true" tabindex="-1"></a>Naslove besedil v jezikovnem gradivu potegnemo iz zgoraj sestavljenega seznama *df_dolzina*. </span>
-<span id="cb70-417"><a href="#cb70-417" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-420"><a href="#cb70-420" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb70-421"><a href="#cb70-421" aria-hidden="true" tabindex="-1"></a>df_naslovi <span class="ot">&lt;-</span> df_dolzina[<span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">8</span>, <span class="dv">9</span>), ] <span class="sc">%&gt;%</span> </span>
-<span id="cb70-422"><a href="#cb70-422" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(title_disp)</span>
-<span id="cb70-423"><a href="#cb70-423" aria-hidden="true" tabindex="-1"></a>df_naslovi</span>
-<span id="cb70-424"><a href="#cb70-424" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb70-425"><a href="#cb70-425" aria-hidden="true" tabindex="-1"></a>Sestavimo tabelo z novim izborom proznih del, tokrat s tremi literarnimi deli.  </span>
-<span id="cb70-426"><a href="#cb70-426" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-429"><a href="#cb70-429" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb70-430"><a href="#cb70-430" aria-hidden="true" tabindex="-1"></a>df_izbor3 <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> </span>
-<span id="cb70-431"><a href="#cb70-431" aria-hidden="true" tabindex="-1"></a>  <span class="co"># ohranimo le tri prozna dela iz celotne tabele </span></span>
-<span id="cb70-432"><a href="#cb70-432" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(title_disp <span class="sc">%in%</span> df_naslovi)</span>
-<span id="cb70-433"><a href="#cb70-433" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-434"><a href="#cb70-434" aria-hidden="true" tabindex="-1"></a>df_izbor3 <span class="sc">%&gt;%</span> rmarkdown<span class="sc">::</span><span class="fu">paged_table</span>()</span>
-<span id="cb70-435"><a href="#cb70-435" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb70-436"><a href="#cb70-436" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-437"><a href="#cb70-437" aria-hidden="true" tabindex="-1"></a>Sestavimo nov corpus, seznam pojavnic in matriko dokumentov in pojavnic. </span>
-<span id="cb70-438"><a href="#cb70-438" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-441"><a href="#cb70-441" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb70-442"><a href="#cb70-442" aria-hidden="true" tabindex="-1"></a>corp3 <span class="ot">&lt;-</span> <span class="fu">corpus</span>(df_izbor3 <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">ids =</span> title), </span>
-<span id="cb70-443"><a href="#cb70-443" aria-hidden="true" tabindex="-1"></a>               <span class="at">text_field =</span> <span class="st">"text"</span>, <span class="at">docid_field =</span> <span class="st">"ids"</span>)</span>
-<span id="cb70-444"><a href="#cb70-444" aria-hidden="true" tabindex="-1"></a>toks3 <span class="ot">&lt;-</span> <span class="fu">tokens</span>(corp3, <span class="at">remove_numbers =</span> <span class="cn">TRUE</span>, <span class="at">remove_punct =</span> T,</span>
-<span id="cb70-445"><a href="#cb70-445" aria-hidden="true" tabindex="-1"></a>               <span class="at">remove_symbols =</span> T, <span class="at">remove_url =</span> T, </span>
-<span id="cb70-446"><a href="#cb70-446" aria-hidden="true" tabindex="-1"></a>               <span class="at">remove_separators =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb70-447"><a href="#cb70-447" aria-hidden="true" tabindex="-1"></a>mat3 <span class="ot">&lt;-</span> <span class="fu">dfm</span>(toks3, <span class="at">padding =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb70-448"><a href="#cb70-448" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb70-449"><a href="#cb70-449" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-450"><a href="#cb70-450" aria-hidden="true" tabindex="-1"></a>Programska funkcija <span class="in">`textstat_simil()`</span> iz knjižnice <span class="in">`quanteda`</span> omogoča izračun količnika podobnosti besedil. Ena izmed priljubljenih metod je kotna funkcija kosinusove razdalje - <span class="in">`cosine`</span>. </span>
-<span id="cb70-451"><a href="#cb70-451" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-452"><a href="#cb70-452" aria-hidden="true" tabindex="-1"></a>Če je kosinus = 1, sta besedili povsem enaki, če je kosinus = 0 povsem različni. </span>
-<span id="cb70-453"><a href="#cb70-453" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-456"><a href="#cb70-456" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb70-457"><a href="#cb70-457" aria-hidden="true" tabindex="-1"></a><span class="fu">textstat_simil</span>(mat3, <span class="at">method =</span> <span class="st">"cosine"</span>, <span class="at">margin =</span> <span class="st">"documents"</span>)</span>
-<span id="cb70-458"><a href="#cb70-458" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb70-459"><a href="#cb70-459" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-460"><a href="#cb70-460" aria-hidden="true" tabindex="-1"></a>Namesto kosinusa lahko uporabljamo tudi druge metode. Privzeta je korelacija:   </span>
-<span id="cb70-461"><a href="#cb70-461" aria-hidden="true" tabindex="-1"></a>"correlation" (default), "cosine", "jaccard", "ejaccard", "dice", "edice", "simple matching", and "hamann".</span>
-<span id="cb70-462"><a href="#cb70-462" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-465"><a href="#cb70-465" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb70-466"><a href="#cb70-466" aria-hidden="true" tabindex="-1"></a><span class="fu">textstat_simil</span>(mat3, <span class="at">method =</span> <span class="st">"dice"</span>, </span>
-<span id="cb70-467"><a href="#cb70-467" aria-hidden="true" tabindex="-1"></a>               <span class="at">margin =</span> <span class="st">"documents"</span>)</span>
-<span id="cb70-468"><a href="#cb70-468" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb70-469"><a href="#cb70-469" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-470"><a href="#cb70-470" aria-hidden="true" tabindex="-1"></a>Razlike med besedili so majhne, saj se večina besednih oblik (tj. funkcijske besede) pojavlja v vseh treh besedilih. </span>
-<span id="cb70-471"><a href="#cb70-471" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-472"><a href="#cb70-472" aria-hidden="true" tabindex="-1"></a>Nasprotna funkcija je <span class="in">`textstat_dist()`</span>, ki meri različnost besedil. Privzeta metoda je evklidska razdalja (znana tudi kot pitagorejska razdalja ali hipotenuza v pravokotnem tritkotniku:   </span>
-<span id="cb70-473"><a href="#cb70-473" aria-hidden="true" tabindex="-1"></a>"euclidean" (default), "manhattan", "maximum", "canberra", and "minkowski".</span>
-<span id="cb70-474"><a href="#cb70-474" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-475"><a href="#cb70-475" aria-hidden="true" tabindex="-1"></a>Narišemo lahko tudi *dendrogram*, in sicer s funkcijo <span class="in">`hclust()`</span>, ki se naloži v pomnilnik ob zagonu programa <span class="in">`R`</span>. </span>
-<span id="cb70-476"><a href="#cb70-476" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-479"><a href="#cb70-479" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb70-480"><a href="#cb70-480" aria-hidden="true" tabindex="-1"></a><span class="co"># plot a dendrogram after converting the object into distances</span></span>
-<span id="cb70-481"><a href="#cb70-481" aria-hidden="true" tabindex="-1"></a>dist1 <span class="ot">=</span> <span class="fu">textstat_dist</span>(mat3, <span class="at">method =</span> <span class="st">"euclidean"</span>, </span>
-<span id="cb70-482"><a href="#cb70-482" aria-hidden="true" tabindex="-1"></a>                      <span class="at">margin =</span> <span class="st">"documents"</span>)</span>
-<span id="cb70-483"><a href="#cb70-483" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">hclust</span>(<span class="fu">as.dist</span>(dist1)))</span>
-<span id="cb70-484"><a href="#cb70-484" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb70-485"><a href="#cb70-485" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-486"><a href="#cb70-486" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-487"><a href="#cb70-487" aria-hidden="true" tabindex="-1"></a><span class="fu">## Ključne besede</span></span>
-<span id="cb70-488"><a href="#cb70-488" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-489"><a href="#cb70-489" aria-hidden="true" tabindex="-1"></a>Metod za določitev ključnih besed v besedilih je več. V knjižnici <span class="in">`quanteda`</span> (zdaj že nekaj časa v posebni knjižnici <span class="in">`quanteda.textstats`</span>) najdemo hitro in preprosto funkcijo <span class="in">`textstat_keyness()`</span>.</span>
-<span id="cb70-490"><a href="#cb70-490" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-491"><a href="#cb70-491" aria-hidden="true" tabindex="-1"></a><span class="in">```{r message=FALSE, warning=FALSE}</span></span>
-<span id="cb70-492"><a href="#cb70-492" aria-hidden="true" tabindex="-1"></a>df_izbor</span>
-<span id="cb70-493"><a href="#cb70-493" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-494"><a href="#cb70-494" aria-hidden="true" tabindex="-1"></a>key_kavcic <span class="ot">&lt;-</span> <span class="fu">textstat_keyness</span>(matrika, <span class="at">target =</span> <span class="st">"Tišina"</span>)</span>
-<span id="cb70-495"><a href="#cb70-495" aria-hidden="true" tabindex="-1"></a>key_kavcic <span class="sc">%&gt;%</span> rmarkdown<span class="sc">::</span><span class="fu">paged_table</span>() <span class="co"># maj68-0073</span></span>
-<span id="cb70-496"><a href="#cb70-496" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-497"><a href="#cb70-497" aria-hidden="true" tabindex="-1"></a>key_partljic <span class="ot">&lt;-</span> <span class="fu">textstat_keyness</span>(matrika, <span class="at">target =</span> <span class="st">"Ribe na plitvini"</span>)</span>
-<span id="cb70-498"><a href="#cb70-498" aria-hidden="true" tabindex="-1"></a>key_partljic <span class="sc">%&gt;%</span> rmarkdown<span class="sc">::</span><span class="fu">paged_table</span>() <span class="co"># maj68-0147</span></span>
-<span id="cb70-499"><a href="#cb70-499" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-500"><a href="#cb70-500" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb70-501"><a href="#cb70-501" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-502"><a href="#cb70-502" aria-hidden="true" tabindex="-1"></a>Besedne oblike, ki so v primerjavi z drugim besedilom (ali besedili) najbolj značilne za določeno besedilo, imajo visoko vrednost hi kvadrata (*chi2*) in se na seznamu privzeto znajdejo na začetku tabele, v proznih delih pa so to npr. imena glavnih likov.  </span>
-<span id="cb70-503"><a href="#cb70-503" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-504"><a href="#cb70-504" aria-hidden="true" tabindex="-1"></a>S programsko funkcijo <span class="in">`textplot_keyness()`</span> lahko tudi narišemo diagram z najbolj značilnimi besednimi oblikami primerjanih besedil. </span>
-<span id="cb70-505"><a href="#cb70-505" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-506"><a href="#cb70-506" aria-hidden="true" tabindex="-1"></a><span class="in">```{r message=FALSE, warning=FALSE}</span></span>
-<span id="cb70-507"><a href="#cb70-507" aria-hidden="true" tabindex="-1"></a><span class="fu">textplot_keyness</span>(key_kavcic)</span>
-<span id="cb70-508"><a href="#cb70-508" aria-hidden="true" tabindex="-1"></a><span class="fu">textplot_keyness</span>(key_partljic)</span>
-<span id="cb70-509"><a href="#cb70-509" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-510"><a href="#cb70-510" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb70-511"><a href="#cb70-511" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-512"><a href="#cb70-512" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-513"><a href="#cb70-513" aria-hidden="true" tabindex="-1"></a><span class="fu">## Razumljivost besedila</span></span>
-<span id="cb70-514"><a href="#cb70-514" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-515"><a href="#cb70-515" aria-hidden="true" tabindex="-1"></a>Razumljivost besedila in s tem primernost besedila za določeno starostno skupino ali bralce z določeno stopnje izobrazbe ocenjujemo na osnovi različnih meril, med najpreprostejšimi in pogosto uporabljenimi sta dolžina povedi in dolžina besednih oblik. Knjižnica <span class="in">`quanteda`</span> ponuja celo paleto merskih metod (gl. vgrajeno pomoč, <span class="in">`help`</span>):   </span>
-<span id="cb70-516"><a href="#cb70-516" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-519"><a href="#cb70-519" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb70-520"><a href="#cb70-520" aria-hidden="true" tabindex="-1"></a><span class="fu">textstat_readability</span>(corp, <span class="at">measure =</span> <span class="fu">c</span>(<span class="st">"Flesch"</span>, <span class="st">"Flesch.Kincaid"</span>, <span class="st">"FOG"</span>, <span class="st">"FOG.PSK"</span>, <span class="st">"FOG.NRI"</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb70-521"><a href="#cb70-521" aria-hidden="true" tabindex="-1"></a>  rmarkdown<span class="sc">::</span><span class="fu">paged_table</span>()</span>
-<span id="cb70-522"><a href="#cb70-522" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb70-523"><a href="#cb70-523" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-524"><a href="#cb70-524" aria-hidden="true" tabindex="-1"></a>Višji koeficient *Flesch* pomeni, da je izrazna plat besedila bolj zahtevna. Za angleščino so izdelali priporočila za potencialne skupine bralcev (npr. ali je besedilo z določeno indeksno vrednostjo jezikovno primerno za otroke 5. razreda osnovne šole).  </span>
-<span id="cb70-525"><a href="#cb70-525" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-526"><a href="#cb70-526" aria-hidden="true" tabindex="-1"></a><span class="ot">&lt;https://en.wikipedia.org/wiki/Flesch%E2%80%93Kincaid_readability_tests&gt;</span></span>
-<span id="cb70-527"><a href="#cb70-527" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-528"><a href="#cb70-528" aria-hidden="true" tabindex="-1"></a>Za uporabo v slovenščini je treba formule za izračun koeficientov prilagoditi. </span>
-<span id="cb70-529"><a href="#cb70-529" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-530"><a href="#cb70-530" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-531"><a href="#cb70-531" aria-hidden="true" tabindex="-1"></a><span class="fu">## Kookurenčna mreža (FCM)</span></span>
-<span id="cb70-532"><a href="#cb70-532" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-533"><a href="#cb70-533" aria-hidden="true" tabindex="-1"></a>Katere besedne oblike se pogosto sopojavljajo, je mogoče prikazovati v mrežnih diagramih. </span>
-<span id="cb70-534"><a href="#cb70-534" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-535"><a href="#cb70-535" aria-hidden="true" tabindex="-1"></a>Iz matrike dokumentov in besednih oblik (<span class="in">`dfm`</span>) izberemo ustrezne besedne oblike za prikaz povezanosti. Za izbor uporabljamo programsko funkcijo <span class="in">`dfm_select()`</span>.   </span>
-<span id="cb70-536"><a href="#cb70-536" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-537"><a href="#cb70-537" aria-hidden="true" tabindex="-1"></a>Ukaz <span class="in">`topfeatures()`</span> sestavi seznam najpogosteje nastopajočih besednih oblik, funkcija <span class="in">`names()`</span> potegne besedne oblike iz seznama imen in pogostnosti pojavljanja. </span>
-<span id="cb70-538"><a href="#cb70-538" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-541"><a href="#cb70-541" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb70-542"><a href="#cb70-542" aria-hidden="true" tabindex="-1"></a>dfm_tags <span class="ot">&lt;-</span> <span class="fu">dfm_select</span>(</span>
-<span id="cb70-543"><a href="#cb70-543" aria-hidden="true" tabindex="-1"></a>  <span class="co"># omejujemo na matriko drugega besedila</span></span>
-<span id="cb70-544"><a href="#cb70-544" aria-hidden="true" tabindex="-1"></a>  matrika[<span class="dv">2</span>,], </span>
-<span id="cb70-545"><a href="#cb70-545" aria-hidden="true" tabindex="-1"></a>  <span class="co"># katere besede želimo vključiti</span></span>
-<span id="cb70-546"><a href="#cb70-546" aria-hidden="true" tabindex="-1"></a>  <span class="at">pattern =</span> (<span class="fu">c</span>(<span class="st">"jože"</span>, <span class="st">"tomaž"</span>, <span class="st">"beti"</span>, <span class="st">"veronika"</span>, <span class="st">"poslanec"</span>, </span>
-<span id="cb70-547"><a href="#cb70-547" aria-hidden="true" tabindex="-1"></a>               <span class="st">"majda"</span>, <span class="st">"miro"</span>, <span class="st">"danica"</span>, <span class="st">"rekel"</span>, <span class="st">"žena"</span>, </span>
-<span id="cb70-548"><a href="#cb70-548" aria-hidden="true" tabindex="-1"></a>               <span class="st">"železnik"</span>, <span class="st">"vino"</span>, <span class="st">"kavo"</span>, <span class="st">"mož"</span>, <span class="st">"otrok"</span>, </span>
-<span id="cb70-549"><a href="#cb70-549" aria-hidden="true" tabindex="-1"></a>               <span class="st">"upravitelj"</span>, <span class="st">"gostilno"</span>)))</span>
-<span id="cb70-550"><a href="#cb70-550" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-551"><a href="#cb70-551" aria-hidden="true" tabindex="-1"></a>toptag <span class="ot">&lt;-</span> <span class="fu">names</span>(<span class="fu">topfeatures</span>(dfm_tags, <span class="dv">50</span>, <span class="at">decreasing =</span> <span class="cn">TRUE</span>))</span>
-<span id="cb70-552"><a href="#cb70-552" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(toptag, <span class="dv">10</span>)</span>
-<span id="cb70-553"><a href="#cb70-553" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb70-554"><a href="#cb70-554" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-555"><a href="#cb70-555" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-558"><a href="#cb70-558" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb70-559"><a href="#cb70-559" aria-hidden="true" tabindex="-1"></a><span class="co">#| out-width: "100%"</span></span>
-<span id="cb70-560"><a href="#cb70-560" aria-hidden="true" tabindex="-1"></a><span class="co">#| out-height: "100%"</span></span>
-<span id="cb70-561"><a href="#cb70-561" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-562"><a href="#cb70-562" aria-hidden="true" tabindex="-1"></a><span class="co"># Construct feature-cooccurrence matrix (fcm) of tags</span></span>
-<span id="cb70-563"><a href="#cb70-563" aria-hidden="true" tabindex="-1"></a>fcm_tis <span class="ot">&lt;-</span> <span class="fu">fcm</span>(matrika[<span class="dv">2</span>,]) <span class="co"># besedilo 2 je Tišina</span></span>
-<span id="cb70-564"><a href="#cb70-564" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(fcm_tis)</span>
-<span id="cb70-565"><a href="#cb70-565" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-566"><a href="#cb70-566" aria-hidden="true" tabindex="-1"></a>top_fcm <span class="ot">&lt;-</span> <span class="fu">fcm_select</span>(fcm_tis, <span class="at">pattern =</span> toptag)</span>
-<span id="cb70-567"><a href="#cb70-567" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-568"><a href="#cb70-568" aria-hidden="true" tabindex="-1"></a><span class="fu">textplot_network</span>(top_fcm, <span class="at">min_freq =</span> <span class="fl">0.1</span>, </span>
-<span id="cb70-569"><a href="#cb70-569" aria-hidden="true" tabindex="-1"></a>                 <span class="at">edge_alpha =</span> <span class="fl">0.8</span>, <span class="at">edge_size =</span> <span class="dv">5</span>)</span>
-<span id="cb70-570"><a href="#cb70-570" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb70-571"><a href="#cb70-571" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-574"><a href="#cb70-574" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb70-575"><a href="#cb70-575" aria-hidden="true" tabindex="-1"></a><span class="fu">png</span>(<span class="st">"pictures/textplot_network_partljic.png"</span>, </span>
-<span id="cb70-576"><a href="#cb70-576" aria-hidden="true" tabindex="-1"></a>    <span class="at">width =</span> <span class="dv">700</span>, <span class="at">height =</span> <span class="dv">500</span>,)</span>
-<span id="cb70-577"><a href="#cb70-577" aria-hidden="true" tabindex="-1"></a><span class="fu">textplot_network</span>(top_fcm, <span class="at">min_freq =</span> <span class="fl">0.1</span>, </span>
-<span id="cb70-578"><a href="#cb70-578" aria-hidden="true" tabindex="-1"></a>                 <span class="at">edge_alpha =</span> <span class="fl">0.8</span>, <span class="at">edge_size =</span> <span class="dv">5</span>)</span>
-<span id="cb70-579"><a href="#cb70-579" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.off</span>()</span>
-<span id="cb70-580"><a href="#cb70-580" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb70-581"><a href="#cb70-581" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-582"><a href="#cb70-582" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-583"><a href="#cb70-583" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-584"><a href="#cb70-584" aria-hidden="true" tabindex="-1"></a>Kookurenčno matriko (<span class="in">`fcm`</span>) lahko pretvorimo v tabelo za uporabo s programskimi funkcijami <span class="in">`tidyverse`</span>. Uporabljamo <span class="in">`as_tibble()`</span> ali v novejšem času <span class="in">`convert()`</span>. </span>
-<span id="cb70-585"><a href="#cb70-585" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-588"><a href="#cb70-588" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb70-589"><a href="#cb70-589" aria-hidden="true" tabindex="-1"></a>cooc_tabela <span class="ot">&lt;-</span> fcm_tis <span class="sc">%&gt;%</span> <span class="fu">as_tibble</span>()</span>
-<span id="cb70-590"><a href="#cb70-590" aria-hidden="true" tabindex="-1"></a>cooc_tabela <span class="ot">&lt;-</span> fcm_tis <span class="sc">%&gt;%</span> <span class="fu">convert</span>(<span class="at">to =</span> <span class="st">"data.frame"</span>)</span>
-<span id="cb70-591"><a href="#cb70-591" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(cooc_tabela) <span class="sc">%&gt;%</span> rmarkdown<span class="sc">::</span><span class="fu">paged_table</span>()</span>
-<span id="cb70-592"><a href="#cb70-592" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb70-593"><a href="#cb70-593" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-594"><a href="#cb70-594" aria-hidden="true" tabindex="-1"></a>Kookurenčne tabele po navadi dopolnjujemo z merami asociacije, ki nam povedo, kako močno sta izraza povezana in / ali je povezanost nenaključna (tj. statistično značilna). </span>
-<span id="cb70-595"><a href="#cb70-595" aria-hidden="true" tabindex="-1"></a></span>
+<div class="sourceCode" id="cb72" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># Quanteda korpusne funkcije {#sec-delavnica2}</span></span>
+<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-5"><a href="#cb72-5" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb72-6"><a href="#cb72-6" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb72-7"><a href="#cb72-7" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-keep: 'all'</span></span>
+<span id="cb72-8"><a href="#cb72-8" aria-hidden="true" tabindex="-1"></a><span class="co">#| out-width: "100%"</span></span>
+<span id="cb72-9"><a href="#cb72-9" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-link: "https://quanteda.io/reference/textplot_network.html"</span></span>
+<span id="cb72-10"><a href="#cb72-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-11"><a href="#cb72-11" aria-hidden="true" tabindex="-1"></a>im <span class="ot">&lt;-</span> magick<span class="sc">::</span><span class="fu">image_read</span>(<span class="st">"https://quanteda.io/reference/textplot_network-1.png"</span>)</span>
+<span id="cb72-12"><a href="#cb72-12" aria-hidden="true" tabindex="-1"></a>im <span class="ot">&lt;-</span> magick<span class="sc">::</span><span class="fu">image_background</span>(im, <span class="at">color =</span> <span class="st">"white"</span>)</span>
+<span id="cb72-13"><a href="#cb72-13" aria-hidden="true" tabindex="-1"></a>magick<span class="sc">::</span><span class="fu">image_write</span>(im, <span class="st">"pictures/quanteda_fcm_example.png"</span>)</span>
+<span id="cb72-14"><a href="#cb72-14" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb72-15"><a href="#cb72-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-18"><a href="#cb72-18" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb72-19"><a href="#cb72-19" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="st">"pictures/quanteda_fcm_example.png"</span>)</span>
+<span id="cb72-20"><a href="#cb72-20" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb72-21"><a href="#cb72-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-22"><a href="#cb72-22" aria-hidden="true" tabindex="-1"></a><span class="fu">## Nalaganje knjižnic</span></span>
+<span id="cb72-23"><a href="#cb72-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-26"><a href="#cb72-26" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb72-27"><a href="#cb72-27" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb72-28"><a href="#cb72-28" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: false</span></span>
+<span id="cb72-29"><a href="#cb72-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-30"><a href="#cb72-30" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readtext)</span>
+<span id="cb72-31"><a href="#cb72-31" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(quanteda)</span>
+<span id="cb72-32"><a href="#cb72-32" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(quanteda.textstats)</span>
+<span id="cb72-33"><a href="#cb72-33" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(quanteda.textplots)</span>
+<span id="cb72-34"><a href="#cb72-34" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb72-35"><a href="#cb72-35" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidytext)</span>
+<span id="cb72-36"><a href="#cb72-36" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(wordcloud2)</span>
+<span id="cb72-37"><a href="#cb72-37" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor)</span>
+<span id="cb72-38"><a href="#cb72-38" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scales)</span>
+<span id="cb72-39"><a href="#cb72-39" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate)</span>
+<span id="cb72-40"><a href="#cb72-40" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
+<span id="cb72-41"><a href="#cb72-41" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(writexl)</span>
+<span id="cb72-42"><a href="#cb72-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-43"><a href="#cb72-43" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb72-44"><a href="#cb72-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-45"><a href="#cb72-45" aria-hidden="true" tabindex="-1"></a><span class="fu">## Odpiranje tabele</span></span>
+<span id="cb72-46"><a href="#cb72-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-49"><a href="#cb72-49" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb72-50"><a href="#cb72-50" aria-hidden="true" tabindex="-1"></a><span class="co"># iz prejšnje seje: csv datoteka z besedili in metapodatki</span></span>
+<span id="cb72-51"><a href="#cb72-51" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">read_csv2</span>(<span class="st">"data/slovenska_literatura_1968.csv"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb72-52"><a href="#cb72-52" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="st">`</span><span class="at">...1</span><span class="st">`</span>, <span class="sc">-</span>n)</span>
+<span id="cb72-53"><a href="#cb72-53" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb72-54"><a href="#cb72-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-55"><a href="#cb72-55" aria-hidden="true" tabindex="-1"></a>Čiščenje besedil v stolpcu *text*: precej je odvečnih presledkov, kar moti poizvedbe. </span>
+<span id="cb72-56"><a href="#cb72-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-59"><a href="#cb72-59" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb72-60"><a href="#cb72-60" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">text =</span> <span class="fu">str_squish</span>(text))</span>
+<span id="cb72-61"><a href="#cb72-61" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb72-62"><a href="#cb72-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-63"><a href="#cb72-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-64"><a href="#cb72-64" aria-hidden="true" tabindex="-1"></a><span class="fu">## Izbor proznih del</span></span>
+<span id="cb72-65"><a href="#cb72-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-68"><a href="#cb72-68" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb72-69"><a href="#cb72-69" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(df)</span>
+<span id="cb72-70"><a href="#cb72-70" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb72-71"><a href="#cb72-71" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-74"><a href="#cb72-74" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb72-75"><a href="#cb72-75" aria-hidden="true" tabindex="-1"></a>df_dolzina <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> </span>
+<span id="cb72-76"><a href="#cb72-76" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(author_disp <span class="sc">!=</span> <span class="st">"[Neznani avtor]"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb72-77"><a href="#cb72-77" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(text_type <span class="sc">==</span> <span class="st">"proza"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb72-78"><a href="#cb72-78" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(title_disp, author_disp) <span class="sc">%&gt;%</span> </span>
+<span id="cb72-79"><a href="#cb72-79" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">dolzina =</span> <span class="fu">ntoken</span>(text)) <span class="sc">%&gt;%</span> </span>
+<span id="cb72-80"><a href="#cb72-80" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="sc">-</span>dolzina)</span>
+<span id="cb72-81"><a href="#cb72-81" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb72-84"><a href="#cb72-84" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb72-85"><a href="#cb72-85" aria-hidden="true" tabindex="-1"></a>df_dolzina <span class="sc">%&gt;%</span> </span>
+<span id="cb72-86"><a href="#cb72-86" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">10</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb72-87"><a href="#cb72-87" aria-hidden="true" tabindex="-1"></a>  rmarkdown<span class="sc">::</span><span class="fu">paged_table</span>()</span>
+<span id="cb72-88"><a href="#cb72-88" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb72-89"><a href="#cb72-89" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-92"><a href="#cb72-92" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb72-93"><a href="#cb72-93" aria-hidden="true" tabindex="-1"></a>df_naslova <span class="ot">&lt;-</span> df_dolzina[<span class="fu">c</span>(<span class="dv">8</span>, <span class="dv">9</span>), ] <span class="sc">%&gt;%</span> </span>
+<span id="cb72-94"><a href="#cb72-94" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(title_disp)</span>
+<span id="cb72-95"><a href="#cb72-95" aria-hidden="true" tabindex="-1"></a>df_naslova</span>
+<span id="cb72-96"><a href="#cb72-96" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb72-97"><a href="#cb72-97" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-100"><a href="#cb72-100" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb72-101"><a href="#cb72-101" aria-hidden="true" tabindex="-1"></a>df_izbor <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> </span>
+<span id="cb72-102"><a href="#cb72-102" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(title_disp <span class="sc">%in%</span> df_naslova)</span>
+<span id="cb72-103"><a href="#cb72-103" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-104"><a href="#cb72-104" aria-hidden="true" tabindex="-1"></a>df_izbor <span class="sc">%&gt;%</span> rmarkdown<span class="sc">::</span><span class="fu">paged_table</span>()</span>
+<span id="cb72-105"><a href="#cb72-105" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb72-106"><a href="#cb72-106" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-107"><a href="#cb72-107" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-108"><a href="#cb72-108" aria-hidden="true" tabindex="-1"></a><span class="fu">## Quanteda korpus</span></span>
+<span id="cb72-109"><a href="#cb72-109" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-110"><a href="#cb72-110" aria-hidden="true" tabindex="-1"></a>Knjižnica <span class="in">`quanteda`</span> ima nekaj zelo priročnih in hitrih funkcij za prikaz konkordanc in diagramov. </span>
+<span id="cb72-111"><a href="#cb72-111" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-112"><a href="#cb72-112" aria-hidden="true" tabindex="-1"></a>S knjižnico <span class="in">`quanteda`</span> bomo ustvarili korpus (<span class="in">`corpus`</span>), ga razdrobili na manjše jezikovne enote (<span class="in">`tokens`</span>) in pripravili matriko (<span class="in">`dfm`</span>), ki vključuje besedila v vrsticah in besede (oz. tokens) v stolpcih.  </span>
+<span id="cb72-113"><a href="#cb72-113" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-114"><a href="#cb72-114" aria-hidden="true" tabindex="-1"></a>V sledečem programskem odstavku so gradniki, ki jih potrebujemo za statistične in grafične funkcije knjižnice <span class="in">`quanteda`</span>.</span>
+<span id="cb72-115"><a href="#cb72-115" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-118"><a href="#cb72-118" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb72-119"><a href="#cb72-119" aria-hidden="true" tabindex="-1"></a>corp <span class="ot">&lt;-</span> <span class="fu">corpus</span>(df_izbor <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">ids =</span> title), </span>
+<span id="cb72-120"><a href="#cb72-120" aria-hidden="true" tabindex="-1"></a>               <span class="at">text_field =</span> <span class="st">"text"</span>, <span class="at">docid_field =</span> <span class="st">"ids"</span>, </span>
+<span id="cb72-121"><a href="#cb72-121" aria-hidden="true" tabindex="-1"></a>               <span class="at">unique_docnames =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb72-122"><a href="#cb72-122" aria-hidden="true" tabindex="-1"></a>toks <span class="ot">&lt;-</span> <span class="fu">tokens</span>(corp, <span class="at">remove_numbers =</span> <span class="cn">TRUE</span>, <span class="at">remove_punct =</span> T,</span>
+<span id="cb72-123"><a href="#cb72-123" aria-hidden="true" tabindex="-1"></a>               <span class="at">remove_symbols =</span> T, <span class="at">remove_url =</span> T, </span>
+<span id="cb72-124"><a href="#cb72-124" aria-hidden="true" tabindex="-1"></a>               <span class="at">remove_separators =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb72-125"><a href="#cb72-125" aria-hidden="true" tabindex="-1"></a>mat <span class="ot">&lt;-</span> <span class="fu">dfm</span>(toks, <span class="at">padding =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb72-126"><a href="#cb72-126" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-127"><a href="#cb72-127" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb72-128"><a href="#cb72-128" aria-hidden="true" tabindex="-1"></a><span class="fu">## Besedilna evidenca</span></span>
+<span id="cb72-129"><a href="#cb72-129" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-130"><a href="#cb72-130" aria-hidden="true" tabindex="-1"></a><span class="in">```{r message=FALSE, warning=FALSE}</span></span>
+<span id="cb72-131"><a href="#cb72-131" aria-hidden="true" tabindex="-1"></a>evidenca <span class="ot">&lt;-</span> <span class="fu">textstat_summary</span>(corp)</span>
+<span id="cb72-132"><a href="#cb72-132" aria-hidden="true" tabindex="-1"></a>evidenca <span class="sc">%&gt;%</span> rmarkdown<span class="sc">::</span><span class="fu">paged_table</span>()</span>
+<span id="cb72-133"><a href="#cb72-133" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb72-134"><a href="#cb72-134" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-135"><a href="#cb72-135" aria-hidden="true" tabindex="-1"></a><span class="in">```{r message=FALSE, warning=FALSE}</span></span>
+<span id="cb72-136"><a href="#cb72-136" aria-hidden="true" tabindex="-1"></a>povzetek <span class="ot">&lt;-</span> <span class="fu">summary</span>(corp)</span>
+<span id="cb72-137"><a href="#cb72-137" aria-hidden="true" tabindex="-1"></a>povzetek</span>
+<span id="cb72-138"><a href="#cb72-138" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb72-139"><a href="#cb72-139" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-140"><a href="#cb72-140" aria-hidden="true" tabindex="-1"></a><span class="fu">## Seznam nezaželenih besed</span></span>
+<span id="cb72-141"><a href="#cb72-141" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-144"><a href="#cb72-144" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb72-145"><a href="#cb72-145" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stopwords)</span>
+<span id="cb72-146"><a href="#cb72-146" aria-hidden="true" tabindex="-1"></a>stop_sl <span class="ot">&lt;-</span> <span class="fu">stopwords</span>(<span class="at">language =</span> <span class="st">"sl"</span>, <span class="at">source =</span> <span class="st">"stopwords-iso"</span>)</span>
+<span id="cb72-147"><a href="#cb72-147" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-148"><a href="#cb72-148" aria-hidden="true" tabindex="-1"></a>stop_sl <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">stopwords</span>(<span class="at">language =</span> <span class="st">"sl"</span>, </span>
+<span id="cb72-149"><a href="#cb72-149" aria-hidden="true" tabindex="-1"></a>                       <span class="at">source =</span> <span class="st">"stopwords-iso"</span>), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>, <span class="st">" "</span>, <span class="st">"  "</span>)</span>
+<span id="cb72-150"><a href="#cb72-150" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-151"><a href="#cb72-151" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb72-152"><a href="#cb72-152" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-153"><a href="#cb72-153" aria-hidden="true" tabindex="-1"></a>Odstranjujemo. </span>
+<span id="cb72-154"><a href="#cb72-154" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-157"><a href="#cb72-157" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb72-158"><a href="#cb72-158" aria-hidden="true" tabindex="-1"></a>besede <span class="ot">&lt;-</span> <span class="fu">tokens_select</span>(toks, <span class="at">pattern =</span> stop_sl, </span>
+<span id="cb72-159"><a href="#cb72-159" aria-hidden="true" tabindex="-1"></a>                       <span class="at">selection =</span> <span class="st">"remove"</span>, <span class="at">padding =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb72-160"><a href="#cb72-160" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb72-161"><a href="#cb72-161" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-162"><a href="#cb72-162" aria-hidden="true" tabindex="-1"></a>Alternativna oblika odstranjevanja: uveljavljamo <span class="in">`padding`</span>.</span>
+<span id="cb72-163"><a href="#cb72-163" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-166"><a href="#cb72-166" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb72-167"><a href="#cb72-167" aria-hidden="true" tabindex="-1"></a><span class="co"># odstrani nezaželene besedne oblike</span></span>
+<span id="cb72-168"><a href="#cb72-168" aria-hidden="true" tabindex="-1"></a>toks1 <span class="ot">&lt;-</span> <span class="fu">tokens_remove</span>(toks, <span class="at">pattern =</span> stop_sl, <span class="at">padding =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb72-169"><a href="#cb72-169" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb72-170"><a href="#cb72-170" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-171"><a href="#cb72-171" aria-hidden="true" tabindex="-1"></a>Namesto besednih oblik so lahko tudi povedi (sentences) osnovna enota, kar dosežemo s funkcjo <span class="in">`corpus_reshape()`</span>. </span>
+<span id="cb72-172"><a href="#cb72-172" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-175"><a href="#cb72-175" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb72-176"><a href="#cb72-176" aria-hidden="true" tabindex="-1"></a><span class="co"># ustvari korpus, ki vsebuje povedi kot osnovno enoto</span></span>
+<span id="cb72-177"><a href="#cb72-177" aria-hidden="true" tabindex="-1"></a>corps <span class="ot">&lt;-</span> <span class="fu">corpus_reshape</span>(corp, <span class="at">to =</span> <span class="st">"sentences"</span>)</span>
+<span id="cb72-178"><a href="#cb72-178" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb72-179"><a href="#cb72-179" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-180"><a href="#cb72-180" aria-hidden="true" tabindex="-1"></a>Zgoraj smo že videli, da lahko tabelo z besedili pretvorimo v korpus knjižnice <span class="in">`quanteda`</span>. Mogoča je tudi obratna pot, tj. da korpus knjižnice <span class="in">`quanteda`</span> pretvorimo v obliko tabele, ki omogoča uporabo programskih funkcij knjižnic <span class="in">`tidyverse`</span> in <span class="in">`tidytext`</span> - <span class="in">`tidy()`</span>: </span>
+<span id="cb72-181"><a href="#cb72-181" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-184"><a href="#cb72-184" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb72-185"><a href="#cb72-185" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidytext)</span>
+<span id="cb72-186"><a href="#cb72-186" aria-hidden="true" tabindex="-1"></a>corp_tidy <span class="ot">&lt;-</span> corp <span class="sc">%&gt;%</span> <span class="fu">tidy</span>()</span>
+<span id="cb72-187"><a href="#cb72-187" aria-hidden="true" tabindex="-1"></a>corps_tidy <span class="ot">&lt;-</span> <span class="fu">tidy</span>(corps)</span>
+<span id="cb72-188"><a href="#cb72-188" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb72-189"><a href="#cb72-189" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-190"><a href="#cb72-190" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-191"><a href="#cb72-191" aria-hidden="true" tabindex="-1"></a><span class="fu">## Kwic konkordance</span></span>
+<span id="cb72-192"><a href="#cb72-192" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-193"><a href="#cb72-193" aria-hidden="true" tabindex="-1"></a>V poizvedbenem nizu je mogoče navesti en izraz ali tudi več. Če je navedenih več izrazov (tj. 2 ali več), potem potrebujete povezovalno funkcijo <span class="in">`c()`</span>, ki povezuje več nizov v en funkcijski argument. </span>
+<span id="cb72-194"><a href="#cb72-194" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-195"><a href="#cb72-195" aria-hidden="true" tabindex="-1"></a>Konkordanco lahko uporabljamo tudi z nekaterimi grafičnimi funkcijami knjižnice <span class="in">`quanteda`</span> (npr. <span class="in">`textplot_xray()`</span>). </span>
+<span id="cb72-196"><a href="#cb72-196" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-199"><a href="#cb72-199" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb72-200"><a href="#cb72-200" aria-hidden="true" tabindex="-1"></a>conc <span class="ot">&lt;-</span> <span class="fu">kwic</span>(toks, <span class="at">pattern =</span> <span class="fu">c</span>(<span class="st">"ura"</span>, <span class="st">"tišina"</span>))</span>
+<span id="cb72-201"><a href="#cb72-201" aria-hidden="true" tabindex="-1"></a>conc</span>
+<span id="cb72-202"><a href="#cb72-202" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-203"><a href="#cb72-203" aria-hidden="true" tabindex="-1"></a><span class="fu">textplot_xray</span>(conc)</span>
+<span id="cb72-204"><a href="#cb72-204" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb72-205"><a href="#cb72-205" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-206"><a href="#cb72-206" aria-hidden="true" tabindex="-1"></a>Izboljšan izpis tabele omogoča funkcija <span class="in">`as_tibble()`</span> iz knjižnične zbirke <span class="in">`tidyverse`</span>. Tabelo lahko preoblikujemo s funkcijami <span class="in">`tidyverse`</span>, ni pa uporabna za funkcije knjižnice <span class="in">`quanteda`</span>. </span>
+<span id="cb72-207"><a href="#cb72-207" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-210"><a href="#cb72-210" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb72-211"><a href="#cb72-211" aria-hidden="true" tabindex="-1"></a><span class="fu">kwic</span>(toks, <span class="at">pattern =</span> <span class="fu">c</span>(<span class="st">"ur*"</span>, <span class="st">"tišin*"</span>), </span>
+<span id="cb72-212"><a href="#cb72-212" aria-hidden="true" tabindex="-1"></a>     <span class="at">case_insensitive =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb72-213"><a href="#cb72-213" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb72-214"><a href="#cb72-214" aria-hidden="true" tabindex="-1"></a>  rmarkdown<span class="sc">::</span><span class="fu">paged_table</span>()</span>
+<span id="cb72-215"><a href="#cb72-215" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-216"><a href="#cb72-216" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb72-217"><a href="#cb72-217" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-218"><a href="#cb72-218" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-221"><a href="#cb72-221" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb72-222"><a href="#cb72-222" aria-hidden="true" tabindex="-1"></a><span class="fu">kwic</span>(corp, <span class="at">pattern =</span> <span class="fu">phrase</span>(<span class="st">"dobr* d*"</span>), <span class="at">window =</span> <span class="dv">2</span>)</span>
+<span id="cb72-223"><a href="#cb72-223" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-224"><a href="#cb72-224" aria-hidden="true" tabindex="-1"></a><span class="fu">kwic</span>(corp, <span class="at">pattern =</span> <span class="fu">phrase</span>(<span class="st">"dobr* d*"</span>), <span class="at">window =</span> <span class="dv">5</span>, </span>
+<span id="cb72-225"><a href="#cb72-225" aria-hidden="true" tabindex="-1"></a>     <span class="at">case_insensitive =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb72-226"><a href="#cb72-226" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb72-227"><a href="#cb72-227" aria-hidden="true" tabindex="-1"></a>  rmarkdown<span class="sc">::</span><span class="fu">paged_table</span>()</span>
+<span id="cb72-228"><a href="#cb72-228" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-229"><a href="#cb72-229" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb72-230"><a href="#cb72-230" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-231"><a href="#cb72-231" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-234"><a href="#cb72-234" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb72-235"><a href="#cb72-235" aria-hidden="true" tabindex="-1"></a><span class="fu">kwic</span>(toks, <span class="st">"*ica"</span>, <span class="at">valuetype =</span> <span class="st">"glob"</span>, </span>
+<span id="cb72-236"><a href="#cb72-236" aria-hidden="true" tabindex="-1"></a>     <span class="at">case_insensitive =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb72-237"><a href="#cb72-237" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb72-238"><a href="#cb72-238" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(docname) <span class="sc">%&gt;%</span> </span>
+<span id="cb72-239"><a href="#cb72-239" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(keyword, <span class="at">sort =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb72-240"><a href="#cb72-240" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb72-241"><a href="#cb72-241" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-244"><a href="#cb72-244" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb72-245"><a href="#cb72-245" aria-hidden="true" tabindex="-1"></a><span class="fu">kwic</span>(toks, <span class="at">pattern =</span> <span class="fu">c</span>(<span class="st">"</span><span class="sc">\\</span><span class="st">b.*[nl]ica</span><span class="sc">\\</span><span class="st">b"</span>),</span>
+<span id="cb72-246"><a href="#cb72-246" aria-hidden="true" tabindex="-1"></a>     <span class="at">valuetype =</span> <span class="st">"regex"</span>, </span>
+<span id="cb72-247"><a href="#cb72-247" aria-hidden="true" tabindex="-1"></a>     <span class="at">case_insensitive =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb72-248"><a href="#cb72-248" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb72-249"><a href="#cb72-249" aria-hidden="true" tabindex="-1"></a>  rmarkdown<span class="sc">::</span><span class="fu">paged_table</span>()</span>
+<span id="cb72-250"><a href="#cb72-250" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb72-251"><a href="#cb72-251" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-254"><a href="#cb72-254" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb72-255"><a href="#cb72-255" aria-hidden="true" tabindex="-1"></a><span class="fu">kwic</span>(corp, <span class="at">pattern =</span> <span class="fu">phrase</span>(<span class="st">"dob[r]?.* d.*"</span>),</span>
+<span id="cb72-256"><a href="#cb72-256" aria-hidden="true" tabindex="-1"></a>     <span class="at">valuetype =</span> <span class="st">"regex"</span>, </span>
+<span id="cb72-257"><a href="#cb72-257" aria-hidden="true" tabindex="-1"></a>     <span class="at">case_insensitive =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb72-258"><a href="#cb72-258" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb72-259"><a href="#cb72-259" aria-hidden="true" tabindex="-1"></a>  rmarkdown<span class="sc">::</span><span class="fu">paged_table</span>()</span>
+<span id="cb72-260"><a href="#cb72-260" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb72-261"><a href="#cb72-261" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-262"><a href="#cb72-262" aria-hidden="true" tabindex="-1"></a>Opcija <span class="in">`window`</span> nam izpisuje navedeno število besed (pojavnic, tokens) na levi in desni strani ključne besede, privzeto po pet besed. </span>
+<span id="cb72-263"><a href="#cb72-263" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-264"><a href="#cb72-264" aria-hidden="true" tabindex="-1"></a>Če želimo v konkordanci na levi in desni strani ključne besede izpisati cele povedi, potem lahko s knjižnico <span class="in">`quanteda`</span> ustvarimo korpus povedi z ukazom <span class="in">`corpus_reshape()`</span> (namesto besednih pojavnic). Druga možnost je, da uporabljamo kar funkcijo <span class="in">`tokens()`</span> namesto <span class="in">`corpus_reshape()`</span>. Poizvedbo opravimo na osnovi korpusa povedi in s pomočjo regularnih izrazov. Razmik (<span class="in">`window`</span>) nastavimo na 1. </span>
+<span id="cb72-265"><a href="#cb72-265" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-268"><a href="#cb72-268" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb72-269"><a href="#cb72-269" aria-hidden="true" tabindex="-1"></a><span class="co"># ustvari jezikovno gradivo povedi</span></span>
+<span id="cb72-270"><a href="#cb72-270" aria-hidden="true" tabindex="-1"></a>corps <span class="ot">&lt;-</span> <span class="fu">corpus_reshape</span>(corp)</span>
+<span id="cb72-271"><a href="#cb72-271" aria-hidden="true" tabindex="-1"></a><span class="co"># ali seznam povedi</span></span>
+<span id="cb72-272"><a href="#cb72-272" aria-hidden="true" tabindex="-1"></a>tokss <span class="ot">&lt;-</span> <span class="fu">tokens</span>(corp, <span class="at">what =</span> <span class="st">"sentence"</span>)</span>
+<span id="cb72-273"><a href="#cb72-273" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-274"><a href="#cb72-274" aria-hidden="true" tabindex="-1"></a><span class="co"># regex \\b pomeni rob besede (border)</span></span>
+<span id="cb72-275"><a href="#cb72-275" aria-hidden="true" tabindex="-1"></a><span class="fu">kwic</span>(tokss, <span class="at">pattern =</span> <span class="st">"</span><span class="sc">\\</span><span class="st">bdobro</span><span class="sc">\\</span><span class="st">b"</span>, </span>
+<span id="cb72-276"><a href="#cb72-276" aria-hidden="true" tabindex="-1"></a>     <span class="at">window =</span> <span class="dv">1</span>,</span>
+<span id="cb72-277"><a href="#cb72-277" aria-hidden="true" tabindex="-1"></a>     <span class="at">valuetype =</span> <span class="st">"regex"</span>, </span>
+<span id="cb72-278"><a href="#cb72-278" aria-hidden="true" tabindex="-1"></a>     <span class="at">case_insensitive =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb72-279"><a href="#cb72-279" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-280"><a href="#cb72-280" aria-hidden="true" tabindex="-1"></a><span class="fu">kwic</span>(tokss, <span class="at">pattern =</span> <span class="st">"</span><span class="sc">\\</span><span class="st">bdobro</span><span class="sc">\\</span><span class="st">b"</span>, </span>
+<span id="cb72-281"><a href="#cb72-281" aria-hidden="true" tabindex="-1"></a>     <span class="at">window =</span> <span class="dv">1</span>,</span>
+<span id="cb72-282"><a href="#cb72-282" aria-hidden="true" tabindex="-1"></a>     <span class="at">valuetype =</span> <span class="st">"regex"</span>, </span>
+<span id="cb72-283"><a href="#cb72-283" aria-hidden="true" tabindex="-1"></a>     <span class="at">case_insensitive =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb72-284"><a href="#cb72-284" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb72-285"><a href="#cb72-285" aria-hidden="true" tabindex="-1"></a>  rmarkdown<span class="sc">::</span><span class="fu">paged_table</span>()</span>
+<span id="cb72-286"><a href="#cb72-286" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb72-287"><a href="#cb72-287" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-288"><a href="#cb72-288" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-289"><a href="#cb72-289" aria-hidden="true" tabindex="-1"></a><span class="fu">## Pogostnost</span></span>
+<span id="cb72-290"><a href="#cb72-290" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-293"><a href="#cb72-293" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb72-294"><a href="#cb72-294" aria-hidden="true" tabindex="-1"></a>matrika <span class="ot">=</span> <span class="fu">dfm_select</span>(mat, <span class="at">selection =</span> <span class="st">"remove"</span>, </span>
+<span id="cb72-295"><a href="#cb72-295" aria-hidden="true" tabindex="-1"></a>                     <span class="at">pattern =</span> stop_sl, <span class="at">padding =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb72-296"><a href="#cb72-296" aria-hidden="true" tabindex="-1"></a>matrika</span>
+<span id="cb72-297"><a href="#cb72-297" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb72-298"><a href="#cb72-298" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-299"><a href="#cb72-299" aria-hidden="true" tabindex="-1"></a>maj68-0073  Vladimir Kavčič (1932): Tišina  </span>
+<span id="cb72-300"><a href="#cb72-300" aria-hidden="true" tabindex="-1"></a>maj68-0147  Tone Partljič (1940): Ribe na plitvini</span>
+<span id="cb72-301"><a href="#cb72-301" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-304"><a href="#cb72-304" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb72-305"><a href="#cb72-305" aria-hidden="true" tabindex="-1"></a>pogostnost <span class="ot">&lt;-</span> <span class="fu">textstat_frequency</span>(matrika, <span class="at">groups =</span> <span class="fu">c</span>(<span class="st">"maj68-0073"</span>, <span class="st">"maj68-0147"</span>))</span>
+<span id="cb72-306"><a href="#cb72-306" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-307"><a href="#cb72-307" aria-hidden="true" tabindex="-1"></a>pogostnost <span class="ot">&lt;-</span> <span class="fu">textstat_frequency</span>(matrika, <span class="at">groups =</span> <span class="fu">c</span>(<span class="st">"Kavčič"</span>, <span class="st">"Partljič"</span>))</span>
+<span id="cb72-308"><a href="#cb72-308" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-309"><a href="#cb72-309" aria-hidden="true" tabindex="-1"></a>pogostnost <span class="sc">%&gt;%</span> </span>
+<span id="cb72-310"><a href="#cb72-310" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(group) <span class="sc">%&gt;%</span> </span>
+<span id="cb72-311"><a href="#cb72-311" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">str_detect</span>(feature, <span class="st">"^[:alpha:]"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb72-312"><a href="#cb72-312" aria-hidden="true" tabindex="-1"></a>  <span class="co"># filter(group == "Partljič") %&gt;% </span></span>
+<span id="cb72-313"><a href="#cb72-313" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">n =</span> <span class="dv">5</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb72-314"><a href="#cb72-314" aria-hidden="true" tabindex="-1"></a>  rmarkdown<span class="sc">::</span><span class="fu">paged_table</span>()</span>
+<span id="cb72-315"><a href="#cb72-315" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-316"><a href="#cb72-316" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb72-317"><a href="#cb72-317" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-320"><a href="#cb72-320" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb72-321"><a href="#cb72-321" aria-hidden="true" tabindex="-1"></a>pogostnost <span class="sc">%&gt;%</span> </span>
+<span id="cb72-322"><a href="#cb72-322" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(group) <span class="sc">%&gt;%</span> </span>
+<span id="cb72-323"><a href="#cb72-323" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">str_detect</span>(feature, <span class="st">"^[:alpha:]"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb72-324"><a href="#cb72-324" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">n =</span> <span class="dv">5</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb72-325"><a href="#cb72-325" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> feature, <span class="at">values_from =</span> frequency,</span>
+<span id="cb72-326"><a href="#cb72-326" aria-hidden="true" tabindex="-1"></a>              <span class="at">values_fill =</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb72-327"><a href="#cb72-327" aria-hidden="true" tabindex="-1"></a>  rmarkdown<span class="sc">::</span><span class="fu">paged_table</span>()</span>
+<span id="cb72-328"><a href="#cb72-328" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-329"><a href="#cb72-329" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb72-330"><a href="#cb72-330" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-333"><a href="#cb72-333" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb72-334"><a href="#cb72-334" aria-hidden="true" tabindex="-1"></a>pogostnost <span class="sc">%&gt;%</span> </span>
+<span id="cb72-335"><a href="#cb72-335" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">str_detect</span>(feature, <span class="st">"^[:alpha:]"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb72-336"><a href="#cb72-336" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_max</span>(<span class="at">order_by =</span> frequency, <span class="at">n =</span> <span class="dv">20</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb72-337"><a href="#cb72-337" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">feature =</span> <span class="fu">reorder_within</span>(feature, frequency, frequency, <span class="at">sep =</span> <span class="st">": "</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb72-338"><a href="#cb72-338" aria-hidden="true" tabindex="-1"></a>  <span class="co"># ggplot(aes(frequency, reorder(feature, frequency))) +</span></span>
+<span id="cb72-339"><a href="#cb72-339" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(frequency, feature)) <span class="sc">+</span></span>
+<span id="cb72-340"><a href="#cb72-340" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">fill=</span><span class="st">"steelblue"</span>) <span class="sc">+</span></span>
+<span id="cb72-341"><a href="#cb72-341" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Frequency"</span>, <span class="at">y =</span> <span class="st">""</span>) <span class="sc">+</span></span>
+<span id="cb72-342"><a href="#cb72-342" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> group, <span class="at">scales =</span> <span class="st">"free"</span>)</span>
+<span id="cb72-343"><a href="#cb72-343" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-344"><a href="#cb72-344" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb72-345"><a href="#cb72-345" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-346"><a href="#cb72-346" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-347"><a href="#cb72-347" aria-hidden="true" tabindex="-1"></a><span class="fu">## Kolokacije</span></span>
+<span id="cb72-348"><a href="#cb72-348" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-349"><a href="#cb72-349" aria-hidden="true" tabindex="-1"></a>Knjižnica <span class="in">`quanteda`</span> ima preprosto funkcijo za iskanje *ngramov* v besedilih, tj. dveh ali več besed, ki se nadpovprečno pogosto sopojavljajo. </span>
+<span id="cb72-350"><a href="#cb72-350" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-353"><a href="#cb72-353" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb72-354"><a href="#cb72-354" aria-hidden="true" tabindex="-1"></a>coll_2 <span class="ot">=</span> <span class="fu">textstat_collocations</span>(besede, <span class="at">size =</span> <span class="dv">2</span><span class="sc">:</span><span class="dv">5</span>, <span class="at">tolower =</span> <span class="cn">TRUE</span>) <span class="co"># naredi male črke !</span></span>
+<span id="cb72-355"><a href="#cb72-355" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-356"><a href="#cb72-356" aria-hidden="true" tabindex="-1"></a>coll_2 <span class="sc">%&gt;%</span> </span>
+<span id="cb72-357"><a href="#cb72-357" aria-hidden="true" tabindex="-1"></a>  rmarkdown<span class="sc">::</span><span class="fu">paged_table</span>()</span>
+<span id="cb72-358"><a href="#cb72-358" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-359"><a href="#cb72-359" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb72-360"><a href="#cb72-360" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-361"><a href="#cb72-361" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-364"><a href="#cb72-364" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb72-365"><a href="#cb72-365" aria-hidden="true" tabindex="-1"></a>rad <span class="ot">&lt;-</span> coll_2 <span class="sc">%&gt;%</span> </span>
+<span id="cb72-366"><a href="#cb72-366" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">str_detect</span>(collocation, <span class="st">"rad$"</span>))</span>
+<span id="cb72-367"><a href="#cb72-367" aria-hidden="true" tabindex="-1"></a>rad <span class="sc">%&gt;%</span> rmarkdown<span class="sc">::</span><span class="fu">paged_table</span>()</span>
+<span id="cb72-368"><a href="#cb72-368" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-369"><a href="#cb72-369" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb72-370"><a href="#cb72-370" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-373"><a href="#cb72-373" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb72-374"><a href="#cb72-374" aria-hidden="true" tabindex="-1"></a>besede_caps <span class="ot">=</span> <span class="fu">tokens_select</span>(besede, <span class="at">pattern =</span> <span class="st">"^[A-Z]"</span>, </span>
+<span id="cb72-375"><a href="#cb72-375" aria-hidden="true" tabindex="-1"></a>                                <span class="at">valuetype =</span> <span class="st">"regex"</span>, </span>
+<span id="cb72-376"><a href="#cb72-376" aria-hidden="true" tabindex="-1"></a>                                <span class="at">case_insensitive =</span> <span class="cn">FALSE</span>, </span>
+<span id="cb72-377"><a href="#cb72-377" aria-hidden="true" tabindex="-1"></a>                                <span class="at">padding =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb72-378"><a href="#cb72-378" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-379"><a href="#cb72-379" aria-hidden="true" tabindex="-1"></a>coll_caps2 <span class="ot">=</span> <span class="fu">textstat_collocations</span>(besede_caps, <span class="at">size =</span> <span class="dv">2</span>, </span>
+<span id="cb72-380"><a href="#cb72-380" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">tolower =</span> <span class="cn">FALSE</span>, </span>
+<span id="cb72-381"><a href="#cb72-381" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">min_count =</span> <span class="dv">2</span>)</span>
+<span id="cb72-382"><a href="#cb72-382" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-383"><a href="#cb72-383" aria-hidden="true" tabindex="-1"></a>coll_caps2 <span class="sc">%&gt;%</span> rmarkdown<span class="sc">::</span><span class="fu">paged_table</span>()</span>
+<span id="cb72-384"><a href="#cb72-384" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-385"><a href="#cb72-385" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb72-386"><a href="#cb72-386" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-387"><a href="#cb72-387" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-388"><a href="#cb72-388" aria-hidden="true" tabindex="-1"></a><span class="fu">## Položaj v besedilu</span></span>
+<span id="cb72-389"><a href="#cb72-389" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-392"><a href="#cb72-392" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb72-393"><a href="#cb72-393" aria-hidden="true" tabindex="-1"></a>kwic_majda <span class="ot">=</span> <span class="fu">kwic</span>(besede, <span class="at">pattern =</span> <span class="st">"Majda"</span>)</span>
+<span id="cb72-394"><a href="#cb72-394" aria-hidden="true" tabindex="-1"></a><span class="fu">textplot_xray</span>(kwic_majda)</span>
+<span id="cb72-395"><a href="#cb72-395" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-396"><a href="#cb72-396" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb72-397"><a href="#cb72-397" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-400"><a href="#cb72-400" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb72-401"><a href="#cb72-401" aria-hidden="true" tabindex="-1"></a>kwic_mesto <span class="ot">&lt;-</span> <span class="fu">kwic</span>(besede, <span class="at">pattern =</span> <span class="st">"mest*"</span>)</span>
+<span id="cb72-402"><a href="#cb72-402" aria-hidden="true" tabindex="-1"></a><span class="fu">textplot_xray</span>(kwic_mesto)</span>
+<span id="cb72-403"><a href="#cb72-403" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-404"><a href="#cb72-404" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb72-405"><a href="#cb72-405" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-406"><a href="#cb72-406" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-407"><a href="#cb72-407" aria-hidden="true" tabindex="-1"></a><span class="fu">## Slovarska raznolikost besedil</span></span>
+<span id="cb72-408"><a href="#cb72-408" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-411"><a href="#cb72-411" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb72-412"><a href="#cb72-412" aria-hidden="true" tabindex="-1"></a><span class="fu">textstat_lexdiv</span>(matrika, <span class="at">measure =</span> <span class="st">"all"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb72-413"><a href="#cb72-413" aria-hidden="true" tabindex="-1"></a>  rmarkdown<span class="sc">::</span><span class="fu">paged_table</span>()</span>
+<span id="cb72-414"><a href="#cb72-414" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb72-415"><a href="#cb72-415" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-416"><a href="#cb72-416" aria-hidden="true" tabindex="-1"></a><span class="fu">## Podobnost besedil</span></span>
+<span id="cb72-417"><a href="#cb72-417" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-418"><a href="#cb72-418" aria-hidden="true" tabindex="-1"></a>Naslove besedil v jezikovnem gradivu potegnemo iz zgoraj sestavljenega seznama *df_dolzina*. </span>
+<span id="cb72-419"><a href="#cb72-419" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-422"><a href="#cb72-422" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb72-423"><a href="#cb72-423" aria-hidden="true" tabindex="-1"></a>df_naslovi <span class="ot">&lt;-</span> df_dolzina[<span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">8</span>, <span class="dv">9</span>), ] <span class="sc">%&gt;%</span> </span>
+<span id="cb72-424"><a href="#cb72-424" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(title_disp)</span>
+<span id="cb72-425"><a href="#cb72-425" aria-hidden="true" tabindex="-1"></a>df_naslovi</span>
+<span id="cb72-426"><a href="#cb72-426" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb72-427"><a href="#cb72-427" aria-hidden="true" tabindex="-1"></a>Sestavimo tabelo z novim izborom proznih del, tokrat s tremi literarnimi deli.  </span>
+<span id="cb72-428"><a href="#cb72-428" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-431"><a href="#cb72-431" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb72-432"><a href="#cb72-432" aria-hidden="true" tabindex="-1"></a>df_izbor3 <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> </span>
+<span id="cb72-433"><a href="#cb72-433" aria-hidden="true" tabindex="-1"></a>  <span class="co"># ohranimo le tri prozna dela iz celotne tabele </span></span>
+<span id="cb72-434"><a href="#cb72-434" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(title_disp <span class="sc">%in%</span> df_naslovi)</span>
+<span id="cb72-435"><a href="#cb72-435" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-436"><a href="#cb72-436" aria-hidden="true" tabindex="-1"></a>df_izbor3 <span class="sc">%&gt;%</span> rmarkdown<span class="sc">::</span><span class="fu">paged_table</span>()</span>
+<span id="cb72-437"><a href="#cb72-437" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb72-438"><a href="#cb72-438" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-439"><a href="#cb72-439" aria-hidden="true" tabindex="-1"></a>Sestavimo nov corpus, seznam pojavnic in matriko dokumentov in pojavnic. </span>
+<span id="cb72-440"><a href="#cb72-440" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-443"><a href="#cb72-443" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb72-444"><a href="#cb72-444" aria-hidden="true" tabindex="-1"></a>corp3 <span class="ot">&lt;-</span> <span class="fu">corpus</span>(df_izbor3 <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">ids =</span> title), </span>
+<span id="cb72-445"><a href="#cb72-445" aria-hidden="true" tabindex="-1"></a>               <span class="at">text_field =</span> <span class="st">"text"</span>, <span class="at">docid_field =</span> <span class="st">"ids"</span>)</span>
+<span id="cb72-446"><a href="#cb72-446" aria-hidden="true" tabindex="-1"></a>toks3 <span class="ot">&lt;-</span> <span class="fu">tokens</span>(corp3, <span class="at">remove_numbers =</span> <span class="cn">TRUE</span>, <span class="at">remove_punct =</span> T,</span>
+<span id="cb72-447"><a href="#cb72-447" aria-hidden="true" tabindex="-1"></a>               <span class="at">remove_symbols =</span> T, <span class="at">remove_url =</span> T, </span>
+<span id="cb72-448"><a href="#cb72-448" aria-hidden="true" tabindex="-1"></a>               <span class="at">remove_separators =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb72-449"><a href="#cb72-449" aria-hidden="true" tabindex="-1"></a>mat3 <span class="ot">&lt;-</span> <span class="fu">dfm</span>(toks3, <span class="at">padding =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb72-450"><a href="#cb72-450" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb72-451"><a href="#cb72-451" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-452"><a href="#cb72-452" aria-hidden="true" tabindex="-1"></a>Programska funkcija <span class="in">`textstat_simil()`</span> iz knjižnice <span class="in">`quanteda`</span> omogoča izračun količnika podobnosti besedil. Ena izmed priljubljenih metod je kotna funkcija kosinusove razdalje - <span class="in">`cosine`</span>. </span>
+<span id="cb72-453"><a href="#cb72-453" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-454"><a href="#cb72-454" aria-hidden="true" tabindex="-1"></a>Če je kosinus = 1, sta besedili povsem enaki, če je kosinus = 0 povsem različni. </span>
+<span id="cb72-455"><a href="#cb72-455" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-458"><a href="#cb72-458" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb72-459"><a href="#cb72-459" aria-hidden="true" tabindex="-1"></a><span class="fu">textstat_simil</span>(mat3, <span class="at">method =</span> <span class="st">"cosine"</span>, <span class="at">margin =</span> <span class="st">"documents"</span>)</span>
+<span id="cb72-460"><a href="#cb72-460" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb72-461"><a href="#cb72-461" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-462"><a href="#cb72-462" aria-hidden="true" tabindex="-1"></a>Namesto kosinusa lahko uporabljamo tudi druge metode. Privzeta je korelacija:   </span>
+<span id="cb72-463"><a href="#cb72-463" aria-hidden="true" tabindex="-1"></a>"correlation" (default), "cosine", "jaccard", "ejaccard", "dice", "edice", "simple matching", and "hamann".</span>
+<span id="cb72-464"><a href="#cb72-464" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-467"><a href="#cb72-467" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb72-468"><a href="#cb72-468" aria-hidden="true" tabindex="-1"></a><span class="fu">textstat_simil</span>(mat3, <span class="at">method =</span> <span class="st">"dice"</span>, </span>
+<span id="cb72-469"><a href="#cb72-469" aria-hidden="true" tabindex="-1"></a>               <span class="at">margin =</span> <span class="st">"documents"</span>)</span>
+<span id="cb72-470"><a href="#cb72-470" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb72-471"><a href="#cb72-471" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-472"><a href="#cb72-472" aria-hidden="true" tabindex="-1"></a>Razlike med besedili so majhne, saj se večina besednih oblik (tj. funkcijske besede) pojavlja v vseh treh besedilih. </span>
+<span id="cb72-473"><a href="#cb72-473" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-474"><a href="#cb72-474" aria-hidden="true" tabindex="-1"></a>Nasprotna funkcija je <span class="in">`textstat_dist()`</span>, ki meri različnost besedil. Privzeta metoda je evklidska razdalja (znana tudi kot pitagorejska razdalja ali hipotenuza v pravokotnem tritkotniku:   </span>
+<span id="cb72-475"><a href="#cb72-475" aria-hidden="true" tabindex="-1"></a>"euclidean" (default), "manhattan", "maximum", "canberra", and "minkowski".</span>
+<span id="cb72-476"><a href="#cb72-476" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-477"><a href="#cb72-477" aria-hidden="true" tabindex="-1"></a>Narišemo lahko tudi *dendrogram*, in sicer s funkcijo <span class="in">`hclust()`</span>, ki se naloži v pomnilnik ob zagonu programa <span class="in">`R`</span>. </span>
+<span id="cb72-478"><a href="#cb72-478" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-481"><a href="#cb72-481" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb72-482"><a href="#cb72-482" aria-hidden="true" tabindex="-1"></a><span class="co"># plot a dendrogram after converting the object into distances</span></span>
+<span id="cb72-483"><a href="#cb72-483" aria-hidden="true" tabindex="-1"></a>dist1 <span class="ot">=</span> <span class="fu">textstat_dist</span>(mat3, <span class="at">method =</span> <span class="st">"euclidean"</span>, </span>
+<span id="cb72-484"><a href="#cb72-484" aria-hidden="true" tabindex="-1"></a>                      <span class="at">margin =</span> <span class="st">"documents"</span>)</span>
+<span id="cb72-485"><a href="#cb72-485" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">hclust</span>(<span class="fu">as.dist</span>(dist1)))</span>
+<span id="cb72-486"><a href="#cb72-486" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb72-487"><a href="#cb72-487" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-488"><a href="#cb72-488" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-489"><a href="#cb72-489" aria-hidden="true" tabindex="-1"></a><span class="fu">## Ključne besede</span></span>
+<span id="cb72-490"><a href="#cb72-490" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-491"><a href="#cb72-491" aria-hidden="true" tabindex="-1"></a>Metod za določitev ključnih besed v besedilih je več. V knjižnici <span class="in">`quanteda`</span> (zdaj že nekaj časa v posebni knjižnici <span class="in">`quanteda.textstats`</span>) najdemo hitro in preprosto funkcijo <span class="in">`textstat_keyness()`</span>.</span>
+<span id="cb72-492"><a href="#cb72-492" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-493"><a href="#cb72-493" aria-hidden="true" tabindex="-1"></a><span class="in">```{r message=FALSE, warning=FALSE}</span></span>
+<span id="cb72-494"><a href="#cb72-494" aria-hidden="true" tabindex="-1"></a>df_izbor</span>
+<span id="cb72-495"><a href="#cb72-495" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-496"><a href="#cb72-496" aria-hidden="true" tabindex="-1"></a>key_kavcic <span class="ot">&lt;-</span> <span class="fu">textstat_keyness</span>(matrika, <span class="at">target =</span> <span class="st">"Tišina"</span>)</span>
+<span id="cb72-497"><a href="#cb72-497" aria-hidden="true" tabindex="-1"></a>key_kavcic <span class="sc">%&gt;%</span> rmarkdown<span class="sc">::</span><span class="fu">paged_table</span>() <span class="co"># maj68-0073</span></span>
+<span id="cb72-498"><a href="#cb72-498" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-499"><a href="#cb72-499" aria-hidden="true" tabindex="-1"></a>key_partljic <span class="ot">&lt;-</span> <span class="fu">textstat_keyness</span>(matrika, <span class="at">target =</span> <span class="st">"Ribe na plitvini"</span>)</span>
+<span id="cb72-500"><a href="#cb72-500" aria-hidden="true" tabindex="-1"></a>key_partljic <span class="sc">%&gt;%</span> rmarkdown<span class="sc">::</span><span class="fu">paged_table</span>() <span class="co"># maj68-0147</span></span>
+<span id="cb72-501"><a href="#cb72-501" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-502"><a href="#cb72-502" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb72-503"><a href="#cb72-503" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-504"><a href="#cb72-504" aria-hidden="true" tabindex="-1"></a>Besedne oblike, ki so v primerjavi z drugim besedilom (ali besedili) najbolj značilne za določeno besedilo, imajo visoko vrednost hi kvadrata (*chi2*) in se na seznamu privzeto znajdejo na začetku tabele, v proznih delih pa so to npr. imena glavnih likov.  </span>
+<span id="cb72-505"><a href="#cb72-505" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-506"><a href="#cb72-506" aria-hidden="true" tabindex="-1"></a>S programsko funkcijo <span class="in">`textplot_keyness()`</span> lahko tudi narišemo diagram z najbolj značilnimi besednimi oblikami primerjanih besedil. </span>
+<span id="cb72-507"><a href="#cb72-507" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-508"><a href="#cb72-508" aria-hidden="true" tabindex="-1"></a><span class="in">```{r message=FALSE, warning=FALSE}</span></span>
+<span id="cb72-509"><a href="#cb72-509" aria-hidden="true" tabindex="-1"></a><span class="fu">textplot_keyness</span>(key_kavcic)</span>
+<span id="cb72-510"><a href="#cb72-510" aria-hidden="true" tabindex="-1"></a><span class="fu">textplot_keyness</span>(key_partljic)</span>
+<span id="cb72-511"><a href="#cb72-511" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-512"><a href="#cb72-512" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb72-513"><a href="#cb72-513" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-514"><a href="#cb72-514" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-515"><a href="#cb72-515" aria-hidden="true" tabindex="-1"></a><span class="fu">## Razumljivost besedila</span></span>
+<span id="cb72-516"><a href="#cb72-516" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-517"><a href="#cb72-517" aria-hidden="true" tabindex="-1"></a>Razumljivost besedila in s tem primernost besedila za določeno starostno skupino ali bralce z določeno stopnje izobrazbe ocenjujemo na osnovi različnih meril, med najpreprostejšimi in pogosto uporabljenimi sta dolžina povedi in dolžina besednih oblik. Knjižnica <span class="in">`quanteda`</span> ponuja celo paleto merskih metod (gl. vgrajeno pomoč, <span class="in">`help`</span>):   </span>
+<span id="cb72-518"><a href="#cb72-518" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-521"><a href="#cb72-521" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb72-522"><a href="#cb72-522" aria-hidden="true" tabindex="-1"></a><span class="fu">textstat_readability</span>(corp, <span class="at">measure =</span> <span class="fu">c</span>(<span class="st">"Flesch"</span>, <span class="st">"Flesch.Kincaid"</span>, <span class="st">"FOG"</span>, <span class="st">"FOG.PSK"</span>, <span class="st">"FOG.NRI"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb72-523"><a href="#cb72-523" aria-hidden="true" tabindex="-1"></a>  rmarkdown<span class="sc">::</span><span class="fu">paged_table</span>()</span>
+<span id="cb72-524"><a href="#cb72-524" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb72-525"><a href="#cb72-525" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-526"><a href="#cb72-526" aria-hidden="true" tabindex="-1"></a>Višji koeficient *Flesch* pomeni, da je izrazna plat besedila bolj zahtevna. Za angleščino so izdelali priporočila za potencialne skupine bralcev (npr. ali je besedilo z določeno indeksno vrednostjo jezikovno primerno za otroke 5. razreda osnovne šole).  </span>
+<span id="cb72-527"><a href="#cb72-527" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-528"><a href="#cb72-528" aria-hidden="true" tabindex="-1"></a><span class="ot">&lt;https://en.wikipedia.org/wiki/Flesch%E2%80%93Kincaid_readability_tests&gt;</span></span>
+<span id="cb72-529"><a href="#cb72-529" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-530"><a href="#cb72-530" aria-hidden="true" tabindex="-1"></a>Za uporabo v slovenščini je treba formule za izračun koeficientov prilagoditi. </span>
+<span id="cb72-531"><a href="#cb72-531" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-532"><a href="#cb72-532" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-533"><a href="#cb72-533" aria-hidden="true" tabindex="-1"></a><span class="fu">## Kookurenčna mreža (FCM)</span></span>
+<span id="cb72-534"><a href="#cb72-534" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-535"><a href="#cb72-535" aria-hidden="true" tabindex="-1"></a>Katere besedne oblike se pogosto sopojavljajo, je mogoče prikazovati v mrežnih diagramih. </span>
+<span id="cb72-536"><a href="#cb72-536" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-537"><a href="#cb72-537" aria-hidden="true" tabindex="-1"></a>Iz matrike dokumentov in besednih oblik (<span class="in">`dfm`</span>) izberemo ustrezne besedne oblike za prikaz povezanosti. Za izbor uporabljamo programsko funkcijo <span class="in">`dfm_select()`</span>.   </span>
+<span id="cb72-538"><a href="#cb72-538" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-539"><a href="#cb72-539" aria-hidden="true" tabindex="-1"></a>Ukaz <span class="in">`topfeatures()`</span> sestavi seznam najpogosteje nastopajočih besednih oblik, funkcija <span class="in">`names()`</span> potegne besedne oblike iz seznama imen in pogostnosti pojavljanja. </span>
+<span id="cb72-540"><a href="#cb72-540" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-543"><a href="#cb72-543" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb72-544"><a href="#cb72-544" aria-hidden="true" tabindex="-1"></a>dfm_tags <span class="ot">&lt;-</span> <span class="fu">dfm_select</span>(</span>
+<span id="cb72-545"><a href="#cb72-545" aria-hidden="true" tabindex="-1"></a>  <span class="co"># omejujemo na matriko drugega besedila</span></span>
+<span id="cb72-546"><a href="#cb72-546" aria-hidden="true" tabindex="-1"></a>  matrika[<span class="dv">2</span>,], </span>
+<span id="cb72-547"><a href="#cb72-547" aria-hidden="true" tabindex="-1"></a>  <span class="co"># katere besede želimo vključiti</span></span>
+<span id="cb72-548"><a href="#cb72-548" aria-hidden="true" tabindex="-1"></a>  <span class="at">pattern =</span> (<span class="fu">c</span>(<span class="st">"jože"</span>, <span class="st">"tomaž"</span>, <span class="st">"beti"</span>, <span class="st">"veronika"</span>, <span class="st">"poslanec"</span>, </span>
+<span id="cb72-549"><a href="#cb72-549" aria-hidden="true" tabindex="-1"></a>               <span class="st">"majda"</span>, <span class="st">"miro"</span>, <span class="st">"danica"</span>, <span class="st">"rekel"</span>, <span class="st">"žena"</span>, </span>
+<span id="cb72-550"><a href="#cb72-550" aria-hidden="true" tabindex="-1"></a>               <span class="st">"železnik"</span>, <span class="st">"vino"</span>, <span class="st">"kavo"</span>, <span class="st">"mož"</span>, <span class="st">"otrok"</span>, </span>
+<span id="cb72-551"><a href="#cb72-551" aria-hidden="true" tabindex="-1"></a>               <span class="st">"upravitelj"</span>, <span class="st">"gostilno"</span>)))</span>
+<span id="cb72-552"><a href="#cb72-552" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-553"><a href="#cb72-553" aria-hidden="true" tabindex="-1"></a>toptag <span class="ot">&lt;-</span> <span class="fu">names</span>(<span class="fu">topfeatures</span>(dfm_tags, <span class="dv">50</span>, <span class="at">decreasing =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb72-554"><a href="#cb72-554" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(toptag, <span class="dv">10</span>)</span>
+<span id="cb72-555"><a href="#cb72-555" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb72-556"><a href="#cb72-556" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-557"><a href="#cb72-557" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-560"><a href="#cb72-560" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb72-561"><a href="#cb72-561" aria-hidden="true" tabindex="-1"></a><span class="co">#| out-width: "100%"</span></span>
+<span id="cb72-562"><a href="#cb72-562" aria-hidden="true" tabindex="-1"></a><span class="co">#| out-height: "100%"</span></span>
+<span id="cb72-563"><a href="#cb72-563" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-564"><a href="#cb72-564" aria-hidden="true" tabindex="-1"></a><span class="co"># Construct feature-cooccurrence matrix (fcm) of tags</span></span>
+<span id="cb72-565"><a href="#cb72-565" aria-hidden="true" tabindex="-1"></a>fcm_tis <span class="ot">&lt;-</span> <span class="fu">fcm</span>(matrika[<span class="dv">2</span>,]) <span class="co"># besedilo 2 je Tišina</span></span>
+<span id="cb72-566"><a href="#cb72-566" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(fcm_tis)</span>
+<span id="cb72-567"><a href="#cb72-567" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-568"><a href="#cb72-568" aria-hidden="true" tabindex="-1"></a>top_fcm <span class="ot">&lt;-</span> <span class="fu">fcm_select</span>(fcm_tis, <span class="at">pattern =</span> toptag)</span>
+<span id="cb72-569"><a href="#cb72-569" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-570"><a href="#cb72-570" aria-hidden="true" tabindex="-1"></a><span class="fu">textplot_network</span>(top_fcm, <span class="at">min_freq =</span> <span class="fl">0.1</span>, </span>
+<span id="cb72-571"><a href="#cb72-571" aria-hidden="true" tabindex="-1"></a>                 <span class="at">edge_alpha =</span> <span class="fl">0.8</span>, <span class="at">edge_size =</span> <span class="dv">5</span>)</span>
+<span id="cb72-572"><a href="#cb72-572" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb72-573"><a href="#cb72-573" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-576"><a href="#cb72-576" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb72-577"><a href="#cb72-577" aria-hidden="true" tabindex="-1"></a><span class="fu">png</span>(<span class="st">"pictures/textplot_network_partljic.png"</span>, </span>
+<span id="cb72-578"><a href="#cb72-578" aria-hidden="true" tabindex="-1"></a>    <span class="at">width =</span> <span class="dv">700</span>, <span class="at">height =</span> <span class="dv">500</span>,)</span>
+<span id="cb72-579"><a href="#cb72-579" aria-hidden="true" tabindex="-1"></a><span class="fu">textplot_network</span>(top_fcm, <span class="at">min_freq =</span> <span class="fl">0.1</span>, </span>
+<span id="cb72-580"><a href="#cb72-580" aria-hidden="true" tabindex="-1"></a>                 <span class="at">edge_alpha =</span> <span class="fl">0.8</span>, <span class="at">edge_size =</span> <span class="dv">5</span>)</span>
+<span id="cb72-581"><a href="#cb72-581" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.off</span>()</span>
+<span id="cb72-582"><a href="#cb72-582" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb72-583"><a href="#cb72-583" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-584"><a href="#cb72-584" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-585"><a href="#cb72-585" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-586"><a href="#cb72-586" aria-hidden="true" tabindex="-1"></a>Kookurenčno matriko (<span class="in">`fcm`</span>) lahko pretvorimo v tabelo za uporabo s programskimi funkcijami <span class="in">`tidyverse`</span>. Uporabljamo <span class="in">`as_tibble()`</span> ali v novejšem času <span class="in">`convert()`</span>. </span>
+<span id="cb72-587"><a href="#cb72-587" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-590"><a href="#cb72-590" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb72-591"><a href="#cb72-591" aria-hidden="true" tabindex="-1"></a>cooc_tabela <span class="ot">&lt;-</span> fcm_tis <span class="sc">%&gt;%</span> <span class="fu">as_tibble</span>()</span>
+<span id="cb72-592"><a href="#cb72-592" aria-hidden="true" tabindex="-1"></a>cooc_tabela <span class="ot">&lt;-</span> fcm_tis <span class="sc">%&gt;%</span> <span class="fu">convert</span>(<span class="at">to =</span> <span class="st">"data.frame"</span>)</span>
+<span id="cb72-593"><a href="#cb72-593" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(cooc_tabela) <span class="sc">%&gt;%</span> rmarkdown<span class="sc">::</span><span class="fu">paged_table</span>()</span>
+<span id="cb72-594"><a href="#cb72-594" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb72-595"><a href="#cb72-595" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-596"><a href="#cb72-596" aria-hidden="true" tabindex="-1"></a>Kookurenčne tabele po navadi dopolnjujemo z merami asociacije, ki nam povedo, kako močno sta izraza povezana in / ali je povezanost nenaključna (tj. statistično značilna). </span>
+<span id="cb72-597"><a href="#cb72-597" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-598"><a href="#cb72-598" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-601"><a href="#cb72-601" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb72-602"><a href="#cb72-602" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(meme)</span>
+<span id="cb72-603"><a href="#cb72-603" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-604"><a href="#cb72-604" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (.Platform<span class="sc">$</span>OS.type <span class="sc">==</span> <span class="st">"windows"</span>) {</span>
+<span id="cb72-605"><a href="#cb72-605" aria-hidden="true" tabindex="-1"></a>    <span class="fu">windowsFonts</span>(</span>
+<span id="cb72-606"><a href="#cb72-606" aria-hidden="true" tabindex="-1"></a>        <span class="at">Script =</span> <span class="fu">windowsFont</span>(<span class="st">"Segoe Script"</span>),</span>
+<span id="cb72-607"><a href="#cb72-607" aria-hidden="true" tabindex="-1"></a>        <span class="at">ScriptBold =</span> <span class="fu">windowsFont</span>(<span class="st">"Script MT Bold"</span>),</span>
+<span id="cb72-608"><a href="#cb72-608" aria-hidden="true" tabindex="-1"></a>        <span class="at">Impact =</span> <span class="fu">windowsFont</span>(<span class="st">"Impact"</span>),</span>
+<span id="cb72-609"><a href="#cb72-609" aria-hidden="true" tabindex="-1"></a>        <span class="at">Courier =</span> <span class="fu">windowsFont</span>(<span class="st">"Courier"</span>)</span>
+<span id="cb72-610"><a href="#cb72-610" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb72-611"><a href="#cb72-611" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb72-612"><a href="#cb72-612" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-613"><a href="#cb72-613" aria-hidden="true" tabindex="-1"></a>dir <span class="ot">&lt;-</span> <span class="fu">system.file</span>(<span class="st">'fonts/bubble'</span>, <span class="at">package=</span><span class="st">'meme'</span>)</span>
+<span id="cb72-614"><a href="#cb72-614" aria-hidden="true" tabindex="-1"></a><span class="fu">font_import</span>(dir)</span>
+<span id="cb72-615"><a href="#cb72-615" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-616"><a href="#cb72-616" aria-hidden="true" tabindex="-1"></a><span class="co"># u2 &lt;- system.file("success.jpg", package="meme")</span></span>
+<span id="cb72-617"><a href="#cb72-617" aria-hidden="true" tabindex="-1"></a>u2 <span class="ot">&lt;-</span> <span class="st">"pictures/boy_with_fist.png"</span></span>
+<span id="cb72-618"><a href="#cb72-618" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">meme</span>(u2, <span class="st">"Mami, ati!"</span>, <span class="st">"Igral bi se s podatkovnim peskom."</span>, </span>
+<span id="cb72-619"><a href="#cb72-619" aria-hidden="true" tabindex="-1"></a>          <span class="at">size =</span> <span class="fl">1.8</span>, <span class="at">color =</span> <span class="st">"#D874E1"</span>, <span class="at">font=</span><span class="st">'bubble1'</span>)</span>
+<span id="cb72-620"><a href="#cb72-620" aria-hidden="true" tabindex="-1"></a><span class="fu">meme_save</span>(x, <span class="at">file=</span><span class="st">"pictures/success3.png"</span>)</span>
+<span id="cb72-621"><a href="#cb72-621" aria-hidden="true" tabindex="-1"></a>x</span>
+<span id="cb72-622"><a href="#cb72-622" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb72-623"><a href="#cb72-623" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-624"><a href="#cb72-624" aria-hidden="true" tabindex="-1"></a><span class="fu">## Naloge</span></span>
+<span id="cb72-625"><a href="#cb72-625" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-626"><a href="#cb72-626" aria-hidden="true" tabindex="-1"></a>Naloge so rešljive na osnovi programskh funkcij, prikazanih v prejšnjih odstavkih. </span>
+<span id="cb72-627"><a href="#cb72-627" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-628"><a href="#cb72-628" aria-hidden="true" tabindex="-1"></a><span class="fu">### N1</span></span>
+<span id="cb72-629"><a href="#cb72-629" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-630"><a href="#cb72-630" aria-hidden="true" tabindex="-1"></a>::: rmdrobot</span>
+<span id="cb72-631"><a href="#cb72-631" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-632"><a href="#cb72-632" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>V RStudiu ustvarite nov dokument s pripono .qmd (Quarto document)!</span>
+<span id="cb72-633"><a href="#cb72-633" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-634"><a href="#cb72-634" aria-hidden="true" tabindex="-1"></a><span class="ss">-  </span>V RStudiu odprite dve besedili približno enake dolžine z računalnikovega diska (npr. dve noveli ali dva romana po lastni izbiri ali iz gornjega jezikovnega gradiva slovenske literature iz leta 1968)!  </span>
+<span id="cb72-635"><a href="#cb72-635" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-636"><a href="#cb72-636" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Sestavite konkordanco, in sicer z iskano besedo ali besedno zvezo po lastni izbiri!  </span>
+<span id="cb72-637"><a href="#cb72-637" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-638"><a href="#cb72-638" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Izpišite konkordanco v obliki tabele in jo shranite v obliki datoteke csv (semicolon / comma-separated) ali xlsx (Excel)!   </span>
+<span id="cb72-639"><a href="#cb72-639" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-640"><a href="#cb72-640" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Pokažite še grafično, kje v besedilih najdemo iskano besedo oz. besedno zvezo!</span>
+<span id="cb72-641"><a href="#cb72-641" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-642"><a href="#cb72-642" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb72-643"><a href="#cb72-643" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-644"><a href="#cb72-644" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-645"><a href="#cb72-645" aria-hidden="true" tabindex="-1"></a><span class="fu">### N2</span></span>
+<span id="cb72-646"><a href="#cb72-646" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-647"><a href="#cb72-647" aria-hidden="true" tabindex="-1"></a>::: rmdrobot</span>
+<span id="cb72-648"><a href="#cb72-648" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-649"><a href="#cb72-649" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Zaradi vsebinske analize odstranite *funkcijske* besede (stopwords) iz obeh že odprtih besedil v vaši zbirki!  </span>
+<span id="cb72-650"><a href="#cb72-650" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-651"><a href="#cb72-651" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Sestavite *poizvedbo*, ki v obeh besedilih poišče *bigrame* (2-grame)!</span>
+<span id="cb72-652"><a href="#cb72-652" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-653"><a href="#cb72-653" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Narišite *diagram* 15 bigramov v vsakem besedilu, ki se odlikujejo po visokih *lambda* ali *z*-vrednosti. </span>
+<span id="cb72-654"><a href="#cb72-654" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-655"><a href="#cb72-655" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb72-656"><a href="#cb72-656" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-657"><a href="#cb72-657" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-658"><a href="#cb72-658" aria-hidden="true" tabindex="-1"></a><span class="fu">### N3</span></span>
+<span id="cb72-659"><a href="#cb72-659" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-660"><a href="#cb72-660" aria-hidden="true" tabindex="-1"></a>::: rmdrobot</span>
+<span id="cb72-661"><a href="#cb72-661" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-662"><a href="#cb72-662" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Sestavite *poizvedbo*, ki v obeh besedilih poišče *ključne izraze*, tj. takih besed, po katerih se eno besedilo razlikuje od drugega!</span>
+<span id="cb72-663"><a href="#cb72-663" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-664"><a href="#cb72-664" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Narišite za primerjavo tudi *diagram* ključnih besed obeh besedil!  </span>
+<span id="cb72-665"><a href="#cb72-665" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-666"><a href="#cb72-666" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb72-667"><a href="#cb72-667" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-668"><a href="#cb72-668" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-671"><a href="#cb72-671" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb72-672"><a href="#cb72-672" aria-hidden="true" tabindex="-1"></a>dir <span class="ot">&lt;-</span> <span class="fu">system.file</span>(<span class="st">'fonts/bubble'</span>, <span class="at">package=</span><span class="st">'meme'</span>)</span>
+<span id="cb72-673"><a href="#cb72-673" aria-hidden="true" tabindex="-1"></a><span class="fu">font_import</span>(dir)</span>
+<span id="cb72-674"><a href="#cb72-674" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-675"><a href="#cb72-675" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">meme</span>(u2, <span class="st">"Mami, Ati!"</span>, <span class="st">"Jaz bi še pesek!"</span>, </span>
+<span id="cb72-676"><a href="#cb72-676" aria-hidden="true" tabindex="-1"></a>          <span class="at">size =</span> <span class="dv">3</span>, <span class="at">color =</span> <span class="st">"#D874E1"</span>, <span class="at">font=</span><span class="st">'sans'</span>)</span>
+<span id="cb72-677"><a href="#cb72-677" aria-hidden="true" tabindex="-1"></a><span class="fu">meme_save</span>(x, <span class="at">file=</span><span class="st">"pictures/success2.png"</span>)</span>
+<span id="cb72-678"><a href="#cb72-678" aria-hidden="true" tabindex="-1"></a>x</span>
+<span id="cb72-679"><a href="#cb72-679" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb72-680"><a href="#cb72-680" aria-hidden="true" tabindex="-1"></a></span>
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->

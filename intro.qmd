@@ -1,6 +1,8 @@
 # Uvod {#sec-uvod}
 
 ```{r echo=FALSE, fig.keep='all', out.width="100%"}
+# install.packages("knitr")
+# install.packages("rmarkdown")
 knitr::include_graphics("pictures/R_delavnica_shema.png")
 ```
 
@@ -20,17 +22,25 @@ knitr::include_graphics("pictures/R_delavnica_oris_vsebin.png")
 #| message: false
 
 packages = c("tidyverse", "tidytext", "janitor", "scales",
-             "widyr", "quanteda", "quanteda.textplots", 
-             "quanteda.textstats", "wordcloud2", "GGally", 
-             "ggwordcloud", "udpipe", "syuzhet", "ggtext", 
-             "corpustools", "xml2", "XML", "rvest", "network", 
-             "readtext", "readxl", "writexl", "flextable", 
-             "stopwords", "xmlconvert", "lubridate", "emo", 
-             "rtweet", "plotly", "Twitmo", "tictoc", "meme",
+             "widyr", "quanteda", "quanteda.textplots",
+             "quanteda.textstats", "wordcloud2", "GGally",
+             "ggwordcloud", "udpipe", "syuzhet", "ggtext",
+             "corpustools", "xml2", "XML", "rvest", "network",
+             "readtext", "readxl", "writexl","flextable",
+             "stopwords", "xmlconvert", "lubridate", "emo",
+             "rtweet", "httpuv", "plotly", "Twitmo", "meme",
              "jsonlite", "ndjson", "igraph", "rmarkdown", 
+<<<<<<< Updated upstream
              "textfeatures", "knitr", "magick", "ggpage", 
              "gganimate", "zoo", "network", "ggraph", "httpuv",
              "factoextra", "FactMineR", "ggdendro") # xlsx
+=======
+             "textfeatures", "knitr", "magick", "ggpage",
+             "gganimate", "zoo", "pdftools", "officer",
+             "docxtractr", "factoMineR", "factoextra", 
+             "tictoc", "ggraph", "ggdendro", "giski", 
+             "tm") # xlsx
+>>>>>>> Stashed changes
 
 # Install packages not yet installed
 installed_packages <- packages %in% rownames(installed.packages())

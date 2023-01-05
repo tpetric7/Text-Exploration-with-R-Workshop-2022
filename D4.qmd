@@ -614,7 +614,7 @@ S funkcijo `ncol()` lahko preverimo, koliko izrazov (besed ali elementov) je pre
 
 S funkcijo `summary()` lahko preverimo, kako pogosto se izrazi (term) pojavljajo v jezikovnem gradivu. Tako izvemo, da je najmanjša pogostost besede v jezikovnem gradivu (Min.) enaka 1 in največja (Max.) enaka 9664.
 
-Velika razlika med *mediano* (24,00) in *povprečjem* (59,45) kaže, da pogostnosti besede niso normalno porazdeljene. To je za jezikovna gradiva povsem običajno.
+Velika razlika med *mediano* (24,00) in *povprečjem* (59,45) kaže, da vrednosti pogostnosti besed niso normalno porazdeljene. To je za jezikovna gradiva povsem običajno.
 
 ```{r}
 # inspect size of matrix
@@ -1469,12 +1469,13 @@ head(avatxt_eng)
 ```
 
 ```{r message=FALSE, warning=FALSE}
+tictoc::tic()
 v_avatar_eng <- get_sentences(avatxt_eng$text)
 rs_nrc_sentiment <- get_nrc_sentiment(v_avatar_eng, 
                                       language = "english")
 joy_items <- which(rs_nrc_sentiment$joy > 0)
 head(v_avatar_eng[joy_items], 4)
-
+tictoc::toc()
 ```
 
 Tukaj je odlomek iz tabele, ki jo dobimo po oceni čustvenih vrednosti besed:
@@ -1553,11 +1554,13 @@ head(avatxt_deu)
 Ocene čustvenih vrednosti besed v nemških podnapisih:
 
 ```{r message=FALSE, warning=FALSE}
+tictoc::tic()
 v_avatar_deu <- get_sentences(avatxt_deu$text)
 rs_nrc_sentiment_de <- get_nrc_sentiment(v_avatar_deu, 
                                          language = "german")
 joy_items_de <- which(rs_nrc_sentiment_de$joy > 0)
 head(v_avatar_deu[joy_items_de], 4)
+tictoc::toc()
 ```
 
 Slikovni prikaz čustvenih vrednosti besed v nemških podnapisih:
@@ -1589,6 +1592,7 @@ Poskusimo animirati ocene čustvenih vrednosti besed v angleških podnapisih. Iz
 library(ggpage)
 library(purrr)
 library(gganimate)
+library(gifski)
 library(tidytext)
 library(zoo)
 
@@ -1614,6 +1618,7 @@ anim_pages <- midbuild %>%
     title = "Smoothed sentiment of English Avatar subtitles, <br>rolling average of {round(frame_time)}") +
   transition_time(rolls)
 
+animate(anim_pages, duration = 5, fps = 20, width = 480, height = 640, renderer = gifski_renderer())
 anim_save("pictures/sentiment_animation.gif")
 ```
 
@@ -1672,9 +1677,85 @@ browse_texts(t, scale='sentiment')
 Barvno označeno besedilo je mogoče prikazovati tudi v spletnem brskalniku in shraniti kot `html` datoteko na disku.
 
 ```{r}
-#| eval: false
+#| eval: true
 browse_texts(t, scale='sentiment', 
              filename = "data/sentiment_24ur_bozic.html", 
              header = "Sentiment v prispevkih gledalcev o oddaji z božično tematiko")
 ```
+
+```{r}
+library(meme)
+
+if (.Platform$OS.type == "windows") {
+    windowsFonts(
+        Script = windowsFont("Segoe Script"),
+        ScriptBold = windowsFont("Script MT Bold"),
+        Impact = windowsFont("Impact"),
+        Courier = windowsFont("Courier")
+    )
+}
+
+dir <- system.file('fonts/bubble', package='meme')
+font_import(dir)
+
+# u2 <- system.file("success.jpg", package="meme")
+u2 <- "pictures/boy_with_fist.png"
+x <- meme(u2, "Mami, ati!", "Gremo na pesek!", 
+          size = 2, color = "#D874E1", font='bubble1')
+meme_save(x, file="pictures/success7.png")
+x
+```
+
+## Naloge
+
+Naloge so rešljive na osnovi programskh funkcij, prikazanih v prejšnjih odstavkih. 
+
+### N1
+
+::: rmdrobot
+
+- V RStudiu ustvarite nov dokument s pripono .qmd (Quarto document)!
+
+-  V RStudiu odprite dve krajši besedili!  
+
+- Razcepite vsako besedilo v povedi!  
+
+- Odprite primeren sentimentni slovar za slovenščino!  
+
+- Programsko izračunajte čustveno polariteto povedi v vsakem besedilu in ugotovite morebitno razliko med njima!  
+
+
+:::
+
+
+### N2
+
+::: rmdrobot
+
+- Sestavite spletno stran, ki prikazuje eno izmed izbranih besedil in barvno označeno čustveno polariteto besed!   
+
+:::
+
+
+### N3
+
+::: rmdrobot
+
+- Programsko izračunajte moč in statistično značilnost dvočlenksih besednih kolokacij v enem izmed izbranih besedil! 
+
+- Pokažite najznačilnejše dvočlenske kolokacije tabelarno!
+
+:::
+
+
+```{r}
+dir <- system.file('fonts/bubble', package='meme')
+font_import(dir)
+
+x <- meme(u2, "Mami, Ati!", "Peska je še dost'.", 
+          size = 3, color = "#D874E1", font='sans')
+meme_save(x, file="pictures/success8.png")
+x
+```
+
 

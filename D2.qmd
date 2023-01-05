@@ -292,6 +292,8 @@ pogostnost %>%
 
 ## Kolokacije
 
+Knjižnica `quanteda` ima preprosto funkcijo za iskanje *ngramov* v besedilih, tj. dveh ali več besed, ki se nadpovprečno pogosto sopojavljajo. 
+
 ```{r}
 coll_2 = textstat_collocations(besede, size = 2:5, tolower = TRUE) # naredi male črke !
 
@@ -504,5 +506,84 @@ head(cooc_tabela) %>% rmarkdown::paged_table()
 ```
 
 Kookurenčne tabele po navadi dopolnjujemo z merami asociacije, ki nam povedo, kako močno sta izraza povezana in / ali je povezanost nenaključna (tj. statistično značilna). 
+
+
+```{r}
+library(meme)
+
+if (.Platform$OS.type == "windows") {
+    windowsFonts(
+        Script = windowsFont("Segoe Script"),
+        ScriptBold = windowsFont("Script MT Bold"),
+        Impact = windowsFont("Impact"),
+        Courier = windowsFont("Courier")
+    )
+}
+
+dir <- system.file('fonts/bubble', package='meme')
+font_import(dir)
+
+# u2 <- system.file("success.jpg", package="meme")
+u2 <- "pictures/boy_with_fist.png"
+x <- meme(u2, "Mami, ati!", "Igral bi se s podatkovnim peskom.", 
+          size = 1.8, color = "#D874E1", font='bubble1')
+meme_save(x, file="pictures/success3.png")
+x
+```
+
+## Naloge
+
+Naloge so rešljive na osnovi programskh funkcij, prikazanih v prejšnjih odstavkih. 
+
+### N1
+
+::: rmdrobot
+
+- V RStudiu ustvarite nov dokument s pripono .qmd (Quarto document)!
+
+-  V RStudiu odprite dve besedili približno enake dolžine z računalnikovega diska (npr. dve noveli ali dva romana po lastni izbiri ali iz gornjega jezikovnega gradiva slovenske literature iz leta 1968)!  
+
+- Sestavite konkordanco, in sicer z iskano besedo ali besedno zvezo po lastni izbiri!  
+
+- Izpišite konkordanco v obliki tabele in jo shranite v obliki datoteke csv (semicolon / comma-separated) ali xlsx (Excel)!   
+
+- Pokažite še grafično, kje v besedilih najdemo iskano besedo oz. besedno zvezo!
+
+:::
+
+
+### N2
+
+::: rmdrobot
+
+- Zaradi vsebinske analize odstranite *funkcijske* besede (stopwords) iz obeh že odprtih besedil v vaši zbirki!  
+
+- Sestavite *poizvedbo*, ki v obeh besedilih poišče *bigrame* (2-grame)!
+
+- Narišite *diagram* 15 bigramov v vsakem besedilu, ki se odlikujejo po visokih *lambda* ali *z*-vrednosti. 
+
+:::
+
+
+### N3
+
+::: rmdrobot
+
+- Sestavite *poizvedbo*, ki v obeh besedilih poišče *ključne izraze*, tj. takih besed, po katerih se eno besedilo razlikuje od drugega!
+
+- Narišite za primerjavo tudi *diagram* ključnih besed obeh besedil!  
+
+:::
+
+
+```{r}
+dir <- system.file('fonts/bubble', package='meme')
+font_import(dir)
+
+x <- meme(u2, "Mami, Ati!", "Jaz bi še pesek!", 
+          size = 3, color = "#D874E1", font='sans')
+meme_save(x, file="pictures/success2.png")
+x
+```
 
 

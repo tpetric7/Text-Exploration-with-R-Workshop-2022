@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <style>
+      a {
+    color: #7D1935;
+}
+
+div.container {
+    background-color: #F5F3EE;
+    resize: both;
+    overflow: auto;
+}
+
+header, footer {
+    padding: 1em;
+    margin-left: 160px;
+    color: white;
+    background-color: #7D1935;
+    clear: left;
+    text-align: center;
+}
+
+.dot {
+  height: 10px;
+  width: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.articles {
+  margin-left: 160px;
+  border: 1px solid gray;
+}
+
+.navbar {
+
+}
+
+.navbar {
+        font-size: 10px;
+
+    height: 100%; /* Full-height: remove this if you want "auto" height */
+    width: 160px; /* Set the width of the sidebar */
+    position: fixed; /* Fixed Sidebar (stay in place on scroll) */
+
+    top: 0; /* Stay at the top */
+    left: 0;
+    background-color: #F5F3EE;
+    overflow-x: hidden; /* Disable horizontal scroll */
+    padding-top: 20px;
+}
+
+navbar ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    padding-left: 0;
+}
+
+navbar ul a {
+    text-decoration: none;
+}
+
+doc_id {
+	font-size:1.2em;
+  font-weight:bold;
+}
+
+article {
+    padding: 1em;
+    line-height: 2.0;
+    font-size: 10px;
+    display: block;
+    overflow: hidden;
+}
+
+article.disable-links {
+    pointer-events: none;
+}
+
+#meta_table, tr, th, td {
+    text-align: left;
+    line-height: 1.5;
+    margin-top: 0px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    font-size: 12px;
+}
+
+#meta_table, td {
+    padding-left:2em;
+    font-size: 10px;
+}
+
+
+#searchField {
+    background-color: #F5F3EE;
+    color: #7D1935;
+    margin-left: 10px;
+    width: 60%; /* Full-width */
+    font-size: 10px; /* Increase font-size */
+    padding: 1em;
+    border: 1px solid #ddd; /* Add a grey border */
+    text-align: left;
+    margin-bottom: 12px; /* Add some space below the input */
+}
+    </style>
+  </head>
+
+  <body>
+
+    <div class="container">
+
+    <header>
+      <a name="top"></a>
+      <h1>Sentiment v prispevkih gledalcev o oddaji z božično tematiko</h1>
+      <p><i><ndoc>142</ndoc> (N = 142)</i></p>
+    </header>
+
+    <div class="navbar" id="navbar">
+      <input type="text" id="searchField" onkeyup="searchFunction()" placeholder="<keyword>">
+      <ul style="list-style-type:none; padding:15px">
+        
+        <p><i></p></i>
+      </ul>
+    </div>
+
+    <div id="articles", class="articles">
+      <article insearch="1" infilter="1"><doc_id>1</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>Jaz sem včeraj <span style="background-color: rgba(255, 0, 0, 0.3)">bla</span> doma.... </p></article>
+
+<article insearch="1" infilter="1"><doc_id>10</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>če ji ne bi odmaknila mikrofona, bi še kar naprej žagala </p></article>
+
+<article insearch="1" infilter="1"><doc_id>100</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>Boga <span style="background-color: rgba(255, 0, 0, 0.3)">reva</span> se je zmela ker je bila pred televizijo </p></article>
+
+<article insearch="1" infilter="1"><doc_id>101</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>meni je to <span style="background-color: rgba(255, 0, 0, 0.3)">nerodno</span> ko to trokiranje gledam </p></article>
+
+<article insearch="1" infilter="1"><doc_id>102</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>Verniki pa jim bog nc ne <span style="background-color: rgba(0, 255, 0, 0.3)">pomaga</span>. </p></article>
+
+<article insearch="1" infilter="1"><doc_id>103</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>Hahaha 6 je to rekla sm štel (& quot; sm doma & quot;) </p></article>
+
+<article insearch="1" infilter="1"><doc_id>104</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>Vecinoma? </p></article>
+
+<article insearch="1" infilter="1"><doc_id>105</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>Mi smo tut duma </p></article>
+
+<article insearch="1" infilter="1"><doc_id>106</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>Oh bolano </p></article>
+
+<article insearch="1" infilter="1"><doc_id>107</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>Kje boste pa letos za božič?: D </p></article>
+
+<article insearch="1" infilter="1"><doc_id>108</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>Ja doma bomo preživljali z družino polnočnico pa mogoče ne mogoče ja večino starši delajo.... <span style="background-color: rgba(255, 0, 0, 0.3)">blablabla</span> no z družino bomo usi doma 😂 </p></article>
+
+<article insearch="1" infilter="1"><doc_id>109</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>Error: Unhandled exception in brain </p></article>
+
+<article insearch="1" infilter="1"><doc_id>11</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>Mislim da je rekla da so doma za božic </p></article>
+
+<article insearch="1" infilter="1"><doc_id>110</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>evo marjan sarec v zenski podobi </p></article>
+
+<article insearch="1" infilter="1"><doc_id>111</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>Hahahahah kral 😂 😂 </p></article>
+
+<article insearch="1" infilter="1"><doc_id>112</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>smo doma bomo mogoce prsli na polno - oučnico če ne bomo doma bomo doma </p></article>
+
+<article insearch="1" infilter="1"><doc_id>113</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>jst bom tud DOMA: D </p></article>
+
+<article insearch="1" infilter="1"><doc_id>114</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>Ko si nekaj vprašan pa zblužiš za 2 </p></article>
+
+<article insearch="1" infilter="1"><doc_id>115</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p><span style="background-color: rgba(0, 255, 0, 0.3)">Realna</span> 😂 😂 </p></article>
+
+<article insearch="1" infilter="1"><doc_id>116</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>Abababababbababa </p></article>
+
+<article insearch="1" infilter="1"><doc_id>117</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>Ta bi morala bit vedeževalka:) Enega <span style="background-color: rgba(255, 0, 0, 0.3)">nezadovoljnega</span> ne bi bilo. </p></article>
+
+<article insearch="1" infilter="1"><doc_id>118</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>Ja razumemo 7 si to rekala </p></article>
+
+<article insearch="1" infilter="1"><doc_id>119</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>povzetek vsega:.... no v <span style="background-color: rgba(0, 255, 0, 0.3)">glavnem</span> so starši vedno v službi, drugače smo pa vedno skupaj doma, ko pa niso v službe smo pa ponavadi vedno skupaj, ko staršev ni doma in so v službe... smo pa skupaj vedno doma:))) </p></article>
+
+<article insearch="1" infilter="1"><doc_id>12</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>Tut jst božič preživim v družinskem krogu. </p></article>
+
+<article insearch="1" infilter="1"><doc_id>120</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>to ni povzetek. </p></article>
+
+<article insearch="1" infilter="1"><doc_id>121</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>važn da si ti doma: D </p></article>
+
+<article insearch="1" infilter="1"><doc_id>122</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>kaj pa za novo leto? </p></article>
+
+<article insearch="1" infilter="1"><doc_id>123</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>za BOŽIČ doma je odgovor na vse </p></article>
+
+<article insearch="1" infilter="1"><doc_id>124</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>Doma če pa ne pa so doma 😂 😂 😂 </p></article>
+
+<article insearch="1" infilter="1"><doc_id>125</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>@ Oppose kaj? 😂 </p></article>
+
+<article insearch="1" infilter="1"><doc_id>126</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>@ Daša Štremfelj viderman? </p></article>
+
+<article insearch="1" infilter="1"><doc_id>127</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>Verjetno so doma 😂 😂 😂 😂 😂 😂 </p></article>
+
+<article insearch="1" infilter="1"><doc_id>128</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>hahaha 6 - krat je rekla doma 😀 😁 ☺ ☺ 😊 </p></article>
+
+<article insearch="1" infilter="1"><doc_id>129</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>Do vsak večer smo doma. Pa ne me <span style="background-color: rgba(255, 0, 0, 0.3)">basat</span> no.: D:D:D </p></article>
+
+<article insearch="1" infilter="1"><doc_id>13</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>lmao </p></article>
+
+<article insearch="1" infilter="1"><doc_id>130</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>😂 😂 😂 </p></article>
+
+<article insearch="1" infilter="1"><doc_id>131</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>: -) </p></article>
+
+<article insearch="1" infilter="1"><doc_id>132</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>zakaj ni voditeljica na koncu rekla, v <span style="background-color: rgba(0, 255, 0, 0.3)">glavnem</span> ste doma: D </p></article>
+
+<article insearch="1" infilter="1"><doc_id>133</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>@ Fabi porkamadona haha <span style="background-color: rgba(0, 255, 0, 0.3)">točno</span> to sm mislu napisat 😂 </p></article>
+
+<article insearch="1" infilter="1"><doc_id>134</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>Zato, ker bi še eno uro trajal spet 😂 </p></article>
+
+<article insearch="1" infilter="1"><doc_id>135</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>Dead 😂 😂 😂 😂 </p></article>
+
+<article insearch="1" infilter="1"><doc_id>136</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>Cist je friznila: P </p></article>
+
+<article insearch="1" infilter="1"><doc_id>137</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>skor crkno od smeha!!!! 😂 😂 😂 😂 😂 😂 </p></article>
+
+<article insearch="1" infilter="1"><doc_id>138</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>Js tut duma je rekla 5 × 😂 </p></article>
+
+<article insearch="1" infilter="1"><doc_id>139</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>sj smo dojel da si doma no </p></article>
+
+<article insearch="1" infilter="1"><doc_id>14</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>Kje ste pa vi za božič? </p></article>
+
+<article insearch="1" infilter="1"><doc_id>140</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>vse se je <span style="background-color: rgba(255, 0, 0, 0.3)">zamotala</span> </p></article>
+
+<article insearch="1" infilter="1"><doc_id>141</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p> a href = " https: / / www.youtube.com / watch? v = nSocIWlvRX4 "  https: / / www.youtube.com / watch? v = nSocIWlvRX4  / a  </p></article>
+
+<article insearch="1" infilter="1"><doc_id>142</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>Haha zakonnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn </p></article>
+
+<article insearch="1" infilter="1"><doc_id>15</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>Intelekt slovenskih klerofašističnih in pedofilskih ovčic. </p></article>
+
+<article insearch="1" infilter="1"><doc_id>16</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p><span style="background-color: rgba(255, 0, 0, 0.3)">Pankrt</span> To je pred pravoslavno cerkevijo v Ljubljani snemano. Tvoji kolegi! </p></article>
+
+<article insearch="1" infilter="1"><doc_id>17</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>vglavnem doma so: D </p></article>
+
+<article insearch="1" infilter="1"><doc_id>18</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>Kdo je za božič doma? </p></article>
+
+<article insearch="1" infilter="1"><doc_id>19</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>Vglavnem Ste Doma </p></article>
+
+<article insearch="1" infilter="1"><doc_id>2</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>Skor <span style="background-color: rgba(0, 255, 0, 0.3)">lahko</span> cutis razocaranje voditeljucw ki kr raste </p></article>
+
+<article insearch="1" infilter="1"><doc_id>20</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>Kaj pa letos ste doma? </p></article>
+
+<article insearch="1" infilter="1"><doc_id>21</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>letos bomo ponovno tudi doma </p></article>
+
+<article insearch="1" infilter="1"><doc_id>22</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>Tut letos smo doma 😁 </p></article>
+
+<article insearch="1" infilter="1"><doc_id>23</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>Res smo in bomo vsi doma </p></article>
+
+<article insearch="1" infilter="1"><doc_id>24</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>Pripravana koronske čase </p></article>
+
+<article insearch="1" infilter="1"><doc_id>25</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p><span style="background-color: rgba(0, 255, 0, 0.3)">Bravo</span>, bolj ku se <span style="background-color: rgba(255, 0, 0, 0.3)">stara</span> bujsi je 🤣 zdej je korona poskrbela da smo res vsi doma za bozic pounoucnico, nou let itd 😂 </p></article>
+
+<article insearch="1" infilter="1"><doc_id>26</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>😂 </p></article>
+
+<article insearch="1" infilter="1"><doc_id>27</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>Maske je pa gospa Beovičeva pojedla!? </p></article>
+
+<article insearch="1" infilter="1"><doc_id>28</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>Kje boste pa vi letos za božič? </p></article>
+
+<article insearch="1" infilter="1"><doc_id>29</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>js se <span style="background-color: rgba(0, 255, 0, 0.3)">čist strinjam</span> </p></article>
+
+<article insearch="1" infilter="1"><doc_id>3</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>Pravijo, da še dandanes stoji na istem mestu in se vrti v istem <span style="background-color: rgba(0, 255, 0, 0.3)">začaranem</span> krogu.... </p></article>
+
+<article insearch="1" infilter="1"><doc_id>30</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>Kr skoz smo doma 🙂 </p></article>
+
+<article insearch="1" infilter="1"><doc_id>31</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>tfw no stay - at - home autistic gf 💖 </p></article>
+
+<article insearch="1" infilter="1"><doc_id>32</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>Pomoje se je kr <span style="background-color: rgba(255, 0, 0, 0.3)">usrala</span> ko je vidla kamero pa mikrofon </p></article>
+
+<article insearch="1" infilter="1"><doc_id>33</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>2021 </p></article>
+
+<article insearch="1" infilter="1"><doc_id>34</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>Se <span style="background-color: rgba(0, 255, 0, 0.3)">dobimo</span> ko bomo vsi čez 4 leta dobli to v prilubljeno;) </p></article>
+
+<article insearch="1" infilter="1"><doc_id>35</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>Ja letos bo spet doma, ja kva so teli verniki sdsovski <span style="background-color: rgba(0, 255, 0, 0.3)">pametni</span> ledje, nemorš vrjet, v butalah bo treba še kašno cerkev pozidat </p></article>
+
+<article insearch="1" infilter="1"><doc_id>36</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>Na <span style="background-color: rgba(0, 255, 0, 0.3)">hitro</span> je povedala da so doma 🤣 🤣 </p></article>
+
+<article insearch="1" infilter="1"><doc_id>37</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>tudi to leto bomo za polnoč doma. in za božič. bomo doma. uglavnem doma. </p></article>
+
+<article insearch="1" infilter="1"><doc_id>38</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>Ta bozic bomo usi doma. </p></article>
+
+<article insearch="1" infilter="1"><doc_id>39</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>To so sds volilci </p></article>
+
+<article insearch="1" infilter="1"><doc_id>4</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>Ja, kdo pa je ta ženska? </p></article>
+
+<article insearch="1" infilter="1"><doc_id>40</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>Če pa ti nisi <span style="background-color: rgba(255, 0, 0, 0.3)">ignorant</span>.... to je bilo na srbsko pravoslavno badnje veče - božični večer. A ne vidiš zadaj srbsko pravoslavno cerkev v Ljubljani? Edino pravoslavno cerkev v Sloveniji. Če še tega ne prepoznaš potem res ne vem kje živiš in kaj sploh poznaš o naši državi. Cerkev ki je na eni najbolj pretočnih ljubljanskih cest in vsi vedo da je to edina srbska pravoslavna cerkev. Cerkev pred katero je velikokrat <span style="background-color: rgba(255, 0, 0, 0.3)">paradiral</span> Zoran Janković in tudi marsikateri poslanci SD - ja in ostali levih strank. Sicer pa če bi imel kaj soli v glavi bi vedel da je to pravoslavno srbkinjo dajala <span style="background-color: rgba(0, 255, 0, 0.3)">močna</span> <span style="background-color: rgba(255, 0, 0, 0.3)">trema</span>. A ne vidiš kako se ji <span style="background-color: rgba(255, 0, 0, 0.3)">trese</span> glas. Sicer pa itak ti ne prepoznaš ničesar, ker si očitno zelo <span style="background-color: rgba(255, 0, 0, 0.3)">omejen</span>. </p></article>
+
+<article insearch="1" infilter="1"><doc_id>41</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>Letos bomo pa res vsi doma 😅 </p></article>
+
+<article insearch="1" infilter="1"><doc_id>42</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>Pa smo spet do večinoma vsi doma...... </p></article>
+
+<article insearch="1" infilter="1"><doc_id>43</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>Evoti i bozic da policiskom Uroma in maskom </p></article>
+
+<article insearch="1" infilter="1"><doc_id>44</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>Ženska govori kod da je <span style="background-color: rgba(255, 0, 0, 0.3)">stara</span> 3 </p></article>
+
+<article insearch="1" infilter="1"><doc_id>45</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>This video hits different in 2020 </p></article>
+
+<article insearch="1" infilter="1"><doc_id>46</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p><span style="background-color: rgba(255, 0, 0, 0.3)">umiram</span> </p></article>
+
+<article insearch="1" infilter="1"><doc_id>47</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>Letos bomo vsi doma 😂 😂 😂 😂 </p></article>
+
+<article insearch="1" infilter="1"><doc_id>48</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p><span style="background-color: rgba(0, 255, 0, 0.3)">Ljubo</span> doma, mi pa pri ljubotu 😂 😎 </p></article>
+
+<article insearch="1" infilter="1"><doc_id>49</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>2020 <span style="background-color: rgba(0, 255, 0, 0.3)">top</span> content 😎 👌 </p></article>
+
+<article insearch="1" infilter="1"><doc_id>5</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>Če smo doma smo doma. <span style="background-color: rgba(0, 255, 0, 0.3)">Lepe</span> praznike <span style="background-color: rgba(0, 255, 0, 0.3)">želim</span> pa če tudi niste doma </p></article>
+
+<article insearch="1" infilter="1"><doc_id>50</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>Ta let bomo pa usi doma 🤣 </p></article>
+
+<article insearch="1" infilter="1"><doc_id>51</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>Letos tudi. Še sploh kdo kaj praznuje? 🙄 🤔 </p></article>
+
+<article insearch="1" infilter="1"><doc_id>52</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>Letos tud </p></article>
+
+<article insearch="1" infilter="1"><doc_id>53</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>ne vem zakaj sem <span style="background-color: rgba(0, 255, 0, 0.3)">dobil</span> obcutek, da jih je vsaj 80 v bajti 🤔 </p></article>
+
+<article insearch="1" infilter="1"><doc_id>54</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>😂 😂 😂 😂 😂 </p></article>
+
+<article insearch="1" infilter="1"><doc_id>55</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>Nevem amapk men se zdi da bojo za božič doma </p></article>
+
+<article insearch="1" infilter="1"><doc_id>56</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>Da povzamemo ste doma </p></article>
+
+<article insearch="1" infilter="1"><doc_id>57</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>Punca je <span style="background-color: rgba(0, 255, 0, 0.3)">idealna</span> za v parlament. </p></article>
+
+<article insearch="1" infilter="1"><doc_id>58</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p> a href = " http: / / www.youtube.com / results? search_query = % 23OSTANIDOMA "  # OSTANIDOMA  / a   a href = " http: / / www.youtube.com / results? search_query = % 23STAYHOMESTAYSAFE "  # STAYHOMESTAYSAFE  / a  😂 </p></article>
+
+<article insearch="1" infilter="1"><doc_id>59</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>Hahahahhaha pa nemors no, svaka <span style="background-color: rgba(0, 255, 0, 0.3)">čast</span> punci tok me pa ze dougu ni noben nasmejou 😁 😁 </p></article>
+
+<article insearch="1" infilter="1"><doc_id>6</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>2023 še smo doma </p></article>
+
+<article insearch="1" infilter="1"><doc_id>60</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>V <span style="background-color: rgba(0, 255, 0, 0.3)">glavnem</span> ste skupaj: D </p></article>
+
+<article insearch="1" infilter="1"><doc_id>61</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>Zaj ko je karantena, pa ni problama doma bit! </p></article>
+
+<article insearch="1" infilter="1"><doc_id>62</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>Brezdomka, pa <span style="background-color: rgba(0, 255, 0, 0.3)">kompenzira</span>. </p></article>
+
+<article insearch="1" infilter="1"><doc_id>63</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>a gLedA kDo V 2o20 </p></article>
+
+<article insearch="1" infilter="1"><doc_id>64</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>ne, js gledam v 2021 </p></article>
+
+<article insearch="1" infilter="1"><doc_id>65</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>Ne, ne gledam, sm pa v <span style="background-color: rgba(0, 255, 0, 0.3)">glavnem</span> doma D: </p></article>
+
+<article insearch="1" infilter="1"><doc_id>66</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>omg ja </p></article>
+
+<article insearch="1" infilter="1"><doc_id>67</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>2020 🙋‍♂️ 😂 </p></article>
+
+<article insearch="1" infilter="1"><doc_id>68</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p><span style="background-color: rgba(0, 255, 0, 0.3)">Želim</span> Vam <span style="background-color: rgba(0, 255, 0, 0.3)">Lep</span> Božič, Vsem KATERI STE DOMA 🙏 </p></article>
+
+<article insearch="1" infilter="1"><doc_id>69</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>A dej no 😂 boga reuca 😂 😂 <span style="background-color: rgba(255, 0, 0, 0.3)">umiram</span> vsak let 😂 😂 </p></article>
+
+<article insearch="1" infilter="1"><doc_id>7</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>Mislim da je rekla da so za božič doma </p></article>
+
+<article insearch="1" infilter="1"><doc_id>70</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>a še gleda kdo v 2019? 😂 </p></article>
+
+<article insearch="1" infilter="1"><doc_id>71</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>Gledamo za božič 2021 ker smo doma za božič gledamo doma </p></article>
+
+<article insearch="1" infilter="1"><doc_id>72</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>Se oglašam iz prihodnosti, iz leta 2022 😝 </p></article>
+
+<article insearch="1" infilter="1"><doc_id>73</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>2021 😂 🤣 </p></article>
+
+<article insearch="1" infilter="1"><doc_id>74</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>2021 </p></article>
+
+<article insearch="1" infilter="1"><doc_id>75</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>2020 😂 </p></article>
+
+<article insearch="1" infilter="1"><doc_id>76</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>2020 😂 </p></article>
+
+<article insearch="1" infilter="1"><doc_id>77</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>2020 majstr </p></article>
+
+<article insearch="1" infilter="1"><doc_id>78</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>mi že v 2020 </p></article>
+
+<article insearch="1" infilter="1"><doc_id>79</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>Večinoma če smo doma gledamo če pa ne smo pa doma </p></article>
+
+<article insearch="1" infilter="1"><doc_id>8</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>Če daš <span style="background-color: rgba(0, 255, 0, 0.3)">hitrost</span> videa na 0,5 je še <span style="background-color: rgba(0, 255, 0, 0.3)">boljše</span>:) </p></article>
+
+<article insearch="1" infilter="1"><doc_id>80</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>Lih k cakamo pounoucnico gledam 😂 😂 </p></article>
+
+<article insearch="1" infilter="1"><doc_id>81</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>Vsi.... k smo doma za pounovčnico gledamo.... edin če ne delamo.... u bistvu smo najraje doma </p></article>
+
+<article insearch="1" infilter="1"><doc_id>82</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>Iz <span style="background-color: rgba(255, 0, 0, 0.3)">jezika</span> mi je vzela. Mi <span style="background-color: rgba(0, 255, 0, 0.3)">čist</span> isto delamo. Do vsak večer. </p></article>
+
+<article insearch="1" infilter="1"><doc_id>83</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>Pol je pa večinoma sama doma. </p></article>
+
+<article insearch="1" infilter="1"><doc_id>84</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>Kaj pa če starši delajo? </p></article>
+
+<article insearch="1" infilter="1"><doc_id>85</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>vsak večer smo doma za božič: D </p></article>
+
+<article insearch="1" infilter="1"><doc_id>86</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>Bahhhaa </p></article>
+
+<article insearch="1" infilter="1"><doc_id>87</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>Kua ou kej nsledn video kr kumi čakam na nouga </p></article>
+
+<article insearch="1" infilter="1"><doc_id>88</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>polnoučnica </p></article>
+
+<article insearch="1" infilter="1"><doc_id>89</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p><span style="background-color: rgba(0, 255, 0, 0.3)">Glavno</span> mesto amerike je miami </p></article>
+
+<article insearch="1" infilter="1"><doc_id>9</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>Kdo je tukaj leta 2022 zaradi Marka Žerjala? 😉 </p></article>
+
+<article insearch="1" infilter="1"><doc_id>90</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>Vosuuuu Majemi drgač </p></article>
+
+<article insearch="1" infilter="1"><doc_id>91</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>😂 </p></article>
+
+<article insearch="1" infilter="1"><doc_id>92</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>zakaj nemora ta ženska narediti še enga intrevjuja </p></article>
+
+<article insearch="1" infilter="1"><doc_id>93</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>Pač <span style="background-color: rgba(255, 0, 0, 0.3)">tremo</span> ma, <span style="background-color: rgba(255, 0, 0, 0.3)">butci</span>. </p></article>
+
+<article insearch="1" infilter="1"><doc_id>94</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>Ma bogaaa </p></article>
+
+<article insearch="1" infilter="1"><doc_id>95</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>večinoma z družino saj doma bomo praznoval božič in polnočnico bomo tut mogoče pršli mogoče ne zarad tega k večinoma starši delajo večinoma za božič smo doma praznujemo družinsko vsi smo doma tkoda do vsak večer tko smo doma za božič in za polnoč tut če so doma starša obadva <span style="background-color: rgba(0, 255, 0, 0.3)">prosta</span> smo za polnočno pridemo če pa ne po pa smo doma tkoda </p></article>
+
+<article insearch="1" infilter="1"><doc_id>96</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>Tnx for the lyrics 😂 </p></article>
+
+<article insearch="1" infilter="1"><doc_id>97</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>Hahahahah, <span style="background-color: rgba(255, 0, 0, 0.3)">umiram</span> noooo 😂 </p></article>
+
+<article insearch="1" infilter="1"><doc_id>98</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>v <span style="background-color: rgba(0, 255, 0, 0.3)">glavnem</span> ste skupaj, ne: D: D: D </p></article>
+
+<article insearch="1" infilter="1"><doc_id>99</doc_id>
+<table class="meta_table" style="border-spacing: 0px"></table>
+<p>🤦 🤦 🤦 🤦 </p></article>
+    </div>
+
+    </div>
+
+
+  </body>
+</html>
+
+
+<script>
+function searchFunction() {
+  // Declare variables
+  var input, filter, elements, n;
+  input = document.getElementById("searchField");
+  filter = input.value.toUpperCase();
+  elements = document.getElementById('articles').children;
+
+  n = 0;
+  navs = [];
+  for (var i = 0; i < elements.length; i++) {
+      if (elements[i].textContent.toUpperCase().indexOf(filter) > -1)
+        elements[i].setAttribute("insearch", "1");
+      else
+        elements[i].setAttribute("insearch", "0");
+
+      if (elements[i].getAttribute('infilter') == "1" && elements[i].getAttribute('insearch') == "1") {
+          n++;
+          elements[i].style.display = 'block';
+      }
+      else {
+          elements[i].style.display = 'none';
+      }
+  }
+
+  document.getElementsByTagName('ndoc')[0].innerHTML = n;
+}
+
+function navSelect(checkbox) {
+  var input, elements, n, navbar, isradio, checkboxes, hit, nofilter;
+  elements = document.getElementById('articles').children;
+  navbar = document.getElementById('navbar');
+  checkboxes = navbar.getElementsByClassName('navselect');
+
+  nofilter = true;
+  for (var j = 0; j < checkboxes.length; j++) if (checkboxes[j].checked) nofilter = false;
+
+  n = 0;
+  for (var i = 0; i < elements.length; i++) {
+      hit = true;
+
+      var tagarray = elements[i].children[1].children;
+      var tags = [];
+      for (var t=0; t<tagarray.length; t++) tags.push(tagarray[t].textContent);
+
+      if (!nofilter){
+        for (var j = 0; j < checkboxes.length; j++) {
+          if (!checkboxes[j].checked) continue;
+          if (checkboxes[j].getAttribute('isradio') == "1") {
+            if (checkboxes[j].value != checkbox.value) {
+              checkboxes[j].checked = false;
+              continue;
+            }
+          }
+
+          if (tags.indexOf(checkboxes[j].value) <= -1) {
+            hit = false;
+            break;
+          }
+        }
+      }
+
+      if (hit)
+        elements[i].setAttribute("infilter", "1");
+      else
+        elements[i].setAttribute("infilter", "0");
+
+      if (elements[i].getAttribute('infilter') == "1" && elements[i].getAttribute('insearch') == "1") {
+        n++;
+        elements[i].style.display = 'block';
+      }
+      else {
+        elements[i].style.display = 'none';
+      }
+  }
+
+  document.getElementsByTagName('ndoc')[0].innerHTML = n;
+}
+
+var unfoldspan = document.querySelectorAll("unfoldspan");
+
+for (i = 0; i < unfoldspan.length; i++) {
+  unfoldspan[i].onclick = function() {
+  //window.confirm(this.textContent)
+
+    if (!this.hasAttribute('unfolded')) this.setAttribute('unfolded', false)
+    if (this.unfolded) {
+      this.nextSibling.style.display = 'none'
+      this.unfolded = false
+    } else {
+      this.nextSibling.style.display = ''
+      this.unfolded = true
+    }
+  }
+}
+
+</script>
