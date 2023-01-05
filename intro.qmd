@@ -30,17 +30,11 @@ packages = c("tidyverse", "tidytext", "janitor", "scales",
              "stopwords", "xmlconvert", "lubridate", "emo",
              "rtweet", "httpuv", "plotly", "Twitmo", "meme",
              "jsonlite", "ndjson", "igraph", "rmarkdown", 
-<<<<<<< Updated upstream
-             "textfeatures", "knitr", "magick", "ggpage", 
-             "gganimate", "zoo", "network", "ggraph", "httpuv",
-             "factoextra", "FactMineR", "ggdendro") # xlsx
-=======
              "textfeatures", "knitr", "magick", "ggpage",
              "gganimate", "zoo", "pdftools", "officer",
              "docxtractr", "factoMineR", "factoextra", 
              "tictoc", "ggraph", "ggdendro", "giski", 
              "tm") # xlsx
->>>>>>> Stashed changes
 
 # Install packages not yet installed
 installed_packages <- packages %in% rownames(installed.packages())
